@@ -31,7 +31,7 @@ public class FacesJasper {
             String layout = FacesContext.getCurrentInstance().getExternalContext().getRealPath(path);
             JasperPrint jasperPrint;
             JRBeanCollectionDataSource jRBeanCollectionDataSource = new JRBeanCollectionDataSource(dataSource, entityManager);
-            if (jRBeanCollectionDataSource == null || jRBeanCollectionDataSource.getData() == null || jRBeanCollectionDataSource.getData().isEmpty()) {
+            if (jRBeanCollectionDataSource.getData() == null || jRBeanCollectionDataSource.getData().isEmpty()) {
                 JREmptyDataSource jREmptyDataSource = new JREmptyDataSource();
                 jasperPrint = JasperFillManager.fillReport(layout, parameters, jREmptyDataSource);
             } else {

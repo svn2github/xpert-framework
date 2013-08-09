@@ -74,4 +74,22 @@ public class StackException extends Exception {
             exceptions.clear();
         }
     }
+
+    /**
+     * Return messages from StackException. String returned is as concat of getMessage() and getMessage() from each getExceptions()
+     * 
+     * @return 
+     */
+    public String getStackMessage() {
+        StringBuilder stackMessage = new StringBuilder();
+        if (getMessage() != null) {
+            stackMessage.append(getMessage()).append("\n");
+        }
+        if (getExceptions() != null) {
+            for (StackException se : getExceptions()) {
+                stackMessage.append(se.getMessage()).append("\n");
+            }
+        }
+        return stackMessage.toString();
+    }
 }

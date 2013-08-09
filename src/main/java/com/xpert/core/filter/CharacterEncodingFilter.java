@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.xpert.core.filter;
 
 import java.io.IOException;
@@ -31,7 +27,7 @@ public class CharacterEncodingFilter implements Filter {
 
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
-        logger.info("Using CharacterEncodingFilter to encode requests to " + UTF_8);
+        logger.info("Using com.xpert.core.filter.CharacterEncodingFilter to encode requests to " + UTF_8);
     }
 
     @Override

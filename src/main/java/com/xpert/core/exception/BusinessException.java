@@ -8,7 +8,7 @@ public class BusinessException extends StackException {
     public BusinessException(String mensagem, String... parametros) {
         super(mensagem, parametros);
     }
-    
+
     public BusinessException(String mensagem) {
         super(mensagem);
     }
@@ -19,4 +19,5 @@ public class BusinessException extends StackException {
             throw this;
         }
     }
+  
 }
