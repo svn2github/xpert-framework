@@ -24,6 +24,7 @@ import org.hibernate.proxy.LazyInitializer;
  */
 public class InitializerBean {
 
+    private static final boolean DEBUG = false;
     private static final Logger logger = Logger.getLogger(InitializerBean.class.getName());
     private Map<ClassIdentifier, Object> cache = new HashMap<ClassIdentifier, Object>();
     private DAO dao;
@@ -93,7 +94,9 @@ public class InitializerBean {
             lazyInitializer = ((HibernateProxy) value).getHibernateLazyInitializer();
             Object cached = cache.get(new ClassIdentifier(lazyInitializer.getIdentifier(), lazyInitializer.getPersistentClass()));
             if (cached != null) {
-                logger.log(Level.INFO, "Initializer: Object from class {0} id {1} expression found in cache", new Object[]{lazyInitializer.getPersistentClass(), lazyInitializer.getIdentifier(), expression});
+                if (DEBUG) {
+                    logger.log(Level.INFO, "Initializer: Object from class {0} id {1} expression found in cache", new Object[]{lazyInitializer.getPersistentClass().getName(), lazyInitializer.getIdentifier(), expression});
+                }
                 FacesUtils.setValueEl(expression, cached);
                 return;
             }
@@ -101,7 +104,9 @@ public class InitializerBean {
         }
 
         if (value instanceof HibernateProxy || value instanceof PersistentCollection) {
-            logger.log(Level.INFO, "Initializer: Initializing expression {0} in database", new Object[]{expression});
+            if (DEBUG) {
+                logger.log(Level.INFO, "Initializer: Initializing expression {0} in database", new Object[]{expression});
+            }
             Object initialized = dao.getInitialized(value);
             if (value instanceof HibernateProxy) {
                 cache.put(new ClassIdentifier(lazyInitializer.getIdentifier(), lazyInitializer.getPersistentClass()), initialized);
