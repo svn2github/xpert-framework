@@ -25,12 +25,34 @@ public interface BaseDAO<T> {
      */
     public Session getSession();
 
+    /**
+     * 
+     * @return 
+     */
     public QueryBuilder getQueryBuilder();
 
+    /**
+     * 
+     * @param path
+     * @param daoClass
+     * @param resultClass
+     * @return 
+     */
     public Query getNativeQueryFromFile(String path, Class daoClass, Class resultClass);
 
+    /**
+     * 
+     * @param path
+     * @param daoClass
+     * @return 
+     */
     public Query getNativeQueryFromFile(String path, Class daoClass);
 
+    /**
+     * Retrurn Current Entity Class
+     * 
+     * @return 
+     */
     public Class getEntityClass();
 
     public void setEntityClass(Class entityClass);
@@ -41,26 +63,92 @@ public interface BaseDAO<T> {
      */
     public void save(T object);
 
+    /**
+     * 
+     * @param object
+     * @param audit Audit Operation
+     */
     public void save(T object, boolean audit);
 
+    /**
+     * Call saveOrUpdate from Session (Hibernate Implementation)
+     * 
+     * @param object 
+     */
     public void saveOrUpdate(T object);
 
+    /**
+     * Call saveOrUpdate from Session (Hibernate Implementation)
+     * 
+     * @param object
+     * @param audit Audit Operation
+     */
     public void saveOrUpdate(T object, boolean audit);
 
+    /**
+     * Call update from Session (Hibernate Implementation)
+     * 
+     * @param object 
+     */
     public void update(T object);
 
+    /**
+     * Call update from Session (Hibernate Implementation)
+     * 
+     * @param object
+     * @param audit 
+     */
     public void update(T object, boolean audit);
 
+    /**
+     * Delete a object from database. This method create a HQL to do the deletion
+     * 
+     * @param id Object Id
+     * @throws DeleteException 
+     */
     public void delete(Object id) throws DeleteException;
 
+    /**
+     * Delete a object from database. This method create a HQL to do the deletion
+     * 
+     * @param id
+     * @param audit Audit Operation
+     * @throws DeleteException 
+     */
     public void delete(Object id, boolean audit) throws DeleteException;
 
+    /**
+     * Delete a object from database. This method call entityManager.remove()
+     * 
+     * @param object
+     * @throws DeleteException 
+     */
     public void remove(Object object) throws DeleteException;
 
+    /**
+     * Delete a object from database. This method call entityManager.remove()
+     * 
+     * @param object
+     * @param audit Audit Operation
+     * @throws DeleteException 
+     */
     public void remove(Object object, boolean audit) throws DeleteException;
 
+    /**
+     * Merge a Object. This method call entityManager.remove()
+     * 
+     * @param object
+     * @return 
+     */
     public T merge(T object);
 
+    /**
+     * Merge a Object. This method call entityManager.remove()
+     * 
+     * @param object
+     * @param audit
+     * @return 
+     */
     public T merge(T object, boolean audit);
 
     public List<T> listAll();
@@ -81,6 +169,12 @@ public interface BaseDAO<T> {
 
     public Long count(String property, Object value);
 
+    /**
+     * Return a object from database by id
+     * 
+     * @param id Object id
+     * @return 
+     */
     public T find(Object id);
 
     public T find(Class entityClass, Object id);
@@ -110,8 +204,8 @@ public interface BaseDAO<T> {
     /**
      * Returns a unique object from query
      * 
-     * @param property - property name
-     * @param value - value to restrict
+     * @param property property name
+     * @param value value to restrict
      * @return
      */
     public T unique(String property, Object value);
@@ -119,12 +213,18 @@ public interface BaseDAO<T> {
     /**
      * Returns the value of especified attribute
      * 
-     * @param attributeName - atribute name of value
-     * @param id - id from object
+     * @param attributeName atribute name of value
+     * @param id id from object
      * @return 
      */
     public Object findAttribute(String attributeName, Long id);
 
+    /**
+     * 
+     * @param attributeName
+     * @param object
+     * @return 
+     */
     public Object findAttribute(String attributeName, Object object);
 
     public Object findList(String attributeName, Long id);
@@ -153,41 +253,180 @@ public interface BaseDAO<T> {
 
     public List<T> list(Map<String, Object> args, String order, Integer firstResult, Integer maxResults);
 
+    /**
+     * 
+     * @param clazz
+     * @param restriction
+     * @param order
+     * @param firstResult
+     * @param maxResults
+     * @return 
+     */
     public List<T> list(Class clazz, Restriction restriction, String order, Integer firstResult, Integer maxResults);
 
+    /**
+     * 
+     * @param clazz
+     * @param restriction
+     * @param order
+     * @param firstResult
+     * @param maxResults
+     * @param attributes
+     * @return 
+     */
     public List<T> list(Class clazz, Restriction restriction, String order, Integer firstResult, Integer maxResults, String attributes);
 
+    /**
+     * 
+     * @param restrictions
+     * @param order
+     * @param firstResult
+     * @param maxResults
+     * @return 
+     */
     public List<T> list(Restriction restrictions, String order, Integer firstResult, Integer maxResults);
 
+    /**
+     * 
+     * @param clazz
+     * @param restrictions
+     * @param order
+     * @param firstResult
+     * @param maxResults
+     * @return 
+     */
     public List<T> list(Class clazz, List<Restriction> restrictions, String order, Integer firstResult, Integer maxResults);
 
+    /**
+     * 
+     * @param clazz
+     * @param restrictions
+     * @param order
+     * @param firstResult
+     * @param maxResults
+     * @param attributes
+     * @return 
+     */
     public List<T> list(Class clazz, List<Restriction> restrictions, String order, Integer firstResult, Integer maxResults, String attributes);
 
+    /**
+     * 
+     * @param restrictions
+     * @param order
+     * @param firstResult
+     * @param maxResults
+     * @return 
+     */
     public List<T> list(List<Restriction> restrictions, String order, Integer firstResult, Integer maxResults);
 
+    /**
+     * 
+     * @param property
+     * @param value
+     * @return 
+     */
     public List<T> list(String property, Object value);
 
+    /**
+     * 
+     * @param property
+     * @param value
+     * @param order
+     * @return 
+     */
     public List<T> list(String property, Object value, String order);
 
+    /**
+     * Return a initialized object, if object is already initialized returns own object
+     * 
+     * @param <U>
+     * @param object
+     * @return 
+     */
     public <U> U getInitialized(U object);
 
+    /**
+     * 
+     * @param attributes
+     * @return 
+     */
     public List<T> listAttributes(String attributes);
 
+    /**
+     * 
+     * @param attributes
+     * @param order
+     * @return 
+     */
     public List<T> listAttributes(String attributes, String order);
 
+    /**
+     * 
+     * @param property
+     * @param value
+     * @param attributes
+     * @return 
+     */
     public List<T> listAttributes(String property, Object value, String attributes);
 
+    /**
+     * 
+     * @param property
+     * @param value
+     * @param attributes
+     * @param order
+     * @return 
+     */
     public List<T> listAttributes(String property, Object value, String attributes, String order);
 
+    /**
+     * 
+     * @param args
+     * @param attributes
+     * @param order
+     * @return 
+     */
     public List<T> listAttributes(Map<String, Object> args, String attributes, String order);
 
+    /**
+     * 
+     * @param args
+     * @param attributes
+     * @return 
+     */
     public List<T> listAttributes(Map<String, Object> args, String attributes);
 
+    /**
+     * 
+     * @param restrictions
+     * @param attributes
+     * @param order
+     * @return 
+     */
     public List<T> listAttributes(List<Restriction> restrictions, String attributes, String order);
 
+    /**
+     * 
+     * @param restrictions
+     * @param attributes
+     * @return 
+     */
     public List<T> listAttributes(List<Restriction> restrictions, String attributes);
 
+    /**
+     * 
+     * @param restriction
+     * @param attributes
+     * @param order
+     * @return 
+     */
     public List<T> listAttributes(Restriction restriction, String attributes, String order);
 
+    /**
+     * 
+     * @param restriction
+     * @param attributes
+     * @return 
+     */
     public List<T> listAttributes(Restriction restriction, String attributes);
 }
