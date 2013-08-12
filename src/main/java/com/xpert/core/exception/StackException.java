@@ -36,6 +36,11 @@ public class StackException extends Exception {
         this.exceptions = excecoes;
     }
 
+    /**
+     * throws a StackException  if getExceptions() is not empty
+     * 
+     * @throws StackException 
+     */
     public void check() throws StackException {
         if (this.isNotEmpty()) {
             throw this;

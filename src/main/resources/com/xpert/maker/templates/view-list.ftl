@@ -13,6 +13,8 @@
             <xc:modalMessages/>
             <p:dataTable paginator="true" rows="10" rowsPerPageTemplate="10,20,30" paginatorPosition="bottom" emptyMessage="${sharp}{xmsg['noRecordFound']}"
                          var="${entity.nameLower}" rowIndexVar="index" widgetVar="dataTable${entity.name}Widget"
+                         currentPageReportTemplate="${sharp}{${entity.nameLower}${configuration.managedBeanSuffix}.dataModel.currentPageReportTemplate}"
+                         paginatorTemplate="${sharp}{${entity.nameLower}${configuration.managedBeanSuffix}.dataModel.paginatorTemplate}"
                          value="${sharp}{${entity.nameLower}${configuration.managedBeanSuffix}.dataModel}" lazy="true" >
                 <p:column style="text-align: center;">
                     <f:facet name="header">

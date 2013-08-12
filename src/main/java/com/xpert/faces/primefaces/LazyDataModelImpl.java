@@ -1,5 +1,6 @@
 package com.xpert.faces.primefaces;
 
+import com.xpert.i18n.XpertResourceBundle;
 import com.xpert.persistence.dao.BaseDAO;
 import com.xpert.persistence.query.JoinBuilder;
 import com.xpert.persistence.query.QueryType;
@@ -14,14 +15,17 @@ import org.primefaces.model.SortOrder;
 
 public class LazyDataModelImpl<T> extends LazyDataModel {
 
+    private static final String PAGINATOR_TEMPLATE = "{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown} {CurrentPageReport}";
     private BaseDAO<T> dao;
     private String defaultOrder;
+    private String currentOrderBy;
     private String attributes;
     private OrderByHandler orderByHandler;
     /*
      * to add restrictions on query to filter table
      */
     private List<Restriction> restrictions;
+    private List<Restriction> queryRestrictions;
     private Restriction restriction;
     private JoinBuilder joinBuilder;
 
@@ -38,6 +42,7 @@ public class LazyDataModelImpl<T> extends LazyDataModel {
         this.defaultOrder = defaultOrder;
         this.restrictions = restrictions;
     }
+
     public LazyDataModelImpl(String defaultOrder, Restriction restriction, BaseDAO<T> dao) {
         this.dao = dao;
         this.defaultOrder = defaultOrder;
@@ -80,17 +85,17 @@ public class LazyDataModelImpl<T> extends LazyDataModel {
         if (orderBy == null || orderBy.trim().isEmpty()) {
             orderBy = defaultOrder;
         } else {
-            
-            if(orderByHandler != null){
+
+            if (orderByHandler != null) {
                 orderBy = getOrderByHandler().getOrderBy(orderBy);
             }
-            
+
             if (order.equals(SortOrder.DESCENDING)) {
                 orderBy = orderBy + " DESC";
             }
         }
 
-        List<Restriction> queryRestrictions = new ArrayList<Restriction>();
+        queryRestrictions = new ArrayList<Restriction>();
         if (restrictions != null && !restrictions.isEmpty()) {
             queryRestrictions.addAll(restrictions);
         }
@@ -104,14 +109,52 @@ public class LazyDataModelImpl<T> extends LazyDataModel {
                 }
             }
         }
-        
+
+        this.currentOrderBy = orderBy;
 
         List<T> dados = dao.getQueryBuilder().type(QueryType.SELECT, attributes).from(dao.getEntityClass()).add(queryRestrictions).join(joinBuilder)
                 .orderBy(orderBy).getResultList(first, pageSize);
-        
+
         this.setRowCount(dao.count(queryRestrictions).intValue());
 
         return dados;
+    }
+
+    /**
+     * Return Paginator Template
+     *
+     * @return
+     */
+    public String getPaginatorTemplate() {
+        return PAGINATOR_TEMPLATE;
+    }
+
+    /**
+     *
+     * @return Current Page Report Template
+     */
+    public String getCurrentPageReportTemplate() {
+        return "{totalRecords} " + XpertResourceBundle.get("records") + " (" + XpertResourceBundle.get("page") + " {currentPage} " + XpertResourceBundle.get("of") + " {totalPages})";
+    }
+
+    /**
+     * Return all objects from data base, based on filters from data table
+     *
+     * @param orderBy
+     * @return
+     */
+    public List getAllResults(String orderBy) {
+        return dao.getQueryBuilder().type(QueryType.SELECT, attributes).from(dao.getEntityClass()).add(queryRestrictions).join(joinBuilder)
+                .orderBy(orderBy).getResultList();
+    }
+
+    /**
+     * Return all objects from data base, based on filters from data table
+     *
+     * @return
+     */
+    public List getAllResults() {
+        return getAllResults(currentOrderBy);
     }
 
     @Override
@@ -130,6 +173,11 @@ public class LazyDataModelImpl<T> extends LazyDataModel {
         this.dao = dao;
     }
 
+    /**
+     * Default order by of query
+     * 
+     * @return 
+     */
     public String getDefaultOrder() {
         return defaultOrder;
     }
@@ -138,6 +186,11 @@ public class LazyDataModelImpl<T> extends LazyDataModel {
         this.defaultOrder = defaultOrder;
     }
 
+    /**
+     * Restrictions to be added in Query
+     * 
+     * @return 
+     */
     public List<Restriction> getRestrictions() {
         return restrictions;
     }
@@ -153,5 +206,42 @@ public class LazyDataModelImpl<T> extends LazyDataModel {
     public void setOrderByHandler(OrderByHandler orderByHandler) {
         this.orderByHandler = orderByHandler;
     }
+
+    public String getCurrentOrderBy() {
+        return currentOrderBy;
+    }
+
+    public void setCurrentOrderBy(String currentOrderBy) {
+        this.currentOrderBy = currentOrderBy;
+    }
+
+    public String getAttributes() {
+        return attributes;
+    }
+
+    public void setAttributes(String attributes) {
+        this.attributes = attributes;
+    }
+
+    /**
+     * 
+     * @return Current Restrictions (Data Table restrictions and defined Restrictions)
+     */
+    public List<Restriction> getQueryRestrictions() {
+        return queryRestrictions;
+    }
+
+    public void setQueryRestrictions(List<Restriction> queryRestrictions) {
+        this.queryRestrictions = queryRestrictions;
+    }
+
+    public JoinBuilder getJoinBuilder() {
+        return joinBuilder;
+    }
+
+    public void setJoinBuilder(JoinBuilder joinBuilder) {
+        this.joinBuilder = joinBuilder;
+    }
+    
     
 }

@@ -28,7 +28,7 @@ public abstract class AbstractBaseBean<T> {
     private static final String ID = "id";
     private Long id;
     private String dialog;
-    private LazyDataModel<T> dataModel;
+    private LazyDataModelImpl<T> dataModel;
     private T entity;
     private boolean loadEntityOnPostConstruct = true;
 
@@ -216,11 +216,11 @@ public abstract class AbstractBaseBean<T> {
         this.id = id;
     }
 
-    public LazyDataModel<T> getDataModel() {
+    public LazyDataModelImpl<T> getDataModel() {
         return dataModel;
     }
 
-    public void setDataModel(LazyDataModel<T> dataModel) {
+    public void setDataModel(LazyDataModelImpl<T> dataModel) {
         this.dataModel = dataModel;
     }
 

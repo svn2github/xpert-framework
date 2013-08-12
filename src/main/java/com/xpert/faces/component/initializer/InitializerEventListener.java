@@ -26,6 +26,15 @@ public class InitializerEventListener implements ComponentSystemEventListener {
     public InitializerEventListener() {
     }
 
+    public InitializerEventListener(String property, ValueExpression valueExpression,
+            FaceletContext faceletContext, UIComponent parent, EntityManager entityManager) {
+        this.property = property;
+        this.valueExpression = valueExpression;
+        this.faceletContext = faceletContext;
+        this.parent = parent;
+        this.entityManager = entityManager;
+    }
+
     public InitializerBean getInitializerBean(FacesContext context) {
         Map requestMap = context.getExternalContext().getRequestMap();
         InitializerBean initializerBean = (InitializerBean) requestMap.get(INITILIZER_BEAN_IDENTIFIER);
@@ -36,15 +45,6 @@ public class InitializerEventListener implements ComponentSystemEventListener {
             requestMap.put(INITILIZER_BEAN_IDENTIFIER, initializerBean);
             return initializerBean;
         }
-    }
-
-    public InitializerEventListener(String property, ValueExpression valueExpression,
-            FaceletContext faceletContext, UIComponent parent, EntityManager entityManager) {
-        this.property = property;
-        this.valueExpression = valueExpression;
-        this.faceletContext = faceletContext;
-        this.parent = parent;
-        this.entityManager = entityManager;
     }
 
     public void processEvent(ComponentSystemEvent event) throws AbortProcessingException {
