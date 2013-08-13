@@ -282,27 +282,34 @@ public class Audit {
                              * One to One cascade ALL
                              */
                             if (isOneToOneCascadeAll(method)) {
-                                List<AbstractMetadata> embedableMetadata = getMetadata(fieldValue, getPersisted(fieldValue), auditing);
+                                List<AbstractMetadata> embedableMetadata = null;
+                                //add metadata for oneToOne cascade all based on new object
+                                if (persisted == null) {
+                                    embedableMetadata = getMetadata(fieldValue, null, auditing);
+                                } else {
+                                    embedableMetadata = getMetadata(fieldValue, getPersisted(fieldValue), auditing);
+                                }
+
                                 if (embedableMetadata != null && !embedableMetadata.isEmpty()) {
                                     metadatas.addAll(embedableMetadata);
                                 }
-                            } else {
-
-                                Object oldId = null;
-                                if (fieldOld instanceof HibernateProxy) {
-                                    oldId = ((HibernateProxy) fieldOld).getHibernateLazyInitializer().getIdentifier();
-                                } else {
-                                    oldId = getId(fieldOld);
-                                }
-                                metadata.setOldIdentifier(oldId == null ? null : Long.valueOf(oldId.toString()));
-                                metadata.setOldValue(fieldOld == null ? "" : fieldOld.toString());
-                                if ((oldId == null && newId != null) || (oldId != null && newId == null) || (oldId != null && !oldId.equals(newId))) {
-                                    addMetadata = true;
-                                }
-                                metadata.setEntity(method.getDeclaringClass().getName());
-                                metadata.setNewIdentifier(newId == null ? null : Long.valueOf(newId.toString()));
-                                metadata.setNewValue(fieldValue == null ? "" : fieldValue.toString());
                             }
+
+                            Object oldId = null;
+                            if (fieldOld instanceof HibernateProxy) {
+                                oldId = ((HibernateProxy) fieldOld).getHibernateLazyInitializer().getIdentifier();
+                            } else {
+                                oldId = getId(fieldOld);
+                            }
+                            metadata.setOldIdentifier(oldId == null ? null : Long.valueOf(oldId.toString()));
+                            metadata.setOldValue(fieldOld == null ? "" : fieldOld.toString());
+                            if ((oldId == null && newId != null) || (oldId != null && newId == null) || (oldId != null && !oldId.equals(newId))) {
+                                addMetadata = true;
+                            }
+                            metadata.setEntity(method.getDeclaringClass().getName());
+                            metadata.setNewIdentifier(newId == null ? null : Long.valueOf(newId.toString()));
+                            metadata.setNewValue(fieldValue == null ? "" : fieldValue.toString());
+
                         }
                     } else {
                         if (fieldOld != null) {
