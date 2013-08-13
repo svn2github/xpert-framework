@@ -22,7 +22,7 @@ public class ${name}${configuration.managedBeanSuffix} extends AbstractBaseBean<
     private ${name}${configuration.businessObjectSuffix} ${nameLower}${configuration.businessObjectSuffix};
 
     @Override
-    public AbstractBusinessObject getBO() {
+    public ${name}${configuration.businessObjectSuffix} getBO() {
         return ${nameLower}${configuration.businessObjectSuffix};
     }
 
