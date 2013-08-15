@@ -1,6 +1,5 @@
 package com.xpert.core.exception;
 
-import com.xpert.i18n.I18N;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -38,9 +37,9 @@ public class StackException extends Exception {
     }
 
     /**
-     * throws a StackException if getExceptions() is not empty
-     *
-     * @throws StackException
+     * throws a StackException  if getExceptions() is not empty
+     * 
+     * @throws StackException 
      */
     public void check() throws StackException {
         if (this.isNotEmpty()) {
@@ -82,19 +81,18 @@ public class StackException extends Exception {
     }
 
     /**
-     * Return messages from StackException. String returned is as concat of
-     * getMessage() and getMessage() from each getExceptions()
-     *
-     * @return
+     * Return messages from StackException. String returned is as concat of getMessage() and getMessage() from each getExceptions()
+     * 
+     * @return 
      */
     public String getStackMessage() {
         StringBuilder stackMessage = new StringBuilder();
         if (getMessage() != null) {
-            stackMessage.append(I18N.get(getMessage(), (Object[]) getParametros())).append("\n");
+            stackMessage.append(getMessage()).append("\n");
         }
         if (getExceptions() != null) {
             for (StackException se : getExceptions()) {
-                stackMessage.append(I18N.get(se.getMessage(), (Object[]) se.getParametros())).append("\n");
+                stackMessage.append(se.getMessage()).append("\n");
             }
         }
         return stackMessage.toString();
