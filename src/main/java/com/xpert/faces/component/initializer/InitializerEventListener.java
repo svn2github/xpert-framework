@@ -1,5 +1,6 @@
 package com.xpert.faces.component.initializer;
 
+import java.io.Serializable;
 import java.util.Map;
 import javax.el.ValueExpression;
 import javax.faces.component.UIComponent;
@@ -14,48 +15,61 @@ import javax.persistence.EntityManager;
  *
  * @author ayslan
  */
-public class InitializerEventListener implements ComponentSystemEventListener {
+public class InitializerEventListener implements ComponentSystemEventListener, Serializable {
 
-    public static final String INITILIZER_BEAN_IDENTIFIER = "xpert.initializer.initializerBean";
+
     private String property;
     private ValueExpression valueExpression;
     private FaceletContext faceletContext;
-    private EntityManager entityManager;
+    private InitializerBean initializerBean;
     private UIComponent parent;
 
     public InitializerEventListener() {
     }
 
     public InitializerEventListener(String property, ValueExpression valueExpression,
-            FaceletContext faceletContext, UIComponent parent, EntityManager entityManager) {
+            FaceletContext faceletContext, UIComponent parent, InitializerBean initializerBean) {
         this.property = property;
         this.valueExpression = valueExpression;
         this.faceletContext = faceletContext;
         this.parent = parent;
-        this.entityManager = entityManager;
+        this.initializerBean = initializerBean;
     }
 
-    public InitializerBean getInitializerBean(FacesContext context) {
-        Map requestMap = context.getExternalContext().getRequestMap();
-        InitializerBean initializerBean = (InitializerBean) requestMap.get(INITILIZER_BEAN_IDENTIFIER);
-        if (initializerBean != null) {
-            return initializerBean;
-        } else {
-            initializerBean = new InitializerBean(entityManager);
-            requestMap.put(INITILIZER_BEAN_IDENTIFIER, initializerBean);
-            return initializerBean;
-        }
-    }
+    
 
     public void processEvent(ComponentSystemEvent event) throws AbortProcessingException {
         if (parent == null || faceletContext == null) {
             return;
         }
-        InitializerBean initializerBean = getInitializerBean(faceletContext.getFacesContext());
         if (valueExpression == null) {
             initializerBean.initialize(parent, faceletContext.getFacesContext(), property);
         } else {
             initializerBean.initialize(parent, faceletContext.getFacesContext(), valueExpression);
         }
     }
+
+    @Override
+    public int hashCode() {
+        int hash = 7;
+        hash = 67 * hash + (this.parent != null ? this.parent.hashCode() : 0);
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final InitializerEventListener other = (InitializerEventListener) obj;
+        if (this.parent != other.parent && (this.parent == null || !this.parent.equals(other.parent))) {
+            return false;
+        }
+        return true;
+    }
+    
+    
 }

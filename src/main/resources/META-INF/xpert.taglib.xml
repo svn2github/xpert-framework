@@ -6,7 +6,6 @@
     <namespace>http://xpert.com/faces</namespace>
     <tag>
         <tag-name>initializer</tag-name>
-        <!--<source>resources/xpert/components/initializer.xhtml</source>-->
         <component>
             <handler-class>com.xpert.faces.component.initializer.InitializerHandler</handler-class>
             <component-type>com.xpert.faces.component.Initializer</component-type>
