@@ -59,8 +59,6 @@ public class InitializerHandler extends TagHandler {
             InitializerEventListener initializerEventListener = new InitializerEventListener(
                     getProperty(faceletContext), valueExpression, faceletContext, parent, initializerBean);
 
-//            System.out.println("expressao: " + (valueExpression == null ? "null" : valueExpression.getExpressionString())
-//                    + " inicializando.. " + parent.getId() + " parent.isRendered(): " + parent.isRendered() + " parent.isInView(): " + parent.isInView());
             parent.subscribeToEvent(PreRenderComponentEvent.class, initializerEventListener);
         }
     }
