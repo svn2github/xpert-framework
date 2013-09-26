@@ -12,38 +12,43 @@ import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
+import javax.persistence.Query;
 
 /**
  *
  * @author Ayslan
  */
 public abstract class SecurityLoginBean {
-    
+
     private String userLogin;
     private String userPassword;
-    
+
     public EncryptionType getEncryptionType() {
         return EncryptionType.SHA256;
     }
-    
+
+    public boolean isLoginIgnoreCase() {
+        return false;
+    }
+
     public boolean isLoginUpperCase() {
         return true;
     }
-    
+
     public boolean isLoginLowerCase() {
         return false;
     }
-    
+
     public boolean isValidateWhenNoRolesFound() {
         return true;
     }
-    
+
     public Class getUserClass() {
         return null;
     }
-    
+
     public abstract AbstractUserSession getUserSession();
-    
+
     public abstract EntityManager getEntityManager();
 
     /**
@@ -130,28 +135,54 @@ public abstract class SecurityLoginBean {
     public boolean validate(User user) throws BusinessException {
         return true;
     }
-    
+
     public void logout() {
         FacesUtils.invalidateSession();
         FacesUtils.redirect(getRedirectPageWhenLogout());
     }
+
+    /**
+     * 
+     * @return Query String to find User
+     */
+    public String getUserLoginQueryString() {
+        String queryString = " FROM " + getUserClass().getName();
+        if (isLoginIgnoreCase()) {
+            queryString = queryString + " WHERE UPPER(userLogin) = UPPER(?1) ";
+        } else {
+            queryString = queryString + " WHERE userLogin = ?1 ";
+        }
+        return queryString;
+    }
     
+    /**
+     * 
+     * @param entityManager
+     * @param queryString String to find User
+     * @param login User Login
+     * @return 
+     */
+    public Query getUserLoginQuery(EntityManager entityManager, String queryString, String login) {
+        return entityManager.createQuery(queryString).setParameter(1, login);
+    }
+
     public User getUser(String login, String password) {
-        
+
         User user = null;
         EntityManager entityManager = getEntityManager();
         if (entityManager == null || getUserClass() == null) {
             throw new IllegalArgumentException("To get the user you must override methods getEntityManager() and getUserClass() or override getUser() and do your own logic");
         }
-        
-        String queryString = " FROM " + getUserClass().getName() + " WHERE userLogin = ?1 ";
+
+        String queryString = getUserLoginQueryString();
+
         if (isLoginUpperCase()) {
             login = login.toUpperCase();
         } else if (isLoginLowerCase()) {
             login = login.toLowerCase();
         }
         try {
-            user = (User) entityManager.createQuery(queryString).setParameter(1, login).getSingleResult();
+            user = (User) getUserLoginQuery(entityManager, queryString, login).getSingleResult();
         } catch (NoResultException ex) {
             //
         }
@@ -169,28 +200,28 @@ public abstract class SecurityLoginBean {
                 } else {
                     encryptedPassword = password;
                 }
-                
+
                 if (!user.getUserPassword().equals(encryptedPassword)) {
                     user = null;
                 }
             } catch (NoSuchAlgorithmException ex) {
                 throw new RuntimeException(ex);
             }
-            
+
         }
         return user;
     }
-    
+
     public void login() {
 
         //clear user session
         if (getUserSession() != null) {
             getUserSession().setUser(null);
         }
-        
+
         if (validate()) {
             User user = getUser(userLogin, userPassword);
-            
+
             if (user == null) {
                 addErrorMessage(getUserNotFoundMessage());
                 onError();
@@ -223,26 +254,26 @@ public abstract class SecurityLoginBean {
             onSucess(user);
             FacesUtils.redirect(getRedirectPageWhenSucess());
         }
-        
+
     }
-    
+
     private void addErrorMessage(String message) {
         FacesContext context = FacesContext.getCurrentInstance();
         context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, message, null));
     }
-    
+
     public String getUserLogin() {
         return userLogin;
     }
-    
+
     public void setUserLogin(String userLogin) {
         this.userLogin = userLogin;
     }
-    
+
     public String getUserPassword() {
         return userPassword;
     }
-    
+
     public void setUserPassword(String userPassword) {
         this.userPassword = userPassword;
     }
