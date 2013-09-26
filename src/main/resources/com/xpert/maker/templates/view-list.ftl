@@ -12,11 +12,11 @@
         <h:form id="formList${entity.name}">
             <xc:modalMessages/>
             <p:dataTable paginator="true" rows="10" rowsPerPageTemplate="10,20,30" paginatorPosition="bottom" emptyMessage="${sharp}{xmsg['noRecordFound']}"
-                         var="${entity.nameLower}" rowIndexVar="index" widgetVar="dataTable${entity.name}Widget"
+                         var="${entity.nameLower}" rowIndexVar="index" widgetVar="dataTable${entity.name}Widget" styleClass="table-responsive"
                          currentPageReportTemplate="${sharp}{${entity.nameLower}${configuration.managedBeanSuffix}.dataModel.currentPageReportTemplate}"
                          paginatorTemplate="${sharp}{${entity.nameLower}${configuration.managedBeanSuffix}.dataModel.paginatorTemplate}"
                          value="${sharp}{${entity.nameLower}${configuration.managedBeanSuffix}.dataModel}" lazy="true" >
-                <p:column style="text-align: center;">
+                <p:column styleClass="uix-datatable-index">
                     <f:facet name="header">
                         <p:commandButton onclick="dataTable${entity.name}Widget.filter()" type="button" icon="ui-icon-refresh" />
                     </f:facet>
@@ -54,7 +54,7 @@
                 </p:column>
                 </#if>
                 </#list>
-                <p:column style="text-align: center;">
+                <p:column styleClass="uix-datatable-actions">
                     <f:facet name="header">
                         <xc:legends detail="true" edit="true" delete="true"/>
                     </f:facet>

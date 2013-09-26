@@ -16,7 +16,9 @@
 .panel-calendar-filter{width: 140px;margin: 0 auto;}
 .calendar-filter{}
 .calendar-filter input{width: 70px;padding: 2px; }
-    
+.uix-center{text-align: center;}
+.uix-datatable-index{text-align: center;width: 1%}
+.uix-datatable-actions{text-align: center;width: 1%}
 
 
 
