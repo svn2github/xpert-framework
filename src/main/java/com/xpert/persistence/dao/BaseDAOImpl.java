@@ -12,6 +12,8 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
+import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.*;
 import java.util.Map.Entry;
 import java.util.logging.Level;
@@ -28,6 +30,7 @@ import org.hibernate.collection.internal.PersistentBag;
 import org.hibernate.collection.internal.PersistentSet;
 import org.hibernate.collection.spi.PersistentCollection;
 import org.hibernate.ejb.EntityManagerImpl;
+import org.hibernate.internal.SessionFactoryImpl;
 import org.hibernate.proxy.HibernateProxy;
 import org.hibernate.proxy.LazyInitializer;
 
@@ -77,6 +80,12 @@ public abstract class BaseDAOImpl<T> implements BaseDAO<T> {
 
     @Override
     public abstract EntityManager getEntityManager();
+
+    @Override
+    public Connection getConnection() throws SQLException {
+        SessionFactoryImpl sessionFactoryImpl = (SessionFactoryImpl) getSession().getSessionFactory();
+        return sessionFactoryImpl.getConnectionProvider().getConnection();
+    }
 
     @Override
     public Session getSession() {
@@ -495,7 +504,6 @@ public abstract class BaseDAOImpl<T> implements BaseDAO<T> {
 
         return query.getResultList();
     }
-
 
     @Override
     public Long count(Map<String, Object> restrictions) {

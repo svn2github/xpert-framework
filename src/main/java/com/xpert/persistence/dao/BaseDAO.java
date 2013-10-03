@@ -3,6 +3,8 @@ package com.xpert.persistence.dao;
 import com.xpert.persistence.exception.DeleteException;
 import com.xpert.persistence.query.QueryBuilder;
 import com.xpert.persistence.query.Restriction;
+import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
 import javax.persistence.EntityManager;
@@ -30,6 +32,12 @@ public interface BaseDAO<T> {
      * @return 
      */
     public QueryBuilder getQueryBuilder();
+    
+    /**
+     * 
+     * @return Connection from ConnectionProvider of SessionFactory
+     */
+    public Connection getConnection() throws SQLException ;
 
     /**
      * 

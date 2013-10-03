@@ -8,6 +8,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.math.BigDecimal;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -211,43 +212,51 @@ public class QueryBuilder {
                 } else {
                     property = restriction.getProperty();
                 }
+                
+                Class propertyType = String.class;
                 try {
-                    Class propertyType = ReflectionUtils.getPropertyType(this.from, property);
-                    //set to type to EQUALS when is not String
-                    if (!propertyType.equals(String.class)) {
-                        restriction.setRestrictionType(RestrictionType.EQUALS);
-                        if (propertyType.isEnum()) {
-                            restriction.setValue(Enum.valueOf(propertyType, restriction.getValue().toString()));
-                        }
-                        if (propertyType.equals(Integer.class) || propertyType.equals(int.class)) {
-                            restriction.setValue(Integer.valueOf(StringUtils.getOnlyIntegerNumbers(restriction.getValue().toString())));
-                        }
-                        if (propertyType.equals(Long.class) || propertyType.equals(long.class)) {
-                            restriction.setValue(Long.valueOf(StringUtils.getOnlyIntegerNumbers(restriction.getValue().toString())));
-                        }
-                        if (propertyType.equals(BigDecimal.class)) {
-                            restriction.setValue(new BigDecimal(restriction.getValue().toString()));
-                        }
-                        if (propertyType.equals(Boolean.class) || propertyType.equals(boolean.class)) {
-                            restriction.setValue(Boolean.valueOf(restriction.getValue().toString()));
-                        }
-                        //if is a date, then its a interval, set GREATER THAN and LESS THAN
-                        if (propertyType.equals(Date.class) || propertyType.equals(Calendar.class)) {
+                    //try to get type from property
+                    propertyType = ReflectionUtils.getPropertyType(this.from, property);
+                } catch (IllegalArgumentException ex) {
+                    //type cannot be get, keep String type
+                }
 
-                            SimpleDateFormat dateFormat = new SimpleDateFormat(I18N.getDatePattern(), I18N.getLocale());
-                            Object value = restriction.getValue().toString();
-                            String[] dateArray = null;
-                            if (value != null) {
-                                dateArray = value.toString().split(DATE_FILTER_INTERVAL_SEPARATOR);
+                //set to type to EQUALS when is not String
+                if (!propertyType.equals(String.class)) {
+                    restriction.setRestrictionType(RestrictionType.EQUALS);
+                    if (propertyType.isEnum()) {
+                        restriction.setValue(Enum.valueOf(propertyType, restriction.getValue().toString()));
+                    }
+                    if (propertyType.equals(Integer.class) || propertyType.equals(int.class)) {
+                        restriction.setValue(Integer.valueOf(StringUtils.getOnlyIntegerNumbers(restriction.getValue().toString())));
+                    }
+                    if (propertyType.equals(Long.class) || propertyType.equals(long.class)) {
+                        restriction.setValue(Long.valueOf(StringUtils.getOnlyIntegerNumbers(restriction.getValue().toString())));
+                    }
+                    if (propertyType.equals(BigDecimal.class)) {
+                        restriction.setValue(new BigDecimal(restriction.getValue().toString()));
+                    }
+                    if (propertyType.equals(Boolean.class) || propertyType.equals(boolean.class)) {
+                        restriction.setValue(Boolean.valueOf(restriction.getValue().toString()));
+                    }
+                    //if is a date, then its a interval, set GREATER THAN and LESS THAN
+                    if (propertyType.equals(Date.class) || propertyType.equals(Calendar.class)) {
+
+                        SimpleDateFormat dateFormat = new SimpleDateFormat(I18N.getDatePattern(), I18N.getLocale());
+                        Object value = restriction.getValue().toString();
+                        String[] dateArray = null;
+                        if (value != null) {
+                            dateArray = value.toString().split(DATE_FILTER_INTERVAL_SEPARATOR);
+                        }
+                        String startDateString = null;
+                        String endDateString = null;
+                        if (dateArray != null && dateArray.length > 0) {
+                            startDateString = dateArray[0];
+                            if (dateArray.length > 1) {
+                                endDateString = dateArray[1];
                             }
-                            String startDateString = null;
-                            String endDateString = null;
-                            if (dateArray != null && dateArray.length > 0) {
-                                startDateString = dateArray[0];
-                                if (dateArray.length > 1) {
-                                    endDateString = dateArray[1];
-                                }
-                            }
+                        }
+                        try {
                             //if start date is empty then should be ignored
                             if (startDateString != null && !startDateString.isEmpty()) {
                                 restriction.setValue(dateFormat.parse(startDateString.trim()));
@@ -270,13 +279,14 @@ public class QueryBuilder {
                                 dateEnd = calendar.getTime();
                                 moreRestrictions.add(new Restriction(restriction.getProperty(), RestrictionType.LESS_THAN, dateEnd));
                             }
+                        } catch (ParseException ex) {
+                            logger.log(Level.SEVERE, null, ex);
                         }
-                    } else {
-                        restriction.setRestrictionType(RestrictionType.LIKE);
                     }
-                } catch (Exception ex) {
-                    logger.log(Level.WARNING, "Error getting Property: " + property, ex);
+                } else {
+                    restriction.setRestrictionType(RestrictionType.LIKE);
                 }
+
             }
 
 
