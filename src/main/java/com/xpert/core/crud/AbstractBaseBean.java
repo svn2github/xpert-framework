@@ -1,6 +1,7 @@
 package com.xpert.core.crud;
 
 import com.xpert.core.exception.BusinessException;
+import com.xpert.faces.primefaces.LazyCountType;
 import com.xpert.faces.utils.FacesMessageUtils;
 import com.xpert.faces.primefaces.PrimeFacesUtils;
 import com.xpert.i18n.XpertResourceBundle;
@@ -144,8 +145,9 @@ public abstract class AbstractBaseBean<T> {
         dataModel = new LazyDataModelImpl<T>(getDataModelOrder(), getDataModelRestrictions(), getDAO());
         OrderByHandler orderByHandler = getOrderByHandler();
         if (orderByHandler != null) {
-            ((LazyDataModelImpl) dataModel).setOrderByHandler(orderByHandler);
+            dataModel.setOrderByHandler(orderByHandler);
         }
+        dataModel.setLazyCountType(getDataModelLazyCountType());
     }
 
     public void onLoadList() {
@@ -184,6 +186,14 @@ public abstract class AbstractBaseBean<T> {
             FacesMessageUtils.error(ex.getMessage());
         }
         return null;
+    }
+
+    /**
+     *
+     * @return LazyCountType used in LazyDataModel, defaul is ALWAYS
+     */
+    public LazyCountType getDataModelLazyCountType() {
+        return LazyCountType.ALWAYS;
     }
 
     public final String getEntitySimpleName() {
