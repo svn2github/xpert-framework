@@ -31,6 +31,11 @@ public class PrimeFacesUtils {
         }
     }
     
+    /**
+     * @param targets
+     * @deprecated use update instead
+     */
+    @Deprecated
     public static void addPartialUpdateTarget(String... targets) {
         RequestContext context = RequestContext.getCurrentInstance();
         if (context != null) {

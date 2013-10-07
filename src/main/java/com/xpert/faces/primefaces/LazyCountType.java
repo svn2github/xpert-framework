@@ -11,7 +11,7 @@ public enum LazyCountType {
      */
     ALWAYS,
     /**
-     * Don't count data. Useful when it1s a data table for many records.
+     * Don't count data. Useful for a data table with many records.
      */
     NONE,
     /**
