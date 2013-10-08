@@ -20,7 +20,6 @@
         <h:outputScript library="xpert" name="scripts/core.js" target="head" />
         <span id="#{cc.attrs.clientId}">
             <h:panelGroup rendered="#{auditBean.isPersisted(cc.attrs.for)}" id="auditingPanel">
-                <p:spacer height="3" />
                 <h:panelGroup id="detail">
 
                     <p:commandButton process="@this" action="#{auditBean.detail}" icon="ui-icon-plus"
