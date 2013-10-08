@@ -1,5 +1,6 @@
 package com.xpert.faces.validation;
 
+import com.xpert.core.validation.Validation;
 import com.xpert.i18n.XpertResourceBundle;
 import javax.faces.application.FacesMessage;
 import javax.faces.component.UIComponent;
