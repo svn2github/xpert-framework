@@ -133,7 +133,7 @@ public class BeanCreator {
             } else if (field.getType().isEnum()) {
                 viewField.setEnumeration(true);
                 //Date
-            } else if (field.getType().equals(Date.class)) {
+            } else if (field.getType().equals(Date.class) || field.getType().equals(Calendar.class)) {
                 viewField.setDate(true);
                 //Boolean
             } else if (field.getType().equals(Boolean.class) || field.getType().equals(boolean.class)) {

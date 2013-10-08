@@ -97,13 +97,4 @@ public class ReadClass {
         return classes;
     }
 
-    public static void main(String[] args) {
-
-        
-        Class[] classes = getClasses("D:/Desenvolvimento/NetBeansProjects/xpert-showcase/dist/gfdeploy/xpert-showcase/xpert-showcase-ejb_jar/com/xpert/showcase/model");
-        System.out.println(classes.length);
-        for(Class clazz : classes){
-            System.out.println(clazz.getName());
-        }
-    }
 }
