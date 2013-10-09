@@ -7,7 +7,7 @@
                  xmlns:xc="http://java.sun.com/jsf/composite/xpert/components">
     
   
-    <h:form>
+    <h:form id="formCreate${entity.name}">
         <p:fieldset legend="${sharp}{xmsg['generalData']}">
             <xc:modalMessages/>
             <h:panelGrid columns="2" styleClass="grid-form">
