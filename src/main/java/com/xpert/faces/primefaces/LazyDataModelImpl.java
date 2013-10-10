@@ -18,7 +18,7 @@ import org.primefaces.model.SortOrder;
 
 public class LazyDataModelImpl<T> extends LazyDataModel {
 
-    private static boolean DEBUG = true;
+    private static boolean DEBUG = false;
     private static final Logger logger = Logger.getLogger(LazyDataModelImpl.class.getName());
     private static final String DEFAULT_PAGINATOR_TEMPLATE = "{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown} {CurrentPageReport}";
     private static final String UNKNOW_COUNT_PAGINATOR_TEMPLATE = "{PreviousPageLink} {NextPageLink} {RowsPerPageDropdown} {CurrentPageReport}";
