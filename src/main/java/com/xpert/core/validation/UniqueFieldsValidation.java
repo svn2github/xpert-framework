@@ -18,6 +18,12 @@ import org.apache.commons.beanutils.PropertyUtils;
  */
 public class UniqueFieldsValidation {
 
+    public static void validateUniqueFields(UniqueField uniqueField, Object object, BaseDAO baseDAO) throws UniqueFieldException {
+        UniqueFields uniqueFields = new UniqueFields();
+        uniqueFields.add(uniqueField);
+        validateUniqueFields(uniqueFields, object, baseDAO);
+    }
+    
     public static void validateUniqueFields(List<UniqueField> uniqueFields, Object object, BaseDAO baseDAO) throws UniqueFieldException {
 
         if (uniqueFields == null) {
