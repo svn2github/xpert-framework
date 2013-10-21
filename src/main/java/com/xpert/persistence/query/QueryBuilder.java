@@ -31,6 +31,7 @@ public class QueryBuilder {
     private static final String DATE_FILTER_INTERVAL_SEPARATOR = " ## ";
     private String order;
     private String attributeName;
+    private String select;
     private Class from;
     private String alias;
     private StringBuilder joins = new StringBuilder();
@@ -57,6 +58,16 @@ public class QueryBuilder {
     public QueryBuilder from(Class from, String alias) {
         this.from = from;
         this.alias = alias;
+        return this;
+    }
+
+    public QueryBuilder selectDistinct(String select) {
+        this.select = "DISTINCT " + select;
+        return this;
+    }
+
+    public QueryBuilder select(String select) {
+        this.select = select;
         return this;
     }
 
@@ -166,8 +177,17 @@ public class QueryBuilder {
             queryString.append("SELECT SUM(").append(alias).append(".").append(attributeName).append(") ");
         }
 
-        if (type.equals(QueryType.SELECT) && attributeName != null && !attributeName.isEmpty()) {
-            queryString.append("SELECT ").append(attributeName).append(" ");
+        if (type.equals(QueryType.SELECT)
+                && ((attributeName != null && !attributeName.isEmpty()) || (select != null && !select.isEmpty()))) {
+            queryString.append("SELECT ");
+
+            if (attributeName != null && !attributeName.isEmpty()) {
+                queryString.append(attributeName).append(" ");
+            }
+
+            if (select != null && !select.isEmpty()) {
+                queryString.append(select).append(" ");
+            }
         }
 
         queryString.append("FROM ").append(from.getName()).append(" ");
@@ -212,7 +232,7 @@ public class QueryBuilder {
                 } else {
                     property = restriction.getProperty();
                 }
-                
+
                 Class propertyType = String.class;
                 try {
                     //try to get type from property
