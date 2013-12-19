@@ -1,5 +1,6 @@
 package com.xpert.faces.conversion;
 
+import com.xpert.core.conversion.Mask;
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.convert.Converter;

@@ -1,24 +1,9 @@
 package com.xpert.core.conversion;
 
-import java.text.ParseException;
-import javax.swing.JFormattedTextField;
-import javax.swing.text.MaskFormatter;
-
 public class Mask {
 
-    public static String mask(String valor, String mask) {
-        JFormattedTextField jTFmask = null;
-        try {
-            jTFmask = new JFormattedTextField(new MaskFormatter(mask));
-            jTFmask.setText(valor);
-        } catch (ParseException e) {
-        }
-        if (jTFmask == null) {
-            return "";
-        } else {
-            return jTFmask.getText();
-        }
-    }
+    public static final int CPF_LENGTH = 11;
+    public static final int CNPJ_LENGTH = 14;
 
     public static String mask(double valor, String mask) {
         return mask(Double.toString(valor), mask);
@@ -32,14 +17,6 @@ public class Mask {
         return mask(cnpj, "##.###.##-#");
     }
 
-    public static String maskCnpj(String cnpj) {
-        return mask(cnpj, "##.###.###/####-##");
-    }
-
-    public static String maskCPF(String cpf) {
-        return mask(cpf, "###.###.###-##");
-    }
-
     public static String maskCep(String cep) {
         return mask(cep, "##.###-###");
     }
@@ -50,5 +27,56 @@ public class Mask {
 
     public static String maskPlacaCarro(String placa) {
         return mask(placa, "AAA-####");
+    }
+
+    public static String maskCpf(String value) {
+        if (value != null) {
+            value = value.replaceAll("[^\\d]", "");
+            if (value.length() < CPF_LENGTH) {
+                value = fillZeros(value, CPF_LENGTH);
+            }
+            return mask(value, "###.###.###-##");
+        }
+        return null;
+    }
+
+    public static String maskCnpj(String value) {
+        if (value != null) {
+            value = value.replaceAll("[^\\d]", "");
+            if (value.length() < CNPJ_LENGTH) {
+                value = fillZeros(value, CNPJ_LENGTH);
+            }
+            return mask(value, "##.###.###/####-##");
+        }
+        return null;
+    }
+
+    public static String maskCpfCnpj(String value) {
+        if (value == null) {
+            return null;
+        }
+        if (value.toString().length() > 11) {
+            return maskCnpj(value.toString());
+        } else {
+            return maskCpf(value.toString());
+        }
+    }
+
+    public static String fillZeros(String string, int tamanho) {
+        String value = "";
+        if (string != null && !string.trim().isEmpty()) {
+            value = string;
+            for (int x = value.length(); x < tamanho; x++) {
+                value = "0" + value;
+            }
+        }
+        return value;
+    }
+
+    public static String mask(String value, String mask) {
+        for (int i = 0; i < value.length(); i++) {
+            mask = mask.replaceFirst("#", value.substring(i, i + 1));
+        }
+        return mask;
     }
 }
