@@ -40,7 +40,7 @@ public class PrimeFacesUtils {
         RequestContext context = RequestContext.getCurrentInstance();
         if (context != null) {
             for (String string : targets) {
-                context.addPartialUpdateTarget(string);
+                context.update(string);
             }
         }
     }
