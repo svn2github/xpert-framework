@@ -4,6 +4,8 @@
  */
 package com.xpert.maker;
 
+import com.xpert.faces.primefaces.PrimeFacesVersion;
+
 /**
  *
  * @author Ayslan
@@ -29,8 +31,17 @@ public class BeanConfiguration {
     
     //suffix/preffix
     private String managedBeanSuffix = BeanCreator.SUFFIX_MANAGED_BEAN;
-    private String businessObjectSuffix =BeanCreator.SUFFIX_BUSINESS_OBJECT;
+    private String businessObjectSuffix = BeanCreator.SUFFIX_BUSINESS_OBJECT;
+    private PrimeFacesVersion primeFacesVersion = PrimeFacesVersion.VERSION_3;
 
+    public PrimeFacesVersion getPrimeFacesVersion() {
+        return primeFacesVersion;
+    }
+
+    public void setPrimeFacesVersion(PrimeFacesVersion primeFacesVersion) {
+        this.primeFacesVersion = primeFacesVersion;
+    }
+    
     public String getBusinessObjectSuffix() {
         return businessObjectSuffix;
     }

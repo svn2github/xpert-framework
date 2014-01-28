@@ -1,6 +1,7 @@
 package com.xpert.faces.bean;
 
 import com.xpert.Configuration;
+import com.xpert.faces.primefaces.PrimeFacesVersion;
 import com.xpert.faces.utils.FacesUtils;
 import com.xpert.maker.MappedBean;
 import com.xpert.maker.BeanConfiguration;
@@ -96,6 +97,10 @@ public class BeanMaker implements Serializable {
     public void reset() {
         nameSelectedClasses = new ArrayList<String>();
         mappedBeans = new ArrayList<MappedBean>();
+    }
+    
+    public PrimeFacesVersion[] getPrimeFacesVersions(){
+        return PrimeFacesVersion.values();
     }
 
     public String getI18n() {

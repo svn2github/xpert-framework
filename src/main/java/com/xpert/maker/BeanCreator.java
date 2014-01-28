@@ -23,7 +23,6 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 import javax.persistence.*;
 
-
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import org.apache.commons.io.IOUtils;
@@ -74,7 +73,14 @@ public class BeanCreator {
                     bean.getBeanType().getTemplate(), configuration == null ? null : configuration.getTemplate(), configuration);
         }
 
-        Template template = getTemplate(bean.getBeanType().getTemplate());
+        String templatePath = bean.getBeanType().getTemplate();
+        //differ primefaces versions
+        if (bean.getBeanType().equals(BeanType.VIEW_DETAIL) || bean.getBeanType().equals(BeanType.VIEW_LIST)
+                || bean.getBeanType().equals(BeanType.VIEW_FORM_CREATE)) {
+            templatePath = configuration.getPrimeFacesVersion().getPackageName() + "/" + templatePath;
+        }
+        
+        Template template = getTemplate(templatePath);
         StringWriter writer = new StringWriter();
         bean.setConfiguration(configuration);
         if (configuration.getAuthor() == null || configuration.getAuthor().trim().isEmpty()) {
@@ -167,7 +173,6 @@ public class BeanCreator {
             }
             entity.getFields().add(viewField);
         }
-
 
         return entity;
     }
@@ -458,7 +463,6 @@ public class BeanCreator {
             builder.append(mappedBean.getHumanClassName());
             builder.append("\n");
         }
-
 
         return builder.toString();
     }
