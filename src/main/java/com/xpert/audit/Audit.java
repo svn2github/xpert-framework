@@ -372,8 +372,10 @@ public class Audit {
     }
 
     private String getToString(Object object) {
-        if (object instanceof Date || object instanceof Calendar) {
+        if (object instanceof Date){
             return AUDIT_DATE_FORMAT.format(object);
+        }else if(object instanceof Calendar){
+            return AUDIT_DATE_FORMAT.format(((Calendar)object).getTime());
         } else {
             return object.toString();
         }
