@@ -30,7 +30,7 @@ public class Mask {
     }
 
     public static String maskCpf(String value) {
-        if (value != null) {
+        if (value != null && !value.isEmpty()) {
             value = value.replaceAll("[^\\d]", "");
             if (value.length() < CPF_LENGTH) {
                 value = fillZeros(value, CPF_LENGTH);
@@ -41,7 +41,7 @@ public class Mask {
     }
 
     public static String maskCnpj(String value) {
-        if (value != null) {
+        if (value != null && !value.isEmpty()) {
             value = value.replaceAll("[^\\d]", "");
             if (value.length() < CNPJ_LENGTH) {
                 value = fillZeros(value, CNPJ_LENGTH);
