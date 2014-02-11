@@ -90,6 +90,10 @@ public abstract class SecurityLoginBean {
     public String getUserNotFoundMessage() {
         return "User not found";
     }
+    
+    public String getUserWithoutPassword() {
+        return "User with no password in database";
+    }
 
     /**
      * Message when user is not active not found.
@@ -187,7 +191,7 @@ public abstract class SecurityLoginBean {
             //
         }
         //compare password encryptedPassword
-        if (user != null) {
+        if (user != null &&  user.getUserPassword() != null && !user.getUserPassword().isEmpty()) {
             try {
                 String encryptedPassword = null;
                 if (getEncryptionType() != null) {
@@ -229,6 +233,11 @@ public abstract class SecurityLoginBean {
             }
             if (!user.isActive()) {
                 addErrorMessage(getInactiveUserMessage());
+                onError();
+                return;
+            }
+            if (user.getUserPassword() == null || user.getUserPassword().isEmpty()) {
+                addErrorMessage(getUserWithoutPassword());
                 onError();
                 return;
             }
