@@ -21,18 +21,24 @@ public class BeanConfiguration {
     private String resourceBundle;
     private String template;
     private String viewPath;
-    
+
     //location attributes
     private String managedBeanLocation;
     private String businessObjectLocation;
     private String daoLocation;
     private String daoImplLocation;
     private String viewLocation;
-    
+
     //suffix/preffix
-    private String managedBeanSuffix = BeanCreator.SUFFIX_MANAGED_BEAN;
-    private String businessObjectSuffix = BeanCreator.SUFFIX_BUSINESS_OBJECT;
-    private PrimeFacesVersion primeFacesVersion = PrimeFacesVersion.VERSION_3;
+    private String managedBeanSuffix;
+    private String businessObjectSuffix;
+    private PrimeFacesVersion primeFacesVersion;
+
+    public BeanConfiguration() {
+        this.managedBeanSuffix = BeanCreator.SUFFIX_MANAGED_BEAN;
+        this.businessObjectSuffix = BeanCreator.SUFFIX_BUSINESS_OBJECT;
+        this.primeFacesVersion = PrimeFacesVersion.VERSION_3;
+    }
 
     public PrimeFacesVersion getPrimeFacesVersion() {
         return primeFacesVersion;
@@ -41,7 +47,7 @@ public class BeanConfiguration {
     public void setPrimeFacesVersion(PrimeFacesVersion primeFacesVersion) {
         this.primeFacesVersion = primeFacesVersion;
     }
-    
+
     public String getBusinessObjectSuffix() {
         return businessObjectSuffix;
     }
@@ -57,7 +63,7 @@ public class BeanConfiguration {
     public void setManagedBeanSuffix(String managedBeanSuffix) {
         this.managedBeanSuffix = managedBeanSuffix;
     }
-    
+
     public String getManagedBeanLocation() {
         return managedBeanLocation;
     }
@@ -97,7 +103,6 @@ public class BeanConfiguration {
     public void setViewLocation(String viewLocation) {
         this.viewLocation = viewLocation;
     }
-    
 
     public String getViewPath() {
         return viewPath;

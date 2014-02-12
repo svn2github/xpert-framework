@@ -67,19 +67,16 @@ public class BeanCreator {
     public static String createBean(Bean bean, BeanConfiguration configuration) throws IOException, TemplateException {
 
         ViewEntity viewEntity = createViewEntity(bean.getEntity());
+        String templatePath = bean.getBeanType().getTemplate();
 
         if (bean.getBeanType().isView()) {
-            return getViewTemplate(viewEntity, configuration.getResourceBundle(),
-                    bean.getBeanType().getTemplate(), configuration == null ? null : configuration.getTemplate(), configuration);
+            //differ primefaces versions
+            if (bean.getBeanType().isPrimefacesVersionDependend()) {
+                templatePath = configuration.getPrimeFacesVersion().getPackageName() + "/" + templatePath;
+            }
+            return getViewTemplate(viewEntity, configuration.getResourceBundle(), templatePath, configuration.getTemplate(), configuration);
         }
 
-        String templatePath = bean.getBeanType().getTemplate();
-        //differ primefaces versions
-        if (bean.getBeanType().equals(BeanType.VIEW_DETAIL) || bean.getBeanType().equals(BeanType.VIEW_LIST)
-                || bean.getBeanType().equals(BeanType.VIEW_FORM_CREATE)) {
-            templatePath = configuration.getPrimeFacesVersion().getPackageName() + "/" + templatePath;
-        }
-        
         Template template = getTemplate(templatePath);
         StringWriter writer = new StringWriter();
         bean.setConfiguration(configuration);
