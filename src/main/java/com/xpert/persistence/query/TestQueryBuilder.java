@@ -40,7 +40,7 @@ public class TestQueryBuilder {
 
         //em cadeia
         restrictions.startGroup()
-                    .equals("nome", "MARIA").equals("status", true)
+                    .notEquals("nome", "MARIA").equals("status", true)
                     .endGroup()
                     .or()
                     .equals("code", "123");
