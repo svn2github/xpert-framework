@@ -68,9 +68,10 @@
                             <h:panelGrid columns="3">
                                 <h:outputLabel value="Primefaces Version:"/>
                                 <h:selectOneRadio value="#{beanMaker.configuration.primeFacesVersion}">
-                                    <f:selectItens value="#{beanMaker.primeFacesVersions}" var="primeFacesVersion"
-                                                   itemValue="#{primeFacesVersion.description}"/>
+                                    <f:selectItems value="#{beanMaker.primeFacesVersions}" var="primeFacesVersion"
+                                                   itemLabel="#{primeFacesVersion.description}"/>
                                 </h:selectOneRadio>
+                                <h:panelGroup/>
                                 
                                 <h:outputLabel value="BaseDAOImpl Class:"/>
                                 <p:inputText value="#{beanMaker.configuration.baseDAO}" size="50"/>

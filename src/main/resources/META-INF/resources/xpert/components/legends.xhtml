@@ -21,8 +21,8 @@
     <!-- IMPLEMENTATION -->
     <cc:implementation>
         <h:outputStylesheet library="xpert" name="css/style.css" />
-        <div style="white-space: normal;margin: 0 auto;">
-            <h:panelGrid columns="#{cc.attrs.vertical ? 1 : 2}" >
+        <div class="uix-legends">
+            <h:panelGrid class="uix-legends-grid" columns="#{cc.attrs.vertical ? 1 : 2}" >
                 <p:commandButton rendered="#{cc.attrs.edit}" styleClass="legends-item" value="#{xmsg['edit']}" type="button" icon="ui-icon-pencil" />
                 <p:commandButton rendered="#{cc.attrs.delete}" styleClass="legends-item" value="#{xmsg['delete']}" type="button" icon="ui-icon-trash" />
                 <p:commandButton rendered="#{cc.attrs.print}" styleClass="legends-item" value="#{xmsg['print']}" type="button" icon="ui-icon-print" />

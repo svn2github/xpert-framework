@@ -14,11 +14,14 @@
 .datatable-auditing .ui-datatable-summaryrow td{font-size: 11px; font-weight: normal;}
 .legends-item{font-size: 9px !important; font-weight: normal !important; margin-bottom: 1px; width: 62px; border: 0 !important;}
 .panel-calendar-filter{width: 140px;margin: 0 auto;}
+.panel-calendar-filter table td{padding: 0 !important; border: 0 !important;}
 .calendar-filter{}
 .calendar-filter input{width: 70px;padding: 2px; }
 .uix-center{text-align: center;}
 .uix-datatable-index{text-align: center;width: 1%}
 .uix-datatable-actions{text-align: center;width: 1%}
+.uix-legends{white-space: normal;margin: 0 auto;}
+.uix-legends-grid, .uix-legends-grid td{border: 0 !important;}
 
 
 

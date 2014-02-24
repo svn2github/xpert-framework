@@ -32,7 +32,7 @@ public class DetailAuditBean {
 
     public void load() {
         if (beanModel != null) {
-            auditings = new LazyDataModelImpl<AbstractAuditing>("eventDate DESC", getRestrictions(), baseDAO, new JoinBuilder("a").leftJoinFetch("a.metadatas"));
+            auditings = new LazyDataModelImpl<AbstractAuditing>("eventDate DESC", getRestrictions(), baseDAO);
         }
     }
 

@@ -6,6 +6,7 @@ import com.xpert.audit.model.AbstractAuditing;
 import com.xpert.audit.model.AbstractMetadata;
 import com.xpert.audit.model.AuditingType;
 import com.xpert.faces.primefaces.LazyDataModelImpl;
+import com.xpert.faces.primefaces.PrimeFacesUtils;
 import com.xpert.persistence.dao.BaseDAO;
 import com.xpert.persistence.query.JoinBuilder;
 import com.xpert.persistence.query.Restriction;
@@ -28,10 +29,9 @@ import org.primefaces.model.LazyDataModel;
  */
 @ManagedBean
 @ViewScoped
-public class AuditDeleteBean implements Serializable{
+public class AuditDeleteBean implements Serializable {
 
-    private static final Logger logger= Logger.getLogger(AuditDeleteBean.class.getName());
-    
+    private static final Logger logger = Logger.getLogger(AuditDeleteBean.class.getName());
     private Class entity;
     private LazyDataModel<AbstractAuditing> auditings;
     private BaseDAO baseDAO;
@@ -39,6 +39,10 @@ public class AuditDeleteBean implements Serializable{
     @PostConstruct
     public void init() {
         baseDAO = new DAO(Configuration.AUDITING_IMPL);
+    }
+
+    public boolean isPrimeFaces3() {
+        return PrimeFacesUtils.isVersion3();
     }
 
     public void load(Class entity) {
@@ -51,7 +55,7 @@ public class AuditDeleteBean implements Serializable{
             List<Restriction> restrictions = new ArrayList<Restriction>();
             restrictions.add(new Restriction("entity", Audit.getEntityName(entity)));
             restrictions.add(new Restriction("auditingType", AuditingType.DELETE));
-            auditings = new LazyDataModelImpl<AbstractAuditing>("eventDate DESC", restrictions, baseDAO, new JoinBuilder("a").leftJoinFetch("a.metadatas"));
+            auditings = new LazyDataModelImpl<AbstractAuditing>("eventDate DESC", restrictions, baseDAO);
         }
     }
 
@@ -68,13 +72,13 @@ public class AuditDeleteBean implements Serializable{
 
         return baseDAO.list(restrictions, "eventDate DESC");
     }
-    
-    public Object newBeanInstance(AbstractAuditing auditingDelete){
+
+    public Object newBeanInstance(AbstractAuditing auditingDelete) {
         try {
-            
+
             Object newInstance = entity.newInstance();
             PropertyUtils.setProperty(newInstance, EntityUtils.getIdFieldName(entity), auditingDelete.getIdentifier());
-           
+
             return newInstance;
         } catch (Exception ex) {
             logger.log(Level.SEVERE, null, ex);

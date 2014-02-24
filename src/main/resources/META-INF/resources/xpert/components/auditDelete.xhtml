@@ -6,6 +6,7 @@
       xmlns:f="http://java.sun.com/jsf/core"
       xmlns:ui="http://java.sun.com/jsf/facelets"
       xmlns:xc="http://java.sun.com/jsf/composite/xpert/components"
+      xmlns:x="http://xpert.com/faces"
       xmlns:h="http://java.sun.com/jsf/html">
 
     <!-- INTERFACE -->
@@ -44,13 +45,14 @@
                                          currentPageReportTemplate=" "
                                          style="font-weight: normal;"
                                          rows="10" paginatorPosition="bottom" >
-                                <p:column style="text-align: center;" sortBy="#{audit.eventDate}" headerText="#{xmsg.date}" >
+                                <p:column style="text-align: center;" sortBy="#{audit.eventDate}" headerText="#{xmsg.date}">
                                     <h:outputText value="#{audit.eventDate}" >
                                         <f:convertDateTime dateStyle="medium" type="both"/>
                                     </h:outputText>
                                 </p:column>
                                 <p:column headerText="#{xmsg['object']}">
                                     <ui:repeat value="#{audit.metadatas}" var="metadata" varStatus="status">
+                                        <x:initializer/>
                                         <h:outputText value=", " rendered="#{status.index gt 0}"/>    
                                         <h:outputText value="#{metadata.getFieldName(cc.attrs.for)}: " style="font-weight: bold;"/>    
                                         <h:outputText value="#{empty metadata.newValue ? ' - ': metadata.newValue}"/>    

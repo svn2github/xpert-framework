@@ -1,5 +1,6 @@
 package com.xpert.faces.primefaces;
 
+import java.lang.reflect.Field;
 import org.primefaces.context.RequestContext;
 
 /**
@@ -30,7 +31,27 @@ public class PrimeFacesUtils {
             }
         }
     }
-    
+    private static Boolean IS_VERSION_3;
+
+    public static boolean isVersion3() {
+        if (IS_VERSION_3 != null) {
+            return IS_VERSION_3;
+        } else {
+            try {
+                Class classConstants = Class.forName("org.primefaces.util.Constants");
+                Field fieldVersion;
+                fieldVersion = classConstants.getDeclaredField("VERSION");
+                if (fieldVersion.get(null).toString().startsWith("3")) {
+                    IS_VERSION_3 = true;
+                }
+            } catch (Exception ex) {
+                IS_VERSION_3 = false;
+            }
+
+        }
+        return IS_VERSION_3;
+    }
+
     /**
      * @param targets
      * @deprecated use update instead
@@ -44,5 +65,4 @@ public class PrimeFacesUtils {
             }
         }
     }
-    
 }

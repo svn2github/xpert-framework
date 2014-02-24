@@ -48,7 +48,7 @@
                      </h:selectOneMenu>
                      </#if>
                      <#-- Collections (render a checkbox list) -->
-                     <#if field.collection == true >
+                     <#if field.manyToMany == true >
                      <h:selectManyCheckbox value="${sharp}{${entity.nameLower}${configuration.managedBeanSuffix}.entity.${field.name}}" converter="entityConverter" >
                          <#if field.lazy == true>
                          <x:initializer/>
