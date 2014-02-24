@@ -350,7 +350,7 @@ public abstract class BaseDAOImpl<T> implements BaseDAO<T> {
 
     @Override
     public List<T> list(Map<String, Object> restrictions, String order, Integer firstResult, Integer maxResults) {
-        Query query = new QueryBuilder(getEntityManager()).from(entityClass).add(restrictions).createQuery();
+        Query query = new QueryBuilder(getEntityManager()).from(entityClass).add(restrictions).orderBy(order).createQuery();
 
         if (firstResult != null) {
             query.setFirstResult(firstResult);

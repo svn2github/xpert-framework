@@ -11,6 +11,7 @@ import javax.persistence.TemporalType;
  */
 public class Restrictions extends ArrayList<Restriction> {
 
+    
     public Restrictions add(String property, RestrictionType restrictionType) {
         this.add(new Restriction(property, restrictionType));
         return this;
@@ -174,14 +175,11 @@ public class Restrictions extends ArrayList<Restriction> {
     public Restrictions or(){
         return this;
     }
-    public Restrictions start(){
+   
+    public Restrictions startGroup(){
         return this;
     }
-    public Restrictions end(){
-        return this;
-    }
-    
-    public Restrictions or(Restriction... restriction){
+    public Restrictions endGroup(){
         return this;
     }
 }

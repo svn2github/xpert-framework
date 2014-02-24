@@ -531,52 +531,107 @@ public class QueryBuilder {
     }
 
     public static void main(String[] args) {
-        //FROM class WHERE  (nome = 'MARIA' OR nome = 'JOSE' OR status = true)
-
-        //FROM class WHERE  (nome = 'MARIA' AND status = true) OR (code = '123')
+        //Caso 1
+        //FROM class WHERE  nome = 'MARIA' OR nome = 'JOSE' OR status = true
         Restrictions restrictions = new Restrictions();
-        restrictions.start();
+        
+        //solução 1
+        restrictions.equals("nome", "MARIA")
+                    .or()
+                    .equals("nome", "JOSE")
+                    .or()
+                    .equals("status", true);
+        
+
+        //Caso 2
+        //FROM class WHERE  (nome = 'MARIA' AND status = true) OR (code = '123') 
+        
+        //solução 1
+        restrictions = new Restrictions();
+        restrictions.startGroup();
         restrictions.equals("nome", "MARIA");
         restrictions.equals("status", true);
-        restrictions.end();
+        restrictions.endGroup();
         restrictions.or();
         restrictions.equals("code", "123");
-
+        
+        //ou em cadeia
+        restrictions.startGroup()
+                        .equals("nome", "MARIA").equals("status", true)
+                    .endGroup()
+                    .or()
+                    .equals("code", "123");
+        
+        
+        
+         //Caso 3
         //FROM class WHERE  (nome = 'MARIA' OR nome = 'JOSE') AND (code = '123' OR code = '321')
         restrictions = new Restrictions();
-        restrictions.start();
+        restrictions.startGroup();
         restrictions.equals("nome", "MARIA");
         restrictions.or();
         restrictions.equals("nome", "JOSE");
-        restrictions.end();
+        restrictions.endGroup();
 
-        restrictions.start();
+        restrictions.startGroup();
         restrictions.equals("code", "123");
         restrictions.or();
         restrictions.equals("code", "321");
-        restrictions.end();
+        restrictions.endGroup();
+        
+        //ou em cadeia
+        restrictions
+                .startGroup()
+                .equals("nome", "MARIA")
+                .or()
+                .equals("nome", "JOSE")
+                .endGroup()
+                .startGroup()
+                .equals("code", "123")
+                .or()
+                .equals("code", "321")
+                .endGroup();
+        
 
+        //Caso 4
         //FROM class WHERE  ((nome = 'MARIA' OR nome = 'JOSE') AND (cidade = 'TERESINA' OR cidade = 'BRASILIA')) AND (code = '123' OR code = '321')
         restrictions = new Restrictions();
-        restrictions.start();
-        restrictions.start();
+        restrictions.startGroup();
+        restrictions.startGroup();
         restrictions.equals("nome", "MARIA");
         restrictions.or();
         restrictions.equals("nome", "JOSE");
-        restrictions.end();
-        restrictions.start();
+        restrictions.endGroup();
+        restrictions.startGroup();
         restrictions.equals("cidade", "TERESINA");
         restrictions.or();
         restrictions.equals("cidade", "BRASILIA");
-        restrictions.end();
-        restrictions.end();
+        restrictions.endGroup();
+        restrictions.endGroup();
 
-        restrictions.start();
+        restrictions.startGroup();
         restrictions.equals("code", "123");
         restrictions.or();
         restrictions.equals("code", "321");
-        restrictions.end();
+        restrictions.endGroup();
 
-        restrictions.end();
+        
+        //em cadeia
+        
+        restrictions = new Restrictions();
+      
+        restrictions.startGroup()
+                        .startGroup()
+                            .equals("nome", "MARIA").or().equals("nome", "JOSE")
+                        .endGroup()
+                        .startGroup()
+                            .equals("cidade", "TERESINA").or().equals("cidade", "BRASILIA")
+                        .endGroup()
+                    .endGroup()
+                    .startGroup()
+                        .equals("code", "123").or().equals("code", "321")
+                    .endGroup();
+        
+        
     }
 }

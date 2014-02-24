@@ -15,6 +15,7 @@ import javax.persistence.TemporalType;
  */
 public class Restriction {
 
+    private ConditionType conditionType;
     private String property;
     private Object value;
     private RestrictionType restrictionType;
@@ -102,15 +103,14 @@ public class Restriction {
         this.value = value;
     }
 
-    public List<Restriction> getOr() {
-        return or;
+    public ConditionType getConditionType() {
+        return conditionType;
     }
 
-    public void setOr(List<Restriction> or) {
-        this.or = or;
+    public void setConditionType(ConditionType conditionType) {
+        this.conditionType = conditionType;
     }
 
-    
     @Override
     public boolean equals(Object obj) {
         if (obj == null) {
@@ -139,5 +139,135 @@ public class Restriction {
         hash = 53 * hash + (this.value != null ? this.value.hashCode() : 0);
         hash = 53 * hash + (this.restrictionType != null ? this.restrictionType.hashCode() : 0);
         return hash;
+    }
+
+    public static Restriction isNull(String property) {
+        return new Restriction(property, RestrictionType.NULL);
+
+    }
+
+    public static Restriction isNotNull(String property) {
+        return new Restriction(property, RestrictionType.NOT_NULL);
+
+    }
+
+    public static Restriction like(String property, Object value) {
+        return new Restriction(property, RestrictionType.LIKE, value);
+
+    }
+
+    public static Restriction like(String property, Object value, LikeType likeType) {
+        return new Restriction(property, RestrictionType.LIKE, value, likeType);
+
+    }
+
+    public static Restriction notLike(String property, Object value) {
+        return new Restriction(property, RestrictionType.NOT_LIKE, value);
+
+    }
+
+    public static Restriction notLike(String property, Object value, LikeType likeType) {
+        return new Restriction(property, RestrictionType.NOT_LIKE, value, likeType);
+
+    }
+
+    public static Restriction greaterThan(String property, Object value) {
+        return new Restriction(property, RestrictionType.GREATER_THAN, value);
+
+    }
+
+    public static Restriction greaterThan(String property, Date value, TemporalType temporalType) {
+        return new Restriction(property, RestrictionType.GREATER_THAN, value, temporalType);
+
+    }
+
+    public static Restriction greaterThan(String property, Calendar value, TemporalType temporalType) {
+        return new Restriction(property, RestrictionType.GREATER_THAN, value, temporalType);
+
+    }
+
+    public static Restriction greaterEqualsThan(String property, Object value) {
+        return new Restriction(property, RestrictionType.GREATER_EQUALS_THAN, value);
+
+    }
+
+    public static Restriction greaterEqualsThan(String property, Date value, TemporalType temporalType) {
+        return new Restriction(property, RestrictionType.GREATER_EQUALS_THAN, value, temporalType);
+
+    }
+
+    public static Restriction greaterEqualsThan(String property, Calendar value, TemporalType temporalType) {
+        return new Restriction(property, RestrictionType.GREATER_EQUALS_THAN, value, temporalType);
+
+    }
+
+    public static Restriction lessThan(String property, Object value) {
+        return new Restriction(property, RestrictionType.LESS_THAN, value);
+
+    }
+
+    public static Restriction lessThan(String property, Date value, TemporalType temporalType) {
+        return new Restriction(property, RestrictionType.LESS_THAN, value, temporalType);
+
+    }
+
+    public static Restriction lessThan(String property, Calendar value, TemporalType temporalType) {
+        return new Restriction(property, RestrictionType.LESS_THAN, value, temporalType);
+
+    }
+
+    public static Restriction lessEqualsThan(String property, Object value) {
+        return new Restriction(property, RestrictionType.LESS_EQUALS_THAN, value);
+
+    }
+
+    public static Restriction lessEqualsThan(String property, Date value, TemporalType temporalType) {
+        return new Restriction(property, RestrictionType.LESS_EQUALS_THAN, value, temporalType);
+
+    }
+
+    public static Restriction lessEqualsThan(String property, Calendar value, TemporalType temporalType) {
+        return new Restriction(property, RestrictionType.LESS_EQUALS_THAN, value, temporalType);
+
+    }
+
+    public static Restriction in(String property, Object value) {
+        return new Restriction(property, RestrictionType.IN, value);
+
+    }
+
+    public static Restriction notIn(String property, Object value) {
+        return new Restriction(property, RestrictionType.NOT_IN, value);
+
+    }
+
+    public static Restriction equals(String property, Object value) {
+        return new Restriction(property, RestrictionType.EQUALS, value);
+
+    }
+
+    public static Restriction equals(String property, Date value, TemporalType temporalType) {
+        return new Restriction(property, RestrictionType.EQUALS, value, temporalType);
+
+    }
+
+    public static Restriction equals(String property, Calendar value, TemporalType temporalType) {
+        return new Restriction(property, RestrictionType.EQUALS, value, temporalType);
+
+    }
+
+    public static Restriction notEquals(String property, Object value) {
+        return new Restriction(property, RestrictionType.NOT_EQUALS, value);
+
+    }
+
+    public static Restriction notEquals(String property, Date value, TemporalType temporalType) {
+        return new Restriction(property, RestrictionType.NOT_EQUALS, value, temporalType);
+
+    }
+
+    public static Restriction notEquals(String property, Calendar value, TemporalType temporalType) {
+        return new Restriction(property, RestrictionType.NOT_EQUALS, value, temporalType);
+
     }
 }
