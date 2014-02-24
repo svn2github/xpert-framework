@@ -153,31 +153,23 @@ public class QueryBuilder {
         return this;
     }
 
-    public String getQueryString() {
+    public String getQuerySelectClausule() {
 
         StringBuilder queryString = new StringBuilder();
-        //type
+
         if (type == null) {
             type = QueryType.SELECT;
         }
 
         if (type.equals(QueryType.COUNT)) {
             queryString.append("SELECT COUNT(*) ");
-        }
-
-        if (type.equals(QueryType.MAX)) {
+        } else if (type.equals(QueryType.MAX)) {
             queryString.append("SELECT MAX(").append(alias).append(".").append(attributeName).append(") ");
-        }
-
-        if (type.equals(QueryType.MIN)) {
+        } else if (type.equals(QueryType.MIN)) {
             queryString.append("SELECT MIN(").append(alias).append(".").append(attributeName).append(") ");
-        }
-
-        if (type.equals(QueryType.SUM)) {
+        } else if (type.equals(QueryType.SUM)) {
             queryString.append("SELECT SUM(").append(alias).append(".").append(attributeName).append(") ");
-        }
-
-        if (type.equals(QueryType.SELECT)
+        } else if (type.equals(QueryType.SELECT)
                 && ((attributeName != null && !attributeName.isEmpty()) || (select != null && !select.isEmpty()))) {
             queryString.append("SELECT ");
 
@@ -189,23 +181,13 @@ public class QueryBuilder {
                 queryString.append(select).append(" ");
             }
         }
+        return queryString.toString();
 
-        queryString.append("FROM ").append(from.getName()).append(" ");
+    }
 
-        if (alias != null) {
-            queryString.append(alias).append(" ");
-        }
-
-        if (joins != null) {
-            queryString.append(joins).append(" ");
-        }
-
-        //restrictions
-        int currentParameter = 1;
-        boolean containsWhere = false;
+    public void loadNormalizedRestrictions() {
 
         normalizedRestrictions = new ArrayList<Restriction>();
-
         //normalize result
         for (Restriction originalRestriction : restrictions) {
             boolean ignoreRestriction = false;
@@ -308,8 +290,6 @@ public class QueryBuilder {
                 }
 
             }
-
-
             if (ignoreRestriction == false) {
                 normalizedRestrictions.add(restriction);
             }
@@ -317,52 +297,99 @@ public class QueryBuilder {
                 normalizedRestrictions.addAll(moreRestrictions);
             }
         }
+    }
 
-        for (Restriction restriction : normalizedRestrictions) {
-            String propertyName;
-            if (alias != null && !alias.trim().isEmpty()) {
-                propertyName = alias + "." + restriction.getProperty();
-            } else {
-                propertyName = restriction.getProperty();
-            }
-            if (!containsWhere) {
-                queryString.append("WHERE");
-                containsWhere = true;
-            } else {
-                queryString.append("AND");
-            }
-            queryString.append(" ");
-            if (restriction.getRestrictionType().equals(RestrictionType.LIKE) || restriction.getRestrictionType().equals(RestrictionType.NOT_LIKE)) {
-                queryString.append("UPPER(").append(propertyName).append(")").append(" ");
-            } else if (restriction.getTemporalType() != null && restriction.getTemporalType().equals(TemporalType.DATE)) {
-                queryString.append("CAST(").append(propertyName).append(" AS date)").append(" ");
-            } else {
-                queryString.append(propertyName);
-            }
-            //if Value is null set default to IS NULL
-            if (restriction.getValue() == null) {
-                //  EQUALS null or IS_NULL
-                if (restriction.getRestrictionType().equals(RestrictionType.EQUALS) || restriction.getRestrictionType().equals(RestrictionType.NULL)) {
-                    queryString.append(" IS NULL ");
-                } else if (restriction.getRestrictionType().equals(RestrictionType.NOT_NULL)) {
-                    queryString.append(" IS NOT NULL ");
-                }
-            } else {
-                queryString.append(" ").append(restriction.getRestrictionType().getSymbol()).append(" ");
-                if (restriction.getRestrictionType().equals(RestrictionType.LIKE) || restriction.getRestrictionType().equals(RestrictionType.NOT_LIKE)) {
-                    queryString.append("UPPER(?").append(currentParameter).append(")");
-                } else if (restriction.getRestrictionType().equals(RestrictionType.IN) || restriction.getRestrictionType().equals(RestrictionType.NOT_IN)) {
-                    queryString.append("(?").append(currentParameter).append(")");
-                } else {
-                    queryString.append("?").append(currentParameter);
-                }
-                queryString.append(" ");
-                currentParameter++;
-            }
+    public String getQueryString() {
+
+        StringBuilder queryString = new StringBuilder();
+        //type Ex: (SELECT FROM, SELECT MAX, SELECT MIN)
+        queryString.append(getQuerySelectClausule());
+
+        queryString.append("FROM ").append(from.getName()).append(" ");
+        if (alias != null) {
+            queryString.append(alias).append(" ");
+        }
+        if (joins != null && joins.length() > 0) {
+            queryString.append(joins).append(" ");
         }
 
+        //normalize
+        loadNormalizedRestrictions();
+
+        //restrictions
+        int currentParameter = 1;
+        if (normalizedRestrictions != null && !normalizedRestrictions.isEmpty()) {
+            queryString.append("WHERE ");
+        }
+        boolean processPropertyAndValue = false;
+        Restriction lastRestriction = null;
+        for (Restriction restriction : normalizedRestrictions) {
+
+            if (lastRestriction != null) {
+                if (lastRestriction.getRestrictionType().equals(RestrictionType.OR)) {
+                    queryString.append(" OR ");
+                    processPropertyAndValue = true;
+                } else {
+                    if (!lastRestriction.getRestrictionType().equals(RestrictionType.START_GROUP)
+                            && !restriction.getRestrictionType().equals(RestrictionType.OR)
+                            && !restriction.getRestrictionType().equals(RestrictionType.END_GROUP)) {
+                        queryString.append(" AND ");
+                    }
+                    processPropertyAndValue = true;
+                }
+            }
+
+            if (restriction.getRestrictionType().equals(RestrictionType.START_GROUP)
+                    || restriction.getRestrictionType().equals(RestrictionType.END_GROUP)) {
+                queryString.append(restriction.getRestrictionType().getSymbol());
+                processPropertyAndValue = false;
+            } else if (restriction.getRestrictionType().equals(RestrictionType.OR)) {
+                processPropertyAndValue = false;
+            } else {
+                processPropertyAndValue = true;
+            }
+
+            lastRestriction = restriction;
+
+            if (processPropertyAndValue) {
+                String propertyName;
+                if (alias != null && !alias.trim().isEmpty()) {
+                    propertyName = alias + "." + restriction.getProperty();
+                } else {
+                    propertyName = restriction.getProperty();
+                }
+                if (restriction.getRestrictionType().equals(RestrictionType.LIKE) || restriction.getRestrictionType().equals(RestrictionType.NOT_LIKE)) {
+                    queryString.append("UPPER(").append(propertyName).append(")").append(" ");
+                } else if (restriction.getTemporalType() != null && restriction.getTemporalType().equals(TemporalType.DATE)) {
+                    queryString.append("CAST(").append(propertyName).append(" AS date)").append(" ");
+                } else {
+                    queryString.append(propertyName);
+                }
+                //if Value is null set default to IS NULL
+                if (restriction.getValue() == null) {
+                    //  EQUALS null or IS_NULL
+                    if (restriction.getRestrictionType().equals(RestrictionType.EQUALS) || restriction.getRestrictionType().equals(RestrictionType.NULL)) {
+                        queryString.append(" IS NULL ");
+                    } else if (restriction.getRestrictionType().equals(RestrictionType.NOT_NULL)) {
+                        queryString.append(" IS NOT NULL ");
+                    }
+                } else {
+                    queryString.append(" ").append(restriction.getRestrictionType().getSymbol()).append(" ");
+                    if (restriction.getRestrictionType().equals(RestrictionType.LIKE) || restriction.getRestrictionType().equals(RestrictionType.NOT_LIKE)) {
+                        queryString.append("UPPER(?").append(currentParameter).append(")");
+                    } else if (restriction.getRestrictionType().equals(RestrictionType.IN) || restriction.getRestrictionType().equals(RestrictionType.NOT_IN)) {
+                        queryString.append("(?").append(currentParameter).append(")");
+                    } else {
+                        queryString.append("?").append(currentParameter);
+                    }
+                    currentParameter++;
+                }
+            }
+        }
         //order by
-        if (order != null && !order.trim().isEmpty()) {
+        if (order
+                != null && !order.trim()
+                .isEmpty()) {
             queryString.append("ORDER BY ").append(order).toString();
         }
 
@@ -377,34 +404,52 @@ public class QueryBuilder {
         return createQuery(null, maxResults);
     }
 
+    public List<QueryParameter> getQueryParameters() {
+        int position = 1;
+        List<QueryParameter> parameters = new ArrayList<QueryParameter>();
+        for (Restriction re : normalizedRestrictions) {
+            if (re.getRestrictionType().isIgnoreParameter()) {
+                continue;
+            }
+            if (re.getValue() != null) {
+                QueryParameter parameter = null;
+                if (re.getRestrictionType().equals(RestrictionType.LIKE)) {
+                    if (re.getLikeType() == null || re.getLikeType().equals(LikeType.BOTH)) {
+                        parameter = new QueryParameter(position, "%" + re.getValue() + "%");
+                    } else if (re.getLikeType().equals(LikeType.BEGIN)) {
+                        parameter = new QueryParameter(position, re.getValue() + "%");
+                    } else if (re.getLikeType().equals(LikeType.END)) {
+                        parameter = new QueryParameter(position, "%" + re.getValue());
+                    }
+                } else {
+                    if (re.getTemporalType() != null && (re.getValue() instanceof Date || re.getValue() instanceof Calendar)) {
+                        parameter = new QueryParameter(position, re.getValue(), re.getTemporalType());
+                    } else {
+                        parameter = new QueryParameter(position, re.getValue());
+                    }
+                }
+                parameters.add(parameter);
+                position++;
+            }
+        }
+        return parameters;
+    }
+
     public Query createQuery(Integer firstResult, Integer maxResults) {
 
         String queryString = getQueryString();
         Query query = entityManager.createQuery(queryString);
 
-        int parameter = 1;
-        for (Restriction re : normalizedRestrictions) {
-            if (re.getValue() != null) {
-                if (re.getRestrictionType().equals(RestrictionType.LIKE)) {
-                    if (re.getLikeType() == null || re.getLikeType().equals(LikeType.BOTH)) {
-                        query.setParameter(parameter, "%" + re.getValue() + "%");
-                    } else if (re.getLikeType().equals(LikeType.BEGIN)) {
-                        query.setParameter(parameter, re.getValue() + "%");
-                    } else if (re.getLikeType().equals(LikeType.END)) {
-                        query.setParameter(parameter, "%" + re.getValue());
-                    }
-                } else {
-                    if (re.getTemporalType() != null && (re.getValue() instanceof Date || re.getValue() instanceof Calendar)) {
-                        if (re.getValue() instanceof Date) {
-                            query.setParameter(parameter, (Date) re.getValue(), re.getTemporalType());
-                        } else if (re.getValue() instanceof Calendar) {
-                            query.setParameter(parameter, (Calendar) re.getValue(), re.getTemporalType());
-                        }
-                    } else {
-                        query.setParameter(parameter, re.getValue());
-                    }
+        List<QueryParameter> parameters = getQueryParameters();
+        for (QueryParameter parameter : parameters) {
+            if (parameter.getTemporalType() != null && (parameter.getValue() instanceof Date || parameter.getValue() instanceof Calendar)) {
+                if (parameter.getValue() instanceof Date) {
+                    query.setParameter(parameter.getPosition(), (Date) parameter.getValue(), parameter.getTemporalType());
+                } else if (parameter.getValue() instanceof Calendar) {
+                    query.setParameter(parameter.getPosition(), (Calendar) parameter.getValue(), parameter.getTemporalType());
                 }
-                parameter++;
+            } else {
+                query.setParameter(parameter.getPosition(), parameter.getValue());
             }
         }
 
@@ -528,110 +573,5 @@ public class QueryBuilder {
 
     public List<Restriction> getNormalizedRestrictions() {
         return normalizedRestrictions;
-    }
-
-    public static void main(String[] args) {
-        //Caso 1
-        //FROM class WHERE  nome = 'MARIA' OR nome = 'JOSE' OR status = true
-        Restrictions restrictions = new Restrictions();
-        
-        //solução 1
-        restrictions.equals("nome", "MARIA")
-                    .or()
-                    .equals("nome", "JOSE")
-                    .or()
-                    .equals("status", true);
-        
-
-        //Caso 2
-        //FROM class WHERE  (nome = 'MARIA' AND status = true) OR (code = '123') 
-        
-        //solução 1
-        restrictions = new Restrictions();
-        restrictions.startGroup();
-        restrictions.equals("nome", "MARIA");
-        restrictions.equals("status", true);
-        restrictions.endGroup();
-        restrictions.or();
-        restrictions.equals("code", "123");
-        
-        //ou em cadeia
-        restrictions.startGroup()
-                        .equals("nome", "MARIA").equals("status", true)
-                    .endGroup()
-                    .or()
-                    .equals("code", "123");
-        
-        
-        
-         //Caso 3
-        //FROM class WHERE  (nome = 'MARIA' OR nome = 'JOSE') AND (code = '123' OR code = '321')
-        restrictions = new Restrictions();
-        restrictions.startGroup();
-        restrictions.equals("nome", "MARIA");
-        restrictions.or();
-        restrictions.equals("nome", "JOSE");
-        restrictions.endGroup();
-
-        restrictions.startGroup();
-        restrictions.equals("code", "123");
-        restrictions.or();
-        restrictions.equals("code", "321");
-        restrictions.endGroup();
-        
-        //ou em cadeia
-        restrictions
-                .startGroup()
-                .equals("nome", "MARIA")
-                .or()
-                .equals("nome", "JOSE")
-                .endGroup()
-                .startGroup()
-                .equals("code", "123")
-                .or()
-                .equals("code", "321")
-                .endGroup();
-        
-
-        //Caso 4
-        //FROM class WHERE  ((nome = 'MARIA' OR nome = 'JOSE') AND (cidade = 'TERESINA' OR cidade = 'BRASILIA')) AND (code = '123' OR code = '321')
-        restrictions = new Restrictions();
-        restrictions.startGroup();
-        restrictions.startGroup();
-        restrictions.equals("nome", "MARIA");
-        restrictions.or();
-        restrictions.equals("nome", "JOSE");
-        restrictions.endGroup();
-        restrictions.startGroup();
-        restrictions.equals("cidade", "TERESINA");
-        restrictions.or();
-        restrictions.equals("cidade", "BRASILIA");
-        restrictions.endGroup();
-        restrictions.endGroup();
-
-        restrictions.startGroup();
-        restrictions.equals("code", "123");
-        restrictions.or();
-        restrictions.equals("code", "321");
-        restrictions.endGroup();
-
-        
-        //em cadeia
-        
-        restrictions = new Restrictions();
-      
-        restrictions.startGroup()
-                        .startGroup()
-                            .equals("nome", "MARIA").or().equals("nome", "JOSE")
-                        .endGroup()
-                        .startGroup()
-                            .equals("cidade", "TERESINA").or().equals("cidade", "BRASILIA")
-                        .endGroup()
-                    .endGroup()
-                    .startGroup()
-                        .equals("code", "123").or().equals("code", "321")
-                    .endGroup();
-        
-        
     }
 }

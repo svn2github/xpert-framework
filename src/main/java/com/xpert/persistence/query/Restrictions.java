@@ -11,7 +11,6 @@ import javax.persistence.TemporalType;
  */
 public class Restrictions extends ArrayList<Restriction> {
 
-    
     public Restrictions add(String property, RestrictionType restrictionType) {
         this.add(new Restriction(property, restrictionType));
         return this;
@@ -171,15 +170,21 @@ public class Restrictions extends ArrayList<Restriction> {
         this.add(new Restriction(property, RestrictionType.NOT_EQUALS, value, temporalType));
         return this;
     }
+
+    public Restrictions or() {
+        this.add(new Restriction(RestrictionType.OR));
+        return this;
+    }
+
+    public Restrictions startGroup() {
+        this.add(new Restriction(RestrictionType.START_GROUP));
+        return this;
+    }
+
+    public Restrictions endGroup() {
+        this.add(new Restriction(RestrictionType.END_GROUP));
+        return this;
+    }
     
-    public Restrictions or(){
-        return this;
-    }
-   
-    public Restrictions startGroup(){
-        return this;
-    }
-    public Restrictions endGroup(){
-        return this;
-    }
+    
 }

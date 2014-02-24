@@ -15,15 +15,17 @@ import javax.persistence.TemporalType;
  */
 public class Restriction {
 
-    private ConditionType conditionType;
     private String property;
     private Object value;
     private RestrictionType restrictionType;
     private LikeType likeType;
     private TemporalType temporalType;
-    private List<Restriction> or;
 
     public Restriction() {
+    }
+
+    public Restriction(RestrictionType restrictionType) {
+        this.restrictionType = restrictionType;
     }
 
     public Restriction(String property, RestrictionType restrictionType) {
@@ -101,14 +103,6 @@ public class Restriction {
 
     public void setValue(Object value) {
         this.value = value;
-    }
-
-    public ConditionType getConditionType() {
-        return conditionType;
-    }
-
-    public void setConditionType(ConditionType conditionType) {
-        this.conditionType = conditionType;
     }
 
     @Override
@@ -269,5 +263,30 @@ public class Restriction {
     public static Restriction notEquals(String property, Calendar value, TemporalType temporalType) {
         return new Restriction(property, RestrictionType.NOT_EQUALS, value, temporalType);
 
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder builder = new StringBuilder();
+        builder.append("{");
+        if (property != null) {
+            builder.append("(Property: ").append(property).append(") ");
+        }
+        if (restrictionType != null) {
+            builder.append("(RestrictionType: ").append(restrictionType.name()).append(") ");
+        }
+
+        if (value != null) {
+            builder.append("(Value: ").append(value).append(") ");
+        }
+
+        if (likeType != null) {
+            builder.append("(LikeType: ").append(likeType.name()).append(") ");
+        }
+        if (temporalType != null) {
+            builder.append("(TemporalType: ").append(temporalType.name()).append(") ");
+        }
+        builder.append("}");
+        return builder.toString();
     }
 }
