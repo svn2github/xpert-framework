@@ -387,9 +387,8 @@ public class QueryBuilder {
             }
         }
         //order by
-        if (order != null && !order.trim()
-                .isEmpty()) {
-            queryString.append("ORDER BY ").append(order).toString();
+        if (order != null && !order.trim().isEmpty()) {
+            queryString.append(" ORDER BY ").append(order).toString();
         }
 
         return queryString.toString();
