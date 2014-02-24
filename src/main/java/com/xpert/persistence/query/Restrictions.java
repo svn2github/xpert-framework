@@ -170,4 +170,18 @@ public class Restrictions extends ArrayList<Restriction> {
         this.add(new Restriction(property, RestrictionType.NOT_EQUALS, value, temporalType));
         return this;
     }
+    
+    public Restrictions or(){
+        return this;
+    }
+    public Restrictions start(){
+        return this;
+    }
+    public Restrictions end(){
+        return this;
+    }
+    
+    public Restrictions or(Restriction... restriction){
+        return this;
+    }
 }

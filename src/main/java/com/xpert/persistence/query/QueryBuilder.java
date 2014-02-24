@@ -529,4 +529,54 @@ public class QueryBuilder {
     public List<Restriction> getNormalizedRestrictions() {
         return normalizedRestrictions;
     }
+
+    public static void main(String[] args) {
+        //FROM class WHERE  (nome = 'MARIA' OR nome = 'JOSE' OR status = true)
+
+        //FROM class WHERE  (nome = 'MARIA' AND status = true) OR (code = '123')
+        Restrictions restrictions = new Restrictions();
+        restrictions.start();
+        restrictions.equals("nome", "MARIA");
+        restrictions.equals("status", true);
+        restrictions.end();
+        restrictions.or();
+        restrictions.equals("code", "123");
+
+        //FROM class WHERE  (nome = 'MARIA' OR nome = 'JOSE') AND (code = '123' OR code = '321')
+        restrictions = new Restrictions();
+        restrictions.start();
+        restrictions.equals("nome", "MARIA");
+        restrictions.or();
+        restrictions.equals("nome", "JOSE");
+        restrictions.end();
+
+        restrictions.start();
+        restrictions.equals("code", "123");
+        restrictions.or();
+        restrictions.equals("code", "321");
+        restrictions.end();
+
+        //FROM class WHERE  ((nome = 'MARIA' OR nome = 'JOSE') AND (cidade = 'TERESINA' OR cidade = 'BRASILIA')) AND (code = '123' OR code = '321')
+        restrictions = new Restrictions();
+        restrictions.start();
+        restrictions.start();
+        restrictions.equals("nome", "MARIA");
+        restrictions.or();
+        restrictions.equals("nome", "JOSE");
+        restrictions.end();
+        restrictions.start();
+        restrictions.equals("cidade", "TERESINA");
+        restrictions.or();
+        restrictions.equals("cidade", "BRASILIA");
+        restrictions.end();
+        restrictions.end();
+
+        restrictions.start();
+        restrictions.equals("code", "123");
+        restrictions.or();
+        restrictions.equals("code", "321");
+        restrictions.end();
+
+        restrictions.end();
+    }
 }

@@ -6,6 +6,7 @@ package com.xpert.persistence.query;
 
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 import javax.persistence.TemporalType;
 
 /**
@@ -19,6 +20,7 @@ public class Restriction {
     private RestrictionType restrictionType;
     private LikeType likeType;
     private TemporalType temporalType;
+    private List<Restriction> or;
 
     public Restriction() {
     }
@@ -100,6 +102,15 @@ public class Restriction {
         this.value = value;
     }
 
+    public List<Restriction> getOr() {
+        return or;
+    }
+
+    public void setOr(List<Restriction> or) {
+        this.or = or;
+    }
+
+    
     @Override
     public boolean equals(Object obj) {
         if (obj == null) {
