@@ -57,6 +57,7 @@ public class TestQueryBuilder {
                 .startGroup()
                     .equals("nome", "MARIA").or().equals("nome", "JOSE")
                 .endGroup()
+                .or()
                 .startGroup()
                     .equals("code", "123").or().equals("code", "321")
                 .endGroup()
