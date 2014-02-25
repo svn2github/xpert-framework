@@ -299,31 +299,20 @@ public class QueryBuilder {
         }
     }
 
-    public String getQueryString() {
-
-        StringBuilder queryString = new StringBuilder();
-        //type Ex: (SELECT FROM, SELECT MAX, SELECT MIN)
-        queryString.append(getQuerySelectClausule());
-
-        queryString.append("FROM ").append(from.getName()).append(" ");
-        if (alias != null) {
-            queryString.append(alias).append(" ");
-        }
-        if (joins != null && joins.length() > 0) {
-            queryString.append(joins).append(" ");
-        }
-
-        //normalize
-        loadNormalizedRestrictions();
-
-        //restrictions
+    
+    /**
+     * @param restrictions
+     * @param alias
+     * @return String of the part after "WHERE" from JPQL generated
+     */
+    public static String getQueryStringFromRestrictions(List<Restriction> restrictions, String alias) {
+       
         int currentParameter = 1;
-        if (normalizedRestrictions != null && !normalizedRestrictions.isEmpty()) {
-            queryString.append("WHERE ");
-        }
+        StringBuilder queryString = new StringBuilder();
         boolean processPropertyAndValue = false;
         Restriction lastRestriction = null;
-        for (Restriction restriction : normalizedRestrictions) {
+        
+        for (Restriction restriction : restrictions) {
 
             if (lastRestriction != null) {
                 if (lastRestriction.getRestrictionType().equals(RestrictionType.OR)) {
@@ -386,6 +375,38 @@ public class QueryBuilder {
                 }
             }
         }
+
+        return queryString.toString();
+    }
+
+    /**
+     * @return The complete String of JPQL generated in this QueryBuilder
+     */
+    public String getQueryString() {
+
+        StringBuilder queryString = new StringBuilder();
+        //type Ex: (SELECT FROM, SELECT MAX, SELECT MIN)
+        queryString.append(getQuerySelectClausule());
+
+        queryString.append("FROM ").append(from.getName()).append(" ");
+        if (alias != null) {
+            queryString.append(alias).append(" ");
+        }
+        if (joins != null && joins.length() > 0) {
+            queryString.append(joins).append(" ");
+        }
+
+        //normalize
+        loadNormalizedRestrictions();
+
+        //where clausule
+        if (normalizedRestrictions != null && !normalizedRestrictions.isEmpty()) {
+            queryString.append("WHERE ");
+        }
+        
+        //restrictions
+        queryString.append(QueryBuilder.getQueryStringFromRestrictions(normalizedRestrictions, alias));
+
         //order by
         if (order != null && !order.trim().isEmpty()) {
             queryString.append(" ORDER BY ").append(order).toString();

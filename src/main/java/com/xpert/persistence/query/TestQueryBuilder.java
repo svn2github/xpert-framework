@@ -12,6 +12,7 @@ public class TestQueryBuilder {
         QueryBuilder builder = new QueryBuilder(null);
         builder.from(Person.class);
         builder.add(restrictions);
+        System.out.println(restrictions.getQueryString());
         System.out.println(builder.getQueryString());
         System.out.println(builder.getQueryParameters());
     }

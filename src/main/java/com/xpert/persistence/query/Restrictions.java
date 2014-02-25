@@ -185,6 +185,13 @@ public class Restrictions extends ArrayList<Restriction> {
         this.add(new Restriction(RestrictionType.END_GROUP));
         return this;
     }
-    
-    
+
+    public String getQueryString() {
+        return getQueryString(null);
+    }
+
+    public String getQueryString(String alias) {
+        return QueryBuilder.getQueryStringFromRestrictions(this, alias);
+    }
+
 }
