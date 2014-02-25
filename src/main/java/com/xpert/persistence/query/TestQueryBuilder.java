@@ -49,7 +49,7 @@ public class TestQueryBuilder {
 
 
         //Caso 3
-        //FROM class WHERE  (nome = 'MARIA' OR nome = 'JOSE') AND (code = '123' OR code = '321')
+        //FROM class WHERE  (nome = 'MARIA' OR nome = 'JOSE') AND (code = '123' OR code = '321') AND status IS NOT NULL
 
         //em cadeia
         restrictions = new Restrictions();
@@ -57,11 +57,10 @@ public class TestQueryBuilder {
                 .startGroup()
                     .equals("nome", "MARIA").or().equals("nome", "JOSE")
                 .endGroup()
-                .or()
                 .startGroup()
                     .equals("code", "123").or().equals("code", "321")
                 .endGroup()
-                .isNotNull("teste");
+                .isNotNull("status");
 
         printQueryString(restrictions);
         
