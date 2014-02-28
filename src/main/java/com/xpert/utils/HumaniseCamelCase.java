@@ -52,7 +52,7 @@ public class HumaniseCamelCase {
 
     private void appendWord(String word) {
         boolean firstWord = humanisedString.length() == 0;
-        humanisedString += firstWord ? capitaliseFirstLetter(word) : " " + word.toLowerCase();
+        humanisedString += firstWord ? capitaliseFirstLetter(word) : " " + capitaliseFirstLetter(word);
     }
 
     private void appendAcronymIfThereIsOne() {
@@ -66,4 +66,5 @@ public class HumaniseCamelCase {
     private String capitaliseFirstLetter(String str) {
         return str.substring(0, 1).toUpperCase() + str.substring(1);
     }
+    
 }

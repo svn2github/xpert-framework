@@ -133,28 +133,7 @@ public class PersistenceMappedBean {
     }
 
     public String getClassBean(BeanConfiguration configuration) {
-
-        try {
-
-            Template template = BeanCreator.getTemplate("class-bean.ftl");
-            StringWriter writer = new StringWriter();
-            Map attributes = new HashMap();
-            attributes.put("classes", getMappedClasses(true));
-            attributes.put("configuration", configuration);
-            attributes.put("package", configuration.getManagedBean() == null ? "" : configuration.getManagedBean());
-            template.process(attributes, writer);
-
-            writer.flush();
-            writer.close();
-
-            return writer.toString();
-        } catch (IOException ex) {
-            logger.log(Level.SEVERE, null, ex);
-        } catch (TemplateException ex) {
-            logger.log(Level.SEVERE, null, ex);
-        }
-
-        return "";
+        return BeanCreator.getClassBean(getMappedClasses(true), configuration);
 
     }
 

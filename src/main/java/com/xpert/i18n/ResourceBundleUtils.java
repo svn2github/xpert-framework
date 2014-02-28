@@ -26,12 +26,16 @@ public class ResourceBundleUtils {
      * Os parametros devem está nas mensagens no formato: {0} {1}. Ex: Já existe
      * o município {0} cadastrado para o estado {1}
      *
-     * @param message
-     * @param array
+     * @param key
+     * @param bundle
      * @return
      */
     public static String get(String key, String bundle, Object... array) {
         return get(key, bundle, null, array);
+    }
+
+    public static String get(String key, String bundle, ClassLoader classLoader, Object... array) {
+        return get(key, bundle, classLoader, I18N.getLocale(), array);
     }
 
     /**
@@ -44,7 +48,7 @@ public class ResourceBundleUtils {
      * @param array
      * @return
      */
-    public static String get(String key, String bundle, ClassLoader classLoader, Object... array) {
+    public static String get(String key, String bundle, ClassLoader classLoader, Locale locale, Object... array) {
 
         if (key == null || key.isEmpty()) {
             try {
@@ -54,8 +58,6 @@ public class ResourceBundleUtils {
             }
             return "ResourceBundle key is required";
         }
-
-        Locale locale = I18N.getLocale();
 
         ResourceBundle resourceBundle = null;
 

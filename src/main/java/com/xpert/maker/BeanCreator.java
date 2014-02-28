@@ -1,5 +1,6 @@
 package com.xpert.maker;
 
+import com.xpert.i18n.XpertResourceBundle;
 import com.xpert.maker.model.ViewEntity;
 import com.xpert.maker.model.ViewField;
 import com.xpert.utils.HumaniseCamelCase;
@@ -173,6 +174,28 @@ public class BeanCreator {
 
         return entity;
     }
+    
+    public static String getClassBean( List<Class> classes, BeanConfiguration configuration) {
+        try {
+            Template template = BeanCreator.getTemplate("class-bean.ftl");
+            StringWriter writer = new StringWriter();
+            Map attributes = new HashMap();
+            attributes.put("classes", classes);
+            attributes.put("configuration", configuration);
+            attributes.put("package", configuration.getManagedBean() == null ? "" : configuration.getManagedBean());
+            template.process(attributes, writer);
+
+            writer.flush();
+            writer.close();
+
+            return writer.toString();
+        } catch (IOException ex) {
+            logger.log(Level.SEVERE, null, ex);
+        } catch (TemplateException ex) {
+            logger.log(Level.SEVERE, null, ex);
+        }
+        return "";
+    }
 
     public static Template getTemplate(String template) throws IOException {
 
@@ -221,9 +244,10 @@ public class BeanCreator {
         builder.append(className).append("=").append(humanName).append("\n");
 
         //create CRUD i18n, like: person.create, person.list, person.detail
-        builder.append(className).append(".create").append("=").append("Create ").append(humanName).append("\n");
-        builder.append(className).append(".list").append("=").append("List ").append(humanName).append("\n");
-        builder.append(className).append(".detail").append("=").append(humanName).append(" Detail").append("\n");
+        Locale locale = Locale.getDefault();
+        builder.append(className).append(".create").append("=").append(XpertResourceBundle.get("makerCreate", locale)).append(" ").append(humanName).append("\n");
+        builder.append(className).append(".list").append("=").append(XpertResourceBundle.get("makerList", locale)).append(" ").append(humanName).append("\n");
+        builder.append(className).append(".detail").append("=").append(humanName).append(" - ").append(XpertResourceBundle.get("makerDetail", locale)).append("\n");
         boolean first = false;
         for (Field field : fields) {
             if (isSerialVersionUID(field)) {
@@ -307,7 +331,6 @@ public class BeanCreator {
         for (MappedBean mappedBean : mappedBeans) {
             i18n.append(mappedBean.getI18n());
         }
-        i18n.append(getMenuI18N(mappedBeans));
         return i18n.toString();
     }
 
