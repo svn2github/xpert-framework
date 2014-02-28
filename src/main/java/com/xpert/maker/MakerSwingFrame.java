@@ -20,29 +20,29 @@ import javax.swing.JTextField;
  * @author ayslan
  */
 public abstract class MakerSwingFrame extends javax.swing.JFrame {
-    
+
     private static final String JAVA_PROJECT_PREFFIX = File.separator + "java";
     private static final Logger logger = Logger.getLogger(MakerSwingFrame.class.getName());
     private BeanConfiguration beanConfiguration;
     private ArrayList<Class<?>> classes = new ArrayList<Class<?>>();
     private File lastFile;
-    
+
     public abstract String getDefaultPackage();
-    
+
     public abstract String getDefaultTemplatePath();
-    
+
     public abstract String getDefaultResourceBundle();
-    
+
     public abstract String getDefaultBaseDAOImpl();
-    
+
     public abstract String getManagedBeanSuffix();
-    
+
     public abstract String getBusinessObjectSuffix();
-    
+
     public PrimeFacesVersion getPrimeFacesVersion() {
         return PrimeFacesVersion.VERSION_3;
     }
-    
+
     public static void run(final MakerSwingFrame maker) {
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
@@ -51,7 +51,7 @@ public abstract class MakerSwingFrame extends javax.swing.JFrame {
             }
         });
     }
-    
+
     public void searchClasses() {
         try {
             ArrayList<Class<?>> allClasses = ClassEnumerator.getClassesForPackage(textPackageName.getText());
@@ -64,10 +64,10 @@ public abstract class MakerSwingFrame extends javax.swing.JFrame {
             listClasses.setListData(classes.toArray(new Class[classes.size()]));
         } catch (Exception ex) {
             logger.log(Level.SEVERE, null, ex);
-            JOptionPane.showMessageDialog(this, "Erro: " + ex.getMessage() + ". See java log for details", "Error", JOptionPane.WARNING_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Message: " + ex.getMessage() + ". See java log for details", "Error", JOptionPane.WARNING_MESSAGE);
         }
     }
-    
+
     public void selectAll() {
         if (classes != null && !classes.isEmpty()) {
             int[] indices = new int[classes.size()];
@@ -77,11 +77,11 @@ public abstract class MakerSwingFrame extends javax.swing.JFrame {
             listClasses.setSelectedIndices(indices);
         }
     }
-    
+
     public void selectNone() {
         listClasses.setSelectedIndices(new int[0]);
     }
-    
+
     public boolean validateField(String value, String fieldName) {
         if (value == null || value.trim().isEmpty()) {
             JOptionPane.showMessageDialog(this, fieldName + " is required", "Warning", JOptionPane.WARNING_MESSAGE);
@@ -89,9 +89,9 @@ public abstract class MakerSwingFrame extends javax.swing.JFrame {
         }
         return true;
     }
-    
+
     public boolean validateConfiguration() {
-        
+
         if (!validateField(beanConfiguration.getManagedBeanLocation(), "ManagedBean location")) {
             return false;
         }
@@ -122,24 +122,24 @@ public abstract class MakerSwingFrame extends javax.swing.JFrame {
         if (!validateField(beanConfiguration.getTemplate(), "Facelets Template")) {
             return false;
         }
-        
+
         return true;
     }
-    
+
     public void generate() {
-        
+
         Object[] selectedClasses = listClasses.getSelectedValues();
-        
+
         if (selectedClasses == null || selectedClasses.length == 0) {
-            JOptionPane.showMessageDialog(this, "No Classes Select", "Error", JOptionPane.WARNING_MESSAGE);
+            JOptionPane.showMessageDialog(this, "No Classes Select", "Error", JOptionPane.ERROR_MESSAGE);
             return;
         }
-        
+
         List<Class> classesList = new ArrayList<Class>();
         for (Object object : selectedClasses) {
             classesList.add((Class) object);
         }
-        
+
         beanConfiguration = new BeanConfiguration();
         beanConfiguration.setPrimeFacesVersion((PrimeFacesVersion) comboPrimeFacesVersion.getSelectedItem());
         beanConfiguration.setTemplate(textTemplatePath.getText());
@@ -159,16 +159,20 @@ public abstract class MakerSwingFrame extends javax.swing.JFrame {
         //suffix/preffix
         beanConfiguration.setManagedBeanSuffix(textManagedBeanSuffix.getText());
         beanConfiguration.setBusinessObjectSuffix(textBusinessObjectSuffix.getText());
-        
-        PersistenceMappedBean persistenceMappedBean = new PersistenceMappedBean(null);
-        List<MappedBean> mappedBeans = persistenceMappedBean.getMappedBeans(classesList, beanConfiguration);
-        textAreaI18n.setText(BeanCreator.getI18N(mappedBeans));
-        textAreaClassBean.setText(BeanCreator.getClassBean(classesList, beanConfiguration));
-        StringBuilder logBuilder = new StringBuilder();
-        BeanCreator.writeBean(mappedBeans, beanConfiguration, logBuilder);
-        textAreaLog.setText(logBuilder.toString());
+        try {
+            PersistenceMappedBean persistenceMappedBean = new PersistenceMappedBean(null);
+            List<MappedBean> mappedBeans = persistenceMappedBean.getMappedBeans(classesList, beanConfiguration);
+            textAreaI18n.setText(BeanCreator.getI18N(mappedBeans));
+            textAreaClassBean.setText(BeanCreator.getClassBean(classesList, beanConfiguration));
+            StringBuilder logBuilder = new StringBuilder();
+            BeanCreator.writeBean(mappedBeans, beanConfiguration, logBuilder);
+            textAreaLog.setText(logBuilder.toString());
+        } catch (Exception ex) {
+            logger.log(Level.SEVERE, null, ex);
+            JOptionPane.showMessageDialog(this, "Message: " + ex.getMessage() + ". See java log for details", "Error", JOptionPane.ERROR_MESSAGE);
+        }
     }
-    
+
     public void showFileChooser(JTextField textSelection, JTextField textPackage) {
         JFileChooser chooser = new JFileChooser();
         if (lastFile != null) {
@@ -179,7 +183,7 @@ public abstract class MakerSwingFrame extends javax.swing.JFrame {
         chooser.setDialogTitle("Select a Directory");
         chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
         chooser.setAcceptAllFileFilterUsed(false);
-        
+
         if (chooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
             String path = chooser.getSelectedFile().getAbsolutePath();
             if (textSelection != null) {
@@ -205,9 +209,9 @@ public abstract class MakerSwingFrame extends javax.swing.JFrame {
     public MakerSwingFrame() {
         initComponents();
         initFromConfiguration();
-        
+
     }
-    
+
     public void initFromConfiguration() {
         if (getDefaultPackage() != null) {
             textPackageName.setText(getDefaultPackage());
@@ -235,7 +239,7 @@ public abstract class MakerSwingFrame extends javax.swing.JFrame {
         } else {
             textBusinessObjectSuffix.setText(BeanCreator.SUFFIX_BUSINESS_OBJECT);
         }
-        
+
         textAuthor.setText(System.getProperty("user.name"));
         PrimeFacesVersion[] versions = PrimeFacesVersion.values();
         for (PrimeFacesVersion version : versions) {
@@ -252,7 +256,7 @@ public abstract class MakerSwingFrame extends javax.swing.JFrame {
             }
         });
     }
-    
+
     public void center() {
         Toolkit tk = Toolkit.getDefaultToolkit();
         Dimension screenSize = tk.getScreenSize();
