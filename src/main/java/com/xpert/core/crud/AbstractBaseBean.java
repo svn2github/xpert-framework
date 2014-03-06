@@ -14,10 +14,11 @@ import com.xpert.persistence.exception.DeleteException;
 import com.xpert.persistence.query.Restriction;
 import java.lang.reflect.ParameterizedType;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
-import org.primefaces.model.LazyDataModel;
+import javax.faces.context.FacesContext;
 
 /**
  *
@@ -32,6 +33,7 @@ public abstract class AbstractBaseBean<T> {
     private LazyDataModelImpl<T> dataModel;
     private T entity;
     private boolean loadEntityOnPostConstruct = true;
+    private static final String ENTITY_CLASS_TO_LOAD = "xpert.entityClassToLoad";
 
     public abstract AbstractBusinessObject getBO();
 
@@ -50,6 +52,13 @@ public abstract class AbstractBaseBean<T> {
     }
 
     public AbstractBaseBean() {
+        System.out.println("Contrutor " + this.getClass());
+        if (isLoadEntityOnPostConstruct()) {
+            Map<String, Object> requestMap = FacesContext.getCurrentInstance().getExternalContext().getRequestMap();
+            if (!requestMap.containsKey(ENTITY_CLASS_TO_LOAD)) {
+                FacesContext.getCurrentInstance().getExternalContext().getRequestMap().put(ENTITY_CLASS_TO_LOAD, this.getClass());
+            }
+        }
     }
 
     /**
@@ -59,12 +68,18 @@ public abstract class AbstractBaseBean<T> {
      */
     @PostConstruct
     public void postConstruct() {
+        System.out.println("@PostConstruct " + this.getClass());
         Long entityId = null;
         if (isLoadEntityOnPostConstruct()) {
             entityId = getIdFromParameter();
         }
         if (entityId != null) {
-            entity = findById(entityId);
+            Map<String, Object> requestMap = FacesContext.getCurrentInstance().getExternalContext().getRequestMap();
+            Class entityClassToLoad = (Class) requestMap.get(ENTITY_CLASS_TO_LOAD);
+            if (entityClassToLoad != null && entityClassToLoad.equals(this.getClass())) {
+                System.out.println("carregando " + this.getClass());
+                entity = findById(entityId);
+            }
         } else {
             create();
         }

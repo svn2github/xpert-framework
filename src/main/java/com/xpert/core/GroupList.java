@@ -3,7 +3,6 @@ package com.xpert.core;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -28,46 +27,6 @@ public class GroupList<K, V> extends ArrayList<GroupList> {
         this.value = value;
     }
     
-    public static void main(String[] args) {
-        
-        Profile profile1 = new Profile(1, "Profile 1");
-        Profile profile2 = new Profile(2, "Profile 2");
-        Profile profile3 = new Profile(3, "Profile 3");
-        
-       List<Person> people = new ArrayList<Person>();
-        
-        Person person1 = new Person(1, "Person 1", profile1);
-        Person person2 = new Person(2, "Person 2", profile1);
-        Person person3 = new Person(3, "Person 3", profile2);
-        Person person4 = new Person(4, "Person 4", profile1);
-        Person person5 = new Person(5, "Person 5", profile3);
-        Person person6 = new Person(6, "Person 6", profile1);
-        Person person7 = new Person(7, "Person 7", profile1);
-        Person person8 = new Person(8, "Person 8", profile2);
-        Person person9 = new Person(9, "Person 9", profile2);
-        Person person10 = new Person(9, "Person 10", null);
-        
-        people.add(person1);
-        people.add(person2);
-        people.add(person3);
-        people.add(person4);
-        people.add(person5);
-        people.add(person6);
-        people.add(person7);
-        people.add(person8);
-        people.add(person9);
-        people.add(person10);
-        
-        
-        GroupList<Profile, Person> groupList = new GroupList<Profile, Person>(people, "profile");
-        for(GroupList<Profile, Person> group : groupList.getList()){
-            System.out.println(" --- "+group.getKey());
-            System.out.println(" --- "+group.getValue());
-        }
-        
-        
-    }
-
     public GroupList<K, V> getList() {
 
         if (value != null) {

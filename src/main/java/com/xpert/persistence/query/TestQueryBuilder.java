@@ -1,6 +1,5 @@
 package com.xpert.persistence.query;
 
-import com.xpert.core.Person;
 
 /**
  *
@@ -10,7 +9,7 @@ public class TestQueryBuilder {
 
     public static void printQueryString(Restrictions restrictions) {
         QueryBuilder builder = new QueryBuilder(null);
-        builder.from(Person.class);
+        builder.from(Class.class);
         builder.add(restrictions);
         System.out.println(restrictions.getQueryString());
         System.out.println(builder.getQueryString());
