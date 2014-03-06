@@ -19,6 +19,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
 import javax.faces.context.FacesContext;
+import javax.interceptor.InvocationContext;
 
 /**
  *
@@ -53,6 +54,7 @@ public abstract class AbstractBaseBean<T> {
     }
 
     public AbstractBaseBean() {
+        System.out.println("Construct - " + this.getClass() + ": " + FacesContext.getCurrentInstance().getELContext().isPropertyResolved());
         if (isLoadEntityOnPostConstruct()) {
             Map<String, Object> requestMap = FacesContext.getCurrentInstance().getExternalContext().getRequestMap();
             if (!requestMap.containsKey(ENTITY_CLASS_TO_LOAD)) {
@@ -68,6 +70,7 @@ public abstract class AbstractBaseBean<T> {
      */
     @PostConstruct
     public void postConstruct() {
+        System.out.println("@PostConstruct - " + this.getClass() + ": " + FacesContext.getCurrentInstance().getELContext().isPropertyResolved());
         Long entityId = null;
         if (isLoadEntityOnPostConstruct()) {
             entityId = getIdFromParameter();
