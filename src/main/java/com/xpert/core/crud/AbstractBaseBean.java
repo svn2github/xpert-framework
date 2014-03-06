@@ -23,6 +23,7 @@ import javax.faces.context.FacesContext;
 /**
  *
  * @author Ayslan
+ * @param <T> type of entity
  */
 public abstract class AbstractBaseBean<T> {
 
