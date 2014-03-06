@@ -52,7 +52,6 @@ public abstract class AbstractBaseBean<T> {
     }
 
     public AbstractBaseBean() {
-        System.out.println("Contrutor " + this.getClass());
         if (isLoadEntityOnPostConstruct()) {
             Map<String, Object> requestMap = FacesContext.getCurrentInstance().getExternalContext().getRequestMap();
             if (!requestMap.containsKey(ENTITY_CLASS_TO_LOAD)) {
@@ -68,7 +67,6 @@ public abstract class AbstractBaseBean<T> {
      */
     @PostConstruct
     public void postConstruct() {
-        System.out.println("@PostConstruct " + this.getClass());
         Long entityId = null;
         if (isLoadEntityOnPostConstruct()) {
             entityId = getIdFromParameter();
@@ -77,7 +75,6 @@ public abstract class AbstractBaseBean<T> {
             Map<String, Object> requestMap = FacesContext.getCurrentInstance().getExternalContext().getRequestMap();
             Class entityClassToLoad = (Class) requestMap.get(ENTITY_CLASS_TO_LOAD);
             if (entityClassToLoad != null && entityClassToLoad.equals(this.getClass())) {
-                System.out.println("carregando " + this.getClass());
                 entity = findById(entityId);
             }
         } else {
