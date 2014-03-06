@@ -3,6 +3,7 @@ package com.xpert.maker;
 import com.xpert.faces.primefaces.PrimeFacesVersion;
 import java.awt.Component;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.Toolkit;
 import java.io.File;
 import java.util.ArrayList;
@@ -14,6 +15,7 @@ import javax.swing.JFileChooser;
 import javax.swing.JList;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
+import javax.swing.UIManager;
 
 /**
  *
@@ -43,6 +45,21 @@ public abstract class MakerSwingFrame extends javax.swing.JFrame {
         return PrimeFacesVersion.VERSION_3;
     }
 
+    /**
+     * Creates new form MakerMainFrame
+     */
+    public MakerSwingFrame() {
+        initCustomLayout();
+        initComponents();
+        initFromConfiguration();
+    }
+
+    public final void initCustomLayout() {
+        //remove bold frm fonts
+        Font oldLabelFont = UIManager.getFont("Label.font");
+        UIManager.put("Label.font", oldLabelFont.deriveFont(Font.PLAIN));
+    }
+
     public static void run(final MakerSwingFrame maker) {
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
@@ -57,7 +74,7 @@ public abstract class MakerSwingFrame extends javax.swing.JFrame {
             ArrayList<Class<?>> allClasses = ClassEnumerator.getClassesForPackage(textPackageName.getText());
             classes = new ArrayList<Class<?>>();
             for (Class entity : allClasses) {
-                if (!entity.isEnum()) {
+                if (!entity.isEnum() && !entity.isInterface()) {
                     classes.add(entity);
                 }
             }
@@ -203,14 +220,6 @@ public abstract class MakerSwingFrame extends javax.swing.JFrame {
         }
     }
 
-    /**
-     * Creates new form MakerMainFrame
-     */
-    public MakerSwingFrame() {
-        initComponents();
-        initFromConfiguration();
-    }
-
     public final void initFromConfiguration() {
         if (getDefaultPackage() != null) {
             textPackageName.setText(getDefaultPackage());
@@ -273,7 +282,7 @@ public abstract class MakerSwingFrame extends javax.swing.JFrame {
 
         tabbedPanelMain = new javax.swing.JTabbedPane();
         panelSelectClasses = new javax.swing.JPanel();
-        jScrollPane1 = new javax.swing.JScrollPane();
+        scrollPaneSelectClasses = new javax.swing.JScrollPane();
         listClasses = new javax.swing.JList();
         labelSelectClasses = new javax.swing.JLabel();
         labelPackageName = new javax.swing.JLabel();
@@ -339,7 +348,7 @@ public abstract class MakerSwingFrame extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Xpert-Maker");
 
-        jScrollPane1.setViewportView(listClasses);
+        scrollPaneSelectClasses.setViewportView(listClasses);
 
         labelSelectClasses.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         labelSelectClasses.setText("Classes:");
@@ -379,7 +388,7 @@ public abstract class MakerSwingFrame extends javax.swing.JFrame {
                         .addComponent(labelSelectClasses, javax.swing.GroupLayout.PREFERRED_SIZE, 117, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addGroup(panelSelectClassesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 457, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(scrollPaneSelectClasses, javax.swing.GroupLayout.PREFERRED_SIZE, 457, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGroup(panelSelectClassesLayout.createSequentialGroup()
                                 .addComponent(buttonSelectAll)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -406,7 +415,7 @@ public abstract class MakerSwingFrame extends javax.swing.JFrame {
                     .addGroup(panelSelectClassesLayout.createSequentialGroup()
                         .addComponent(labelSelectClasses)
                         .addGap(0, 433, Short.MAX_VALUE))
-                    .addComponent(jScrollPane1))
+                    .addComponent(scrollPaneSelectClasses))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(panelSelectClassesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(buttonSelectAll)
@@ -416,7 +425,7 @@ public abstract class MakerSwingFrame extends javax.swing.JFrame {
 
         tabbedPanelMain.addTab("Select Classes", panelSelectClasses);
 
-        panelMB.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Managed Bean", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.BELOW_TOP, new java.awt.Font("Tahoma", 0, 12))); // NOI18N
+        panelMB.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Managed Bean", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.BELOW_TOP, new java.awt.Font("Tahoma", 0, 12), new java.awt.Color(103, 142, 174))); // NOI18N
         panelMB.setPreferredSize(new java.awt.Dimension(723, 85));
 
         labelMBPackage.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
@@ -477,7 +486,7 @@ public abstract class MakerSwingFrame extends javax.swing.JFrame {
         textManagedBean.getAccessibleContext().setAccessibleParent(panelConfiguration);
         buttonSelectMB.getAccessibleContext().setAccessibleParent(panelConfiguration);
 
-        panelOthers.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Others", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.BELOW_TOP, new java.awt.Font("Tahoma", 0, 12))); // NOI18N
+        panelOthers.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Others", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.BELOW_TOP, new java.awt.Font("Tahoma", 0, 12), new java.awt.Color(103, 142, 174))); // NOI18N
         panelOthers.setPreferredSize(new java.awt.Dimension(723, 158));
 
         labelXHTMLLocation.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
@@ -591,7 +600,7 @@ public abstract class MakerSwingFrame extends javax.swing.JFrame {
                 .addGap(6, 6, 6))
         );
 
-        panelBO.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Business Object (BO)", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.BELOW_TOP, new java.awt.Font("Tahoma", 0, 12))); // NOI18N
+        panelBO.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Business Object (BO)", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.BELOW_TOP, new java.awt.Font("Tahoma", 0, 12), new java.awt.Color(103, 142, 174))); // NOI18N
         panelBO.setPreferredSize(new java.awt.Dimension(723, 85));
 
         labelBOPackage.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
@@ -647,7 +656,7 @@ public abstract class MakerSwingFrame extends javax.swing.JFrame {
                 .addGap(0, 8, Short.MAX_VALUE))
         );
 
-        panelDAO.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "DAO", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.BELOW_TOP, new java.awt.Font("Tahoma", 0, 12))); // NOI18N
+        panelDAO.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "DAO", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.BELOW_TOP, new java.awt.Font("Tahoma", 0, 12), new java.awt.Color(103, 142, 174))); // NOI18N
         panelDAO.setPreferredSize(new java.awt.Dimension(723, 85));
 
         labelDAOPackage.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
@@ -702,7 +711,7 @@ public abstract class MakerSwingFrame extends javax.swing.JFrame {
                     .addComponent(textPackageDAO, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
         );
 
-        panelDAOImpl.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "DAO Implementation", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.BELOW_TOP, new java.awt.Font("Tahoma", 0, 12))); // NOI18N
+        panelDAOImpl.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "DAO Implementation", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.BELOW_TOP, new java.awt.Font("Tahoma", 0, 12), new java.awt.Color(103, 142, 174))); // NOI18N
         panelDAOImpl.setPreferredSize(new java.awt.Dimension(723, 85));
 
         labelDAOImplPackage.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
@@ -935,7 +944,6 @@ public abstract class MakerSwingFrame extends javax.swing.JFrame {
     private javax.swing.JButton buttonSelectNone;
     private javax.swing.JButton buttonSelectView;
     private javax.swing.JComboBox comboPrimeFacesVersion;
-    private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JLabel labelAuthor;
     private javax.swing.JLabel labelBOLocation;
     private javax.swing.JLabel labelBOPackage;
@@ -969,6 +977,7 @@ public abstract class MakerSwingFrame extends javax.swing.JFrame {
     private javax.swing.JScrollPane scrollPaneClassBean;
     private javax.swing.JScrollPane scrollPaneI18N;
     private javax.swing.JScrollPane scrollPaneLog;
+    private javax.swing.JScrollPane scrollPaneSelectClasses;
     private javax.swing.JTabbedPane tabbedPanelMain;
     private javax.swing.JTextArea textAreaClassBean;
     private javax.swing.JTextArea textAreaI18n;

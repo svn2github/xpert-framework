@@ -65,7 +65,7 @@
                               <Component id="labelSelectClasses" min="-2" pref="117" max="-2" attributes="0"/>
                               <EmptySpace type="unrelated" max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="0" attributes="0">
-                                  <Component id="jScrollPane1" min="-2" pref="457" max="-2" attributes="0"/>
+                                  <Component id="scrollPaneSelectClasses" min="-2" pref="457" max="-2" attributes="0"/>
                                   <Group type="102" alignment="0" attributes="0">
                                       <Component id="buttonSelectAll" min="-2" max="-2" attributes="0"/>
                                       <EmptySpace max="-2" attributes="0"/>
@@ -101,7 +101,7 @@
                               <Component id="labelSelectClasses" min="-2" max="-2" attributes="0"/>
                               <EmptySpace min="0" pref="433" max="32767" attributes="0"/>
                           </Group>
-                          <Component id="jScrollPane1" max="32767" attributes="0"/>
+                          <Component id="scrollPaneSelectClasses" max="32767" attributes="0"/>
                       </Group>
                       <EmptySpace type="unrelated" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="3" attributes="0">
@@ -114,7 +114,7 @@
             </DimensionLayout>
           </Layout>
           <SubComponents>
-            <Container class="javax.swing.JScrollPane" name="jScrollPane1">
+            <Container class="javax.swing.JScrollPane" name="scrollPaneSelectClasses">
               <AuxValues>
                 <AuxValue name="autoScrollPane" type="java.lang.Boolean" value="true"/>
               </AuxValues>
@@ -222,6 +222,7 @@
                   <Border info="org.netbeans.modules.form.compat2.border.TitledBorderInfo">
                     <TitledBorder position="3" title="Managed Bean">
                       <Font PropertyName="font" name="Tahoma" size="12" style="0"/>
+                      <Color PropertyName="color" blue="ae" green="8e" red="67" type="rgb"/>
                     </TitledBorder>
                   </Border>
                 </Property>
@@ -330,6 +331,7 @@
                   <Border info="org.netbeans.modules.form.compat2.border.TitledBorderInfo">
                     <TitledBorder position="3" title="Others">
                       <Font PropertyName="font" name="Tahoma" size="12" style="0"/>
+                      <Color PropertyName="color" blue="ae" green="8e" red="67" type="rgb"/>
                     </TitledBorder>
                   </Border>
                 </Property>
@@ -537,6 +539,7 @@
                   <Border info="org.netbeans.modules.form.compat2.border.TitledBorderInfo">
                     <TitledBorder position="3" title="Business Object (BO)">
                       <Font PropertyName="font" name="Tahoma" size="12" style="0"/>
+                      <Color PropertyName="color" blue="ae" green="8e" red="67" type="rgb"/>
                     </TitledBorder>
                   </Border>
                 </Property>
@@ -627,6 +630,7 @@
                   <Border info="org.netbeans.modules.form.compat2.border.TitledBorderInfo">
                     <TitledBorder position="3" title="DAO">
                       <Font PropertyName="font" name="Tahoma" size="12" style="0"/>
+                      <Color PropertyName="color" blue="ae" green="8e" red="67" type="rgb"/>
                     </TitledBorder>
                   </Border>
                 </Property>
@@ -716,6 +720,7 @@
                   <Border info="org.netbeans.modules.form.compat2.border.TitledBorderInfo">
                     <TitledBorder position="3" title="DAO Implementation">
                       <Font PropertyName="font" name="Tahoma" size="12" style="0"/>
+                      <Color PropertyName="color" blue="ae" green="8e" red="67" type="rgb"/>
                     </TitledBorder>
                   </Border>
                 </Property>
