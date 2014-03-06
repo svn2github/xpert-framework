@@ -46,7 +46,7 @@
 
       <Layout class="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout"/>
       <SubComponents>
-        <Container class="javax.swing.JPanel" name="jPanel2">
+        <Container class="javax.swing.JPanel" name="panelSelectClasses">
           <Constraints>
             <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout" value="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout$JTabbedPaneConstraintsDescription">
               <JTabbedPaneConstraints tabName="Select Classes">
@@ -99,9 +99,9 @@
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Group type="102" attributes="0">
                               <Component id="labelSelectClasses" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
+                              <EmptySpace min="0" pref="433" max="32767" attributes="0"/>
                           </Group>
-                          <Component id="jScrollPane1" pref="449" max="32767" attributes="0"/>
+                          <Component id="jScrollPane1" max="32767" attributes="0"/>
                       </Group>
                       <EmptySpace type="unrelated" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="3" attributes="0">
@@ -186,12 +186,12 @@
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Group type="103" groupAlignment="1" max="-2" attributes="0">
-                              <Component id="jPanel9" max="32767" attributes="0"/>
-                              <Component id="jPanel7" alignment="0" max="32767" attributes="0"/>
-                              <Component id="jPanel6" alignment="0" max="32767" attributes="0"/>
-                              <Component id="jPanel4" alignment="0" max="32767" attributes="0"/>
+                              <Component id="panelDAOImpl" max="32767" attributes="0"/>
+                              <Component id="panelDAO" alignment="0" max="32767" attributes="0"/>
+                              <Component id="panelBO" alignment="0" max="32767" attributes="0"/>
+                              <Component id="panelMB" alignment="0" max="32767" attributes="0"/>
                           </Group>
-                          <Component id="jPanel5" alignment="0" min="-2" max="-2" attributes="0"/>
+                          <Component id="panelOthers" alignment="0" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace max="32767" attributes="0"/>
                   </Group>
@@ -201,22 +201,22 @@
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" alignment="0" attributes="0">
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="jPanel6" min="-2" max="-2" attributes="0"/>
+                      <Component id="panelBO" min="-2" max="-2" attributes="0"/>
                       <EmptySpace min="-2" pref="1" max="-2" attributes="0"/>
-                      <Component id="jPanel7" min="-2" max="-2" attributes="0"/>
+                      <Component id="panelDAO" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="jPanel9" min="-2" max="-2" attributes="0"/>
+                      <Component id="panelDAOImpl" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="jPanel4" min="-2" pref="83" max="-2" attributes="0"/>
+                      <Component id="panelMB" min="-2" pref="83" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="jPanel5" min="-2" pref="188" max="-2" attributes="0"/>
+                      <Component id="panelOthers" min="-2" pref="188" max="-2" attributes="0"/>
                       <EmptySpace max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
           </Layout>
           <SubComponents>
-            <Container class="javax.swing.JPanel" name="jPanel4">
+            <Container class="javax.swing.JPanel" name="panelMB">
               <Properties>
                 <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
                   <Border info="org.netbeans.modules.form.compat2.border.TitledBorderInfo">
@@ -236,8 +236,8 @@
                       <Group type="102" attributes="0">
                           <EmptySpace max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="1" attributes="0">
-                              <Component id="labelManagedBean" min="-2" pref="94" max="-2" attributes="0"/>
-                              <Component id="jLabel1" min="-2" pref="94" max="-2" attributes="0"/>
+                              <Component id="labelMBLocation" min="-2" pref="94" max="-2" attributes="0"/>
+                              <Component id="labelMBPackage" min="-2" pref="94" max="-2" attributes="0"/>
                           </Group>
                           <EmptySpace max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="0" attributes="0">
@@ -256,13 +256,13 @@
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Group type="102" alignment="0" attributes="0">
                           <Group type="103" groupAlignment="3" attributes="0">
-                              <Component id="labelManagedBean" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="labelMBLocation" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="textManagedBean" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="buttonSelectMB" alignment="3" min="-2" max="-2" attributes="0"/>
                           </Group>
                           <EmptySpace max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="3" attributes="0">
-                              <Component id="jLabel1" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="labelMBPackage" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="textPackageMB" alignment="3" min="-2" max="-2" attributes="0"/>
                           </Group>
                           <EmptySpace max="32767" attributes="0"/>
@@ -271,7 +271,7 @@
                 </DimensionLayout>
               </Layout>
               <SubComponents>
-                <Component class="javax.swing.JLabel" name="jLabel1">
+                <Component class="javax.swing.JLabel" name="labelMBPackage">
                   <Properties>
                     <Property name="horizontalAlignment" type="int" value="4"/>
                     <Property name="labelFor" type="java.awt.Component" editor="org.netbeans.modules.form.ComponentChooserEditor">
@@ -288,7 +288,7 @@
                     <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="textPackageMBActionPerformed"/>
                   </Events>
                 </Component>
-                <Component class="javax.swing.JLabel" name="labelManagedBean">
+                <Component class="javax.swing.JLabel" name="labelMBLocation">
                   <Properties>
                     <Property name="horizontalAlignment" type="int" value="4"/>
                     <Property name="labelFor" type="java.awt.Component" editor="org.netbeans.modules.form.ComponentChooserEditor">
@@ -324,7 +324,7 @@
                 </Component>
               </SubComponents>
             </Container>
-            <Container class="javax.swing.JPanel" name="jPanel5">
+            <Container class="javax.swing.JPanel" name="panelOthers">
               <Properties>
                 <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
                   <Border info="org.netbeans.modules.form.compat2.border.TitledBorderInfo">
@@ -343,48 +343,45 @@
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Group type="102" attributes="0">
                           <EmptySpace max="-2" attributes="0"/>
-                          <Group type="103" groupAlignment="1" max="-2" attributes="0">
-                              <Component id="labelView7" max="32767" attributes="0"/>
-                              <Component id="labelView1" alignment="0" max="32767" attributes="0"/>
-                              <Component id="labelView2" alignment="0" max="32767" attributes="0"/>
-                              <Component id="labelView5" alignment="0" pref="142" max="32767" attributes="0"/>
-                              <Component id="labelView4" alignment="0" max="32767" attributes="0"/>
-                              <Component id="labelView" alignment="0" max="32767" attributes="0"/>
+                          <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                              <Component id="labelMBSuffix" alignment="0" pref="115" max="32767" attributes="0"/>
+                              <Component id="labelResourceBundle" alignment="0" max="32767" attributes="0"/>
+                              <Component id="labelFaceletsTemplate" alignment="0" max="32767" attributes="0"/>
+                              <Component id="labelBaseDAOImpl" alignment="0" max="32767" attributes="0"/>
+                              <Component id="labelXHTMLLocation" alignment="0" max="32767" attributes="0"/>
+                              <Component id="labelPrimeFacesVersion" max="32767" attributes="0"/>
                           </Group>
-                          <EmptySpace min="-2" max="-2" attributes="0"/>
+                          <EmptySpace max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="0" attributes="0">
+                              <Group type="102" attributes="0">
+                                  <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                                      <Group type="102" alignment="0" attributes="0">
+                                          <Component id="textResourceBundle" min="-2" pref="158" max="-2" attributes="0"/>
+                                          <EmptySpace max="32767" attributes="0"/>
+                                          <Component id="labelAuthor" min="-2" pref="142" max="-2" attributes="0"/>
+                                      </Group>
+                                      <Group type="102" alignment="0" attributes="0">
+                                          <Component id="textManagedBeanSuffix" min="-2" pref="158" max="-2" attributes="0"/>
+                                          <EmptySpace max="-2" attributes="0"/>
+                                          <Component id="labelBOSuffix" min="-2" pref="143" max="-2" attributes="0"/>
+                                      </Group>
+                                  </Group>
+                                  <EmptySpace max="-2" attributes="0"/>
+                                  <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                                      <Component id="textBusinessObjectSuffix" pref="157" max="32767" attributes="0"/>
+                                      <Component id="textAuthor" max="32767" attributes="0"/>
+                                  </Group>
+                              </Group>
+                              <Component id="textBaseDAOImpl" min="-2" pref="480" max="-2" attributes="0"/>
                               <Group type="102" attributes="0">
                                   <Component id="textView" min="-2" pref="480" max="-2" attributes="0"/>
                                   <EmptySpace max="-2" attributes="0"/>
                                   <Component id="buttonSelectView" min="-2" max="-2" attributes="0"/>
                               </Group>
-                              <Component id="textBaseDAOImpl" min="-2" pref="480" max="-2" attributes="0"/>
-                              <Component id="textTemplatePath" min="-2" pref="480" max="-2" attributes="0"/>
-                              <Group type="102" alignment="0" attributes="0">
-                                  <Group type="103" groupAlignment="1" max="-2" attributes="0">
-                                      <Component id="textResourceBundle" pref="158" max="32767" attributes="0"/>
-                                      <Group type="102" attributes="0">
-                                          <Component id="textManagedBeanSuffix" max="32767" attributes="0"/>
-                                          <EmptySpace min="-2" pref="106" max="-2" attributes="0"/>
-                                      </Group>
-                                  </Group>
-                                  <EmptySpace min="-2" pref="4" max="-2" attributes="0"/>
-                                  <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                                      <Group type="102" attributes="0">
-                                          <Component id="labelView6" min="-2" pref="143" max="-2" attributes="0"/>
-                                          <EmptySpace min="-2" pref="18" max="-2" attributes="0"/>
-                                          <Component id="textBusinessObjectSuffix" min="-2" pref="157" max="-2" attributes="0"/>
-                                      </Group>
-                                      <Group type="102" attributes="0">
-                                          <Component id="labelView3" min="-2" pref="142" max="-2" attributes="0"/>
-                                          <EmptySpace type="separate" max="-2" attributes="0"/>
-                                          <Component id="textAuthor" max="32767" attributes="0"/>
-                                      </Group>
-                                  </Group>
-                              </Group>
-                              <Component id="comboPrimeFacesVersion" min="-2" pref="215" max="-2" attributes="0"/>
+                              <Component id="textTemplatePath" alignment="0" min="-2" pref="480" max="-2" attributes="0"/>
+                              <Component id="comboPrimeFacesVersion" min="-2" pref="158" max="-2" attributes="0"/>
                           </Group>
-                          <EmptySpace pref="24" max="32767" attributes="0"/>
+                          <EmptySpace pref="51" max="32767" attributes="0"/>
                       </Group>
                   </Group>
                 </DimensionLayout>
@@ -392,37 +389,37 @@
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Group type="102" alignment="0" attributes="0">
                           <Group type="103" groupAlignment="3" attributes="0">
-                              <Component id="labelView" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="labelXHTMLLocation" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="textView" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="buttonSelectView" alignment="3" min="-2" max="-2" attributes="0"/>
                           </Group>
                           <EmptySpace max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="3" attributes="0">
-                              <Component id="labelView4" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="labelBaseDAOImpl" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="textBaseDAOImpl" alignment="3" min="-2" max="-2" attributes="0"/>
                           </Group>
                           <EmptySpace max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="3" attributes="0">
-                              <Component id="labelView1" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="labelFaceletsTemplate" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="textTemplatePath" alignment="3" min="-2" max="-2" attributes="0"/>
                           </Group>
                           <EmptySpace min="-2" pref="8" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="3" attributes="0">
-                              <Component id="labelView2" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="labelResourceBundle" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="textResourceBundle" alignment="3" min="-2" max="-2" attributes="0"/>
-                              <Component id="labelView3" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="labelAuthor" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="textAuthor" alignment="3" min="-2" max="-2" attributes="0"/>
                           </Group>
                           <EmptySpace max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="3" attributes="0">
                               <Component id="textManagedBeanSuffix" alignment="3" min="-2" max="-2" attributes="0"/>
-                              <Component id="labelView5" alignment="3" min="-2" max="-2" attributes="0"/>
-                              <Component id="labelView6" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="labelMBSuffix" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="labelBOSuffix" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="textBusinessObjectSuffix" alignment="3" min="-2" max="-2" attributes="0"/>
                           </Group>
                           <EmptySpace max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="3" attributes="0">
-                              <Component id="labelView7" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="labelPrimeFacesVersion" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="comboPrimeFacesVersion" alignment="3" min="-2" max="-2" attributes="0"/>
                           </Group>
                           <EmptySpace min="-2" pref="6" max="-2" attributes="0"/>
@@ -431,13 +428,13 @@
                 </DimensionLayout>
               </Layout>
               <SubComponents>
-                <Component class="javax.swing.JLabel" name="labelView">
+                <Component class="javax.swing.JLabel" name="labelXHTMLLocation">
                   <Properties>
                     <Property name="horizontalAlignment" type="int" value="4"/>
                     <Property name="labelFor" type="java.awt.Component" editor="org.netbeans.modules.form.ComponentChooserEditor">
                       <ComponentRef name="textView"/>
                     </Property>
-                    <Property name="text" type="java.lang.String" value="View Location:"/>
+                    <Property name="text" type="java.lang.String" value="XHTML Location:"/>
                   </Properties>
                 </Component>
                 <Component class="javax.swing.JTextField" name="textView">
@@ -450,7 +447,7 @@
                     <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="buttonSelectViewActionPerformed"/>
                   </Events>
                 </Component>
-                <Component class="javax.swing.JLabel" name="labelView1">
+                <Component class="javax.swing.JLabel" name="labelFaceletsTemplate">
                   <Properties>
                     <Property name="horizontalAlignment" type="int" value="4"/>
                     <Property name="labelFor" type="java.awt.Component" editor="org.netbeans.modules.form.ComponentChooserEditor">
@@ -461,7 +458,7 @@
                 </Component>
                 <Component class="javax.swing.JTextField" name="textTemplatePath">
                 </Component>
-                <Component class="javax.swing.JLabel" name="labelView2">
+                <Component class="javax.swing.JLabel" name="labelResourceBundle">
                   <Properties>
                     <Property name="horizontalAlignment" type="int" value="4"/>
                     <Property name="labelFor" type="java.awt.Component" editor="org.netbeans.modules.form.ComponentChooserEditor">
@@ -472,7 +469,7 @@
                 </Component>
                 <Component class="javax.swing.JTextField" name="textResourceBundle">
                 </Component>
-                <Component class="javax.swing.JLabel" name="labelView3">
+                <Component class="javax.swing.JLabel" name="labelAuthor">
                   <Properties>
                     <Property name="horizontalAlignment" type="int" value="4"/>
                     <Property name="labelFor" type="java.awt.Component" editor="org.netbeans.modules.form.ComponentChooserEditor">
@@ -483,7 +480,7 @@
                 </Component>
                 <Component class="javax.swing.JTextField" name="textAuthor">
                 </Component>
-                <Component class="javax.swing.JLabel" name="labelView4">
+                <Component class="javax.swing.JLabel" name="labelBaseDAOImpl">
                   <Properties>
                     <Property name="horizontalAlignment" type="int" value="4"/>
                     <Property name="labelFor" type="java.awt.Component" editor="org.netbeans.modules.form.ComponentChooserEditor">
@@ -494,7 +491,7 @@
                 </Component>
                 <Component class="javax.swing.JTextField" name="textBaseDAOImpl">
                 </Component>
-                <Component class="javax.swing.JLabel" name="labelView5">
+                <Component class="javax.swing.JLabel" name="labelMBSuffix">
                   <Properties>
                     <Property name="horizontalAlignment" type="int" value="4"/>
                     <Property name="labelFor" type="java.awt.Component" editor="org.netbeans.modules.form.ComponentChooserEditor">
@@ -507,7 +504,7 @@
                 </Component>
                 <Component class="javax.swing.JTextField" name="textBusinessObjectSuffix">
                 </Component>
-                <Component class="javax.swing.JLabel" name="labelView6">
+                <Component class="javax.swing.JLabel" name="labelBOSuffix">
                   <Properties>
                     <Property name="horizontalAlignment" type="int" value="4"/>
                     <Property name="labelFor" type="java.awt.Component" editor="org.netbeans.modules.form.ComponentChooserEditor">
@@ -516,13 +513,13 @@
                     <Property name="text" type="java.lang.String" value="Business Object Suffix:"/>
                   </Properties>
                 </Component>
-                <Component class="javax.swing.JLabel" name="labelView7">
+                <Component class="javax.swing.JLabel" name="labelPrimeFacesVersion">
                   <Properties>
                     <Property name="horizontalAlignment" type="int" value="4"/>
                     <Property name="labelFor" type="java.awt.Component" editor="org.netbeans.modules.form.ComponentChooserEditor">
                       <ComponentRef name="textAuthor"/>
                     </Property>
-                    <Property name="text" type="java.lang.String" value="PrimeFaces:"/>
+                    <Property name="text" type="java.lang.String" value="PrimeFaces Version:"/>
                   </Properties>
                 </Component>
                 <Component class="javax.swing.JComboBox" name="comboPrimeFacesVersion">
@@ -534,7 +531,7 @@
                 </Component>
               </SubComponents>
             </Container>
-            <Container class="javax.swing.JPanel" name="jPanel6">
+            <Container class="javax.swing.JPanel" name="panelBO">
               <Properties>
                 <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
                   <Border info="org.netbeans.modules.form.compat2.border.TitledBorderInfo">
@@ -554,8 +551,8 @@
                       <Group type="102" attributes="0">
                           <EmptySpace max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                              <Component id="jLabel6" max="32767" attributes="0"/>
-                              <Component id="labelManagedBean2" pref="94" max="32767" attributes="0"/>
+                              <Component id="labelBOPackage" max="32767" attributes="0"/>
+                              <Component id="labelBOLocation" pref="94" max="32767" attributes="0"/>
                           </Group>
                           <EmptySpace max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="0" attributes="0">
@@ -574,14 +571,14 @@
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Group type="102" alignment="0" attributes="0">
                           <Group type="103" groupAlignment="3" attributes="0">
-                              <Component id="labelManagedBean2" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="labelBOLocation" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="textBusinessObject" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="buttonSelectBO" alignment="3" min="-2" max="-2" attributes="0"/>
                           </Group>
                           <EmptySpace max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="3" attributes="0">
                               <Component id="textPackageBO" alignment="3" min="-2" max="-2" attributes="0"/>
-                              <Component id="jLabel6" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="labelBOPackage" alignment="3" min="-2" max="-2" attributes="0"/>
                           </Group>
                           <EmptySpace min="0" pref="8" max="32767" attributes="0"/>
                       </Group>
@@ -589,7 +586,7 @@
                 </DimensionLayout>
               </Layout>
               <SubComponents>
-                <Component class="javax.swing.JLabel" name="jLabel6">
+                <Component class="javax.swing.JLabel" name="labelBOPackage">
                   <Properties>
                     <Property name="horizontalAlignment" type="int" value="4"/>
                     <Property name="labelFor" type="java.awt.Component" editor="org.netbeans.modules.form.ComponentChooserEditor">
@@ -613,7 +610,7 @@
                     <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="buttonSelectBOActionPerformed"/>
                   </Events>
                 </Component>
-                <Component class="javax.swing.JLabel" name="labelManagedBean2">
+                <Component class="javax.swing.JLabel" name="labelBOLocation">
                   <Properties>
                     <Property name="horizontalAlignment" type="int" value="4"/>
                     <Property name="labelFor" type="java.awt.Component" editor="org.netbeans.modules.form.ComponentChooserEditor">
@@ -624,7 +621,7 @@
                 </Component>
               </SubComponents>
             </Container>
-            <Container class="javax.swing.JPanel" name="jPanel7">
+            <Container class="javax.swing.JPanel" name="panelDAO">
               <Properties>
                 <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
                   <Border info="org.netbeans.modules.form.compat2.border.TitledBorderInfo">
@@ -644,8 +641,8 @@
                       <Group type="102" attributes="0">
                           <EmptySpace max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="1" attributes="0">
-                              <Component id="jLabel7" min="-2" pref="98" max="-2" attributes="0"/>
-                              <Component id="labelManagedBean3" min="-2" pref="94" max="-2" attributes="0"/>
+                              <Component id="labelDAOPackage" min="-2" pref="98" max="-2" attributes="0"/>
+                              <Component id="labelDAOLocation" min="-2" pref="94" max="-2" attributes="0"/>
                           </Group>
                           <EmptySpace max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="0" attributes="0">
@@ -664,13 +661,13 @@
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Group type="102" alignment="0" attributes="0">
                           <Group type="103" groupAlignment="3" attributes="0">
-                              <Component id="labelManagedBean3" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="labelDAOLocation" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="textDAO" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="buttonSelectDAO" alignment="3" min="-2" max="-2" attributes="0"/>
                           </Group>
                           <EmptySpace max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="3" attributes="0">
-                              <Component id="jLabel7" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="labelDAOPackage" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="textPackageDAO" alignment="3" min="-2" max="-2" attributes="0"/>
                           </Group>
                       </Group>
@@ -678,7 +675,7 @@
                 </DimensionLayout>
               </Layout>
               <SubComponents>
-                <Component class="javax.swing.JLabel" name="jLabel7">
+                <Component class="javax.swing.JLabel" name="labelDAOPackage">
                   <Properties>
                     <Property name="horizontalAlignment" type="int" value="4"/>
                     <Property name="labelFor" type="java.awt.Component" editor="org.netbeans.modules.form.ComponentChooserEditor">
@@ -692,7 +689,7 @@
                     <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="textPackageDAOActionPerformed"/>
                   </Events>
                 </Component>
-                <Component class="javax.swing.JLabel" name="labelManagedBean3">
+                <Component class="javax.swing.JLabel" name="labelDAOLocation">
                   <Properties>
                     <Property name="horizontalAlignment" type="int" value="4"/>
                     <Property name="labelFor" type="java.awt.Component" editor="org.netbeans.modules.form.ComponentChooserEditor">
@@ -713,7 +710,7 @@
                 </Component>
               </SubComponents>
             </Container>
-            <Container class="javax.swing.JPanel" name="jPanel9">
+            <Container class="javax.swing.JPanel" name="panelDAOImpl">
               <Properties>
                 <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
                   <Border info="org.netbeans.modules.form.compat2.border.TitledBorderInfo">
@@ -733,8 +730,8 @@
                       <Group type="102" attributes="0">
                           <EmptySpace max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="1" attributes="0">
-                              <Component id="labelManagedBean5" min="-2" pref="94" max="-2" attributes="0"/>
-                              <Component id="jLabel9" min="-2" pref="98" max="-2" attributes="0"/>
+                              <Component id="labelDAOImplLocation" min="-2" pref="94" max="-2" attributes="0"/>
+                              <Component id="labelDAOImplPackage" min="-2" pref="98" max="-2" attributes="0"/>
                           </Group>
                           <EmptySpace max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="0" attributes="0">
@@ -754,12 +751,12 @@
                       <Group type="102" alignment="0" attributes="0">
                           <Group type="103" groupAlignment="3" attributes="0">
                               <Component id="textDAOImpl" alignment="3" min="-2" max="-2" attributes="0"/>
-                              <Component id="labelManagedBean5" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="labelDAOImplLocation" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="buttonSelectDAOImpl" alignment="3" min="-2" max="-2" attributes="0"/>
                           </Group>
                           <EmptySpace max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="3" attributes="0">
-                              <Component id="jLabel9" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="labelDAOImplPackage" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="textPackageDAOImpl" alignment="3" min="-2" max="-2" attributes="0"/>
                           </Group>
                           <EmptySpace min="0" pref="8" max="32767" attributes="0"/>
@@ -768,7 +765,7 @@
                 </DimensionLayout>
               </Layout>
               <SubComponents>
-                <Component class="javax.swing.JLabel" name="jLabel9">
+                <Component class="javax.swing.JLabel" name="labelDAOImplPackage">
                   <Properties>
                     <Property name="horizontalAlignment" type="int" value="4"/>
                     <Property name="labelFor" type="java.awt.Component" editor="org.netbeans.modules.form.ComponentChooserEditor">
@@ -777,7 +774,7 @@
                     <Property name="text" type="java.lang.String" value="Package:"/>
                   </Properties>
                 </Component>
-                <Component class="javax.swing.JLabel" name="labelManagedBean5">
+                <Component class="javax.swing.JLabel" name="labelDAOImplLocation">
                   <Properties>
                     <Property name="horizontalAlignment" type="int" value="4"/>
                     <Property name="labelFor" type="java.awt.Component" editor="org.netbeans.modules.form.ComponentChooserEditor">
@@ -805,7 +802,7 @@
             </Container>
           </SubComponents>
         </Container>
-        <Container class="javax.swing.JPanel" name="jPanel1">
+        <Container class="javax.swing.JPanel" name="panelCreateClasses">
           <Constraints>
             <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout" value="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout$JTabbedPaneConstraintsDescription">
               <JTabbedPaneConstraints tabName="Create Classes">
@@ -820,18 +817,18 @@
                   <Group type="102" attributes="0">
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="jScrollPane2" alignment="0" max="32767" attributes="0"/>
-                          <Component id="jScrollPane3" alignment="0" pref="721" max="32767" attributes="0"/>
+                          <Component id="scrollPaneLog" alignment="0" max="32767" attributes="0"/>
+                          <Component id="scrollPaneClassBean" alignment="0" pref="721" max="32767" attributes="0"/>
                           <Group type="102" attributes="0">
                               <Group type="103" groupAlignment="0" attributes="0">
-                                  <Component id="jButton1" min="-2" max="-2" attributes="0"/>
-                                  <Component id="jLabel2" alignment="0" min="-2" max="-2" attributes="0"/>
-                                  <Component id="jLabel3" alignment="0" min="-2" max="-2" attributes="0"/>
-                                  <Component id="jLabel4" alignment="0" min="-2" max="-2" attributes="0"/>
+                                  <Component id="buttonCreateClasses" min="-2" max="-2" attributes="0"/>
+                                  <Component id="labelLogMaker" alignment="0" min="-2" max="-2" attributes="0"/>
+                                  <Component id="labelI18N" alignment="0" min="-2" max="-2" attributes="0"/>
+                                  <Component id="labelClassBean" alignment="0" min="-2" max="-2" attributes="0"/>
                               </Group>
                               <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
                           </Group>
-                          <Component id="jScrollPane4" alignment="0" pref="721" max="32767" attributes="0"/>
+                          <Component id="scrollPaneI18N" alignment="0" pref="721" max="32767" attributes="0"/>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
                   </Group>
@@ -841,26 +838,26 @@
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" alignment="0" attributes="0">
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="jButton1" min="-2" max="-2" attributes="0"/>
+                      <Component id="buttonCreateClasses" min="-2" max="-2" attributes="0"/>
                       <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                      <Component id="jLabel2" min="-2" max="-2" attributes="0"/>
+                      <Component id="labelLogMaker" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="jScrollPane2" min="-2" pref="136" max="-2" attributes="0"/>
+                      <Component id="scrollPaneLog" min="-2" pref="136" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="jLabel3" min="-2" max="-2" attributes="0"/>
+                      <Component id="labelI18N" min="-2" max="-2" attributes="0"/>
                       <EmptySpace min="-2" pref="1" max="-2" attributes="0"/>
-                      <Component id="jScrollPane4" min="-2" pref="133" max="-2" attributes="0"/>
+                      <Component id="scrollPaneI18N" min="-2" pref="133" max="-2" attributes="0"/>
                       <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                      <Component id="jLabel4" min="-2" max="-2" attributes="0"/>
+                      <Component id="labelClassBean" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="jScrollPane3" min="-2" pref="147" max="-2" attributes="0"/>
+                      <Component id="scrollPaneClassBean" min="-2" pref="147" max="-2" attributes="0"/>
                       <EmptySpace max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
           </Layout>
           <SubComponents>
-            <Container class="javax.swing.JScrollPane" name="jScrollPane2">
+            <Container class="javax.swing.JScrollPane" name="scrollPaneLog">
               <AuxValues>
                 <AuxValue name="autoScrollPane" type="java.lang.Boolean" value="true"/>
               </AuxValues>
@@ -875,20 +872,20 @@
                 </Component>
               </SubComponents>
             </Container>
-            <Component class="javax.swing.JLabel" name="jLabel2">
+            <Component class="javax.swing.JLabel" name="labelLogMaker">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Log:"/>
               </Properties>
             </Component>
-            <Component class="javax.swing.JButton" name="jButton1">
+            <Component class="javax.swing.JButton" name="buttonCreateClasses">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Create Classes"/>
               </Properties>
               <Events>
-                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButton1ActionPerformed"/>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="buttonCreateClassesActionPerformed"/>
               </Events>
             </Component>
-            <Container class="javax.swing.JScrollPane" name="jScrollPane3">
+            <Container class="javax.swing.JScrollPane" name="scrollPaneClassBean">
               <AuxValues>
                 <AuxValue name="autoScrollPane" type="java.lang.Boolean" value="true"/>
               </AuxValues>
@@ -903,17 +900,17 @@
                 </Component>
               </SubComponents>
             </Container>
-            <Component class="javax.swing.JLabel" name="jLabel3">
+            <Component class="javax.swing.JLabel" name="labelI18N">
               <Properties>
                 <Property name="text" type="java.lang.String" value="I18N Resource Bundle:"/>
               </Properties>
             </Component>
-            <Component class="javax.swing.JLabel" name="jLabel4">
+            <Component class="javax.swing.JLabel" name="labelClassBean">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Class Bean:"/>
               </Properties>
             </Component>
-            <Container class="javax.swing.JScrollPane" name="jScrollPane4">
+            <Container class="javax.swing.JScrollPane" name="scrollPaneI18N">
               <AuxValues>
                 <AuxValue name="autoScrollPane" type="java.lang.Boolean" value="true"/>
               </AuxValues>
