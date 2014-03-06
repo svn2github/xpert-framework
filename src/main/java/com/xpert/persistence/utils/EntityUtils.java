@@ -36,13 +36,13 @@ public class EntityUtils {
         Method[] methods = clazz.getDeclaredMethods();
         try {
             for (Field field : fields) {
-                if (field.isAnnotationPresent(Id.class)) {
+                if (field.isAnnotationPresent(Id.class) || field.isAnnotationPresent(EmbeddedId.class)) {
                     field.setAccessible(true);
                     return field.get(object);
                 }
             }
             for (Method method : methods) {
-                if (method.isAnnotationPresent(Id.class)) {
+                if (method.isAnnotationPresent(Id.class) || method.isAnnotationPresent(EmbeddedId.class)) {
                     return method.invoke(object);
                 }
             }
