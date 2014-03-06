@@ -7,7 +7,6 @@
   </Properties>
   <SyntheticProperties>
     <SyntheticProperty name="formSizePolicy" type="int" value="1"/>
-    <SyntheticProperty name="generateCenter" type="boolean" value="false"/>
   </SyntheticProperties>
   <AuxValues>
     <AuxValue name="FormSettings_autoResourcing" type="java.lang.Integer" value="0"/>
@@ -99,7 +98,7 @@
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Group type="102" attributes="0">
                               <Component id="labelSelectClasses" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace min="0" pref="433" max="32767" attributes="0"/>
+                              <EmptySpace min="0" pref="441" max="32767" attributes="0"/>
                           </Group>
                           <Component id="scrollPaneSelectClasses" max="32767" attributes="0"/>
                       </Group>
@@ -209,7 +208,7 @@
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="panelMB" min="-2" pref="83" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="panelOthers" min="-2" pref="188" max="-2" attributes="0"/>
+                      <Component id="panelOthers" min="-2" pref="196" max="-2" attributes="0"/>
                       <EmptySpace max="32767" attributes="0"/>
                   </Group>
               </Group>
@@ -424,7 +423,7 @@
                               <Component id="labelPrimeFacesVersion" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="comboPrimeFacesVersion" alignment="3" min="-2" max="-2" attributes="0"/>
                           </Group>
-                          <EmptySpace min="-2" pref="6" max="-2" attributes="0"/>
+                          <EmptySpace max="32767" attributes="0"/>
                       </Group>
                   </Group>
                 </DimensionLayout>
@@ -583,7 +582,7 @@
                               <Component id="textPackageBO" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="labelBOPackage" alignment="3" min="-2" max="-2" attributes="0"/>
                           </Group>
-                          <EmptySpace min="0" pref="8" max="32767" attributes="0"/>
+                          <EmptySpace min="0" pref="6" max="32767" attributes="0"/>
                       </Group>
                   </Group>
                 </DimensionLayout>
@@ -764,7 +763,7 @@
                               <Component id="labelDAOImplPackage" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="textPackageDAOImpl" alignment="3" min="-2" max="-2" attributes="0"/>
                           </Group>
-                          <EmptySpace min="0" pref="8" max="32767" attributes="0"/>
+                          <EmptySpace min="0" pref="6" max="32767" attributes="0"/>
                       </Group>
                   </Group>
                 </DimensionLayout>
@@ -856,7 +855,7 @@
                       <Component id="labelClassBean" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="scrollPaneClassBean" min="-2" pref="147" max="-2" attributes="0"/>
-                      <EmptySpace max="32767" attributes="0"/>
+                      <EmptySpace pref="42" max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>

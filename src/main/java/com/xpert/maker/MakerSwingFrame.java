@@ -415,7 +415,7 @@ public abstract class MakerSwingFrame extends javax.swing.JFrame {
                 .addGroup(panelSelectClassesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(panelSelectClassesLayout.createSequentialGroup()
                         .addComponent(labelSelectClasses)
-                        .addGap(0, 433, Short.MAX_VALUE))
+                        .addGap(0, 441, Short.MAX_VALUE))
                     .addComponent(scrollPaneSelectClasses))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(panelSelectClassesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -598,7 +598,7 @@ public abstract class MakerSwingFrame extends javax.swing.JFrame {
                 .addGroup(panelOthersLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(labelPrimeFacesVersion)
                     .addComponent(comboPrimeFacesVersion, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(6, 6, 6))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         panelBO.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Business Object (BO)", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.BELOW_TOP, new java.awt.Font("Tahoma", 0, 12), new java.awt.Color(103, 142, 174))); // NOI18N
@@ -654,7 +654,7 @@ public abstract class MakerSwingFrame extends javax.swing.JFrame {
                 .addGroup(panelBOLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(textPackageBO, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(labelBOPackage))
-                .addGap(0, 8, Short.MAX_VALUE))
+                .addGap(0, 6, Short.MAX_VALUE))
         );
 
         panelDAO.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "DAO", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.BELOW_TOP, new java.awt.Font("Tahoma", 0, 12), new java.awt.Color(103, 142, 174))); // NOI18N
@@ -765,7 +765,7 @@ public abstract class MakerSwingFrame extends javax.swing.JFrame {
                 .addGroup(panelDAOImplLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(labelDAOImplPackage)
                     .addComponent(textPackageDAOImpl, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(0, 8, Short.MAX_VALUE))
+                .addGap(0, 6, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout panelConfigurationLayout = new javax.swing.GroupLayout(panelConfiguration);
@@ -795,7 +795,7 @@ public abstract class MakerSwingFrame extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(panelMB, javax.swing.GroupLayout.PREFERRED_SIZE, 83, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(panelOthers, javax.swing.GroupLayout.PREFERRED_SIZE, 188, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(panelOthers, javax.swing.GroupLayout.PREFERRED_SIZE, 196, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -862,7 +862,7 @@ public abstract class MakerSwingFrame extends javax.swing.JFrame {
                 .addComponent(labelClassBean)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(scrollPaneClassBean, javax.swing.GroupLayout.PREFERRED_SIZE, 147, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(42, Short.MAX_VALUE))
         );
 
         tabbedPanelMain.addTab("Create Classes", panelCreateClasses);
@@ -873,7 +873,7 @@ public abstract class MakerSwingFrame extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(tabbedPanelMain, javax.swing.GroupLayout.PREFERRED_SIZE, 746, Short.MAX_VALUE)
+                .addComponent(tabbedPanelMain, javax.swing.GroupLayout.DEFAULT_SIZE, 746, Short.MAX_VALUE)
                 .addContainerGap())
         );
         layout.setVerticalGroup(
