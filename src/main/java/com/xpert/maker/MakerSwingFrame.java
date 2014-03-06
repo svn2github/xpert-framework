@@ -253,6 +253,7 @@ public abstract class MakerSwingFrame extends javax.swing.JFrame {
         for (PrimeFacesVersion version : versions) {
             comboPrimeFacesVersion.addItem(version);
         }
+        comboPrimeFacesVersion.setSelectedItem(getPrimeFacesVersion());
         comboPrimeFacesVersion.setRenderer(new DefaultListCellRenderer() {
             @Override
             public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
