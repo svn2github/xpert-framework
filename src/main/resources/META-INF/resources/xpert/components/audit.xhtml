@@ -67,8 +67,11 @@
                                         <p:column headerText="#{xmsg['user']}">
                                             <h:outputText value="#{audit.userName}" />
                                         </p:column>
+                                        <p:column headerText="#{xmsg['ip']}">
+                                            <h:outputText value="#{audit.ip}" />
+                                        </p:column>
                                         <p:summaryRow>  
-                                            <p:column colspan="4">  
+                                            <p:column colspan="5">  
                                                 <p:dataTable var="metadata" emptyMessage="#{xmsg.noRecordFound}"
                                                              value="#{audit.metadatas}" rowIndexVar="indexMetadata">
                                                     <x:initializer/>
@@ -118,8 +121,11 @@
                                         <p:column headerText="#{xmsg['user']}">
                                             <h:outputText value="#{audit.userName}" />
                                         </p:column>
+                                        <p:column headerText="#{xmsg['ip']}">
+                                            <h:outputText value="#{audit.ip}" />
+                                        </p:column>
                                         <p:summaryRow>  
-                                            <p:column colspan="4">  
+                                            <p:column colspan="5">  
                                                 <p:dataTable var="metadata" emptyMessage="#{xmsg.noRecordFound}"
                                                              value="#{audit.metadatas}" rowIndexVar="indexMetadata">
                                                     <x:initializer/>

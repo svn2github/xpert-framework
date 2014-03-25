@@ -18,6 +18,8 @@ public abstract class AbstractAuditing {
     
     private Long identifier;
     
+    private String ip;
+    
     @Column(length = 10)
     @Enumerated(EnumType.STRING)
     private AuditingType auditingType;
@@ -61,6 +63,14 @@ public abstract class AbstractAuditing {
 
     public void setAuditingType(AuditingType auditingType) {
         this.auditingType = auditingType;
+    }
+
+    public String getIp() {
+        return ip;
+    }
+
+    public void setIp(String ip) {
+        this.ip = ip;
     }
     
     

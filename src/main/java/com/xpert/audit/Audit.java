@@ -4,15 +4,14 @@ import com.xpert.audit.model.AbstractAuditing;
 import com.xpert.audit.model.AbstractMetadata;
 import com.xpert.audit.model.AuditingType;
 import com.xpert.Configuration;
+import com.xpert.faces.utils.FacesUtils;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.faces.context.FacesContext;
 import javax.persistence.*;
-import org.hibernate.Hibernate;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.collection.internal.PersistentBag;
@@ -25,7 +24,7 @@ import org.hibernate.proxy.HibernateProxy;
  * @author Ayslan
  */
 public class Audit {
-
+    
     private static final Logger logger = Logger.getLogger(Audit.class.getName());
     private static final String[] EXCLUDED_FIELDS = {"notifyAll", "notify", "getClass", "wait", "hashCode", "toString", "equals"};
     private static final SimpleDateFormat AUDIT_DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -34,11 +33,11 @@ public class Audit {
     private static Map<Method, Boolean> mappedOneToOneCascadeAll = new HashMap<Method, Boolean>();
     private Session session;
     private EntityManager entityManager;
-
+    
     public Audit(EntityManager entityManager) {
         this.entityManager = entityManager;
     }
-
+    
     public Object getId(Object object) {
         if (object == null) {
             return null;
@@ -48,7 +47,7 @@ public class Audit {
         }
         return getAnnotadedWithId(object, object.getClass());
     }
-
+    
     public Object getAnnotadedWithId(Object object, Class clazz) {
         Field[] fields = clazz.getDeclaredFields();
         Method[] methods = clazz.getDeclaredMethods();
@@ -72,7 +71,7 @@ public class Audit {
         }
         return null;
     }
-
+    
     public Object getPersisted(Object object) {
         Object id = getId(object);
         if (id != null) {
@@ -83,14 +82,14 @@ public class Audit {
         }
         return null;
     }
-
+    
     public Object getPersistedById(Object id, Class clazz) {
         if (id != null) {
             return entityManager.find(clazz, id);
         }
         return null;
     }
-
+    
     public Session getSession() {
         if (session == null) {
             if (entityManager.getDelegate() instanceof EntityManagerImpl) {
@@ -103,18 +102,18 @@ public class Audit {
             return session;
         }
     }
-
+    
     public SessionFactory getSessionFactory() {
         return getSession().getSessionFactory();
     }
-
+    
     public void insert(Object object) {
         if (!isAudit(object)) {
             return;
         }
         audit(object, null, AuditingType.INSERT);
     }
-
+    
     public void update(Object object) {
         if (!isAudit(object)) {
             return;
@@ -127,29 +126,29 @@ public class Audit {
             logger.log(Level.SEVERE, "Entity passed to update in Xpert Audit, is a transient instance");
         }
     }
-
+    
     public void delete(Object id, Class clazz) {
         if (!isAudit(clazz)) {
             return;
         }
         audit(getPersistedById(id, clazz), null, AuditingType.DELETE);
     }
-
+    
     public void delete(Object object) {
         if (!isAudit(object)) {
             return;
         }
         audit(object, null, AuditingType.DELETE);
     }
-
+    
     public static String getEntityName(Class entity) {
-
+        
         if (mappedName.get(entity) != null) {
             return mappedName.get(entity);
         }
-
+        
         String name = null;
-
+        
         Table table = (Table) entity.getAnnotation(Table.class);
         if (table != null && table.name() != null && !table.name().isEmpty()) {
             name = table.name();
@@ -161,48 +160,48 @@ public class Audit {
                 name = entity.getSimpleName();
             }
         }
-
+        
         mappedName.put(entity, name);
-
+        
         return name;
     }
-
+    
     public boolean isAudit(Object object) {
         if (object == null) {
             return false;
         }
         return isAudit(object.getClass());
     }
-
+    
     public boolean isAudit(Class entity) {
         if (entity.isAnnotationPresent(NotAudited.class)) {
             return false;
         }
         return true;
     }
-
+    
     public void audit(Object object, Object persisted, AuditingType auditingType) {
-
+        
         try {
-
+            
             if (isEntity(object)) {
-
+                
                 Field[] fields = object.getClass().getDeclaredFields();
                 Method[] methods = object.getClass().getDeclaredMethods();
                 Method.setAccessible(methods, true);
                 Field.setAccessible(fields, true);
-
+                
                 AbstractAuditing auditing = Configuration.getAbstractAuditing();
                 auditing.setIdentifier(Long.valueOf(getId(object).toString()));
                 auditing.setEntity(getEntityName(object.getClass()));
                 auditing.setAuditingType(auditingType);
                 auditing.setEventDate(new Date());
-
+                auditing.setIp(FacesUtils.getIP());
                 AbstractAuditingListener listener = Configuration.getAuditingListener();
                 if (listener != null) {
                     listener.onSave(auditing);
                 }
-
+                
                 List<AbstractMetadata> metadatas = null;
                 if (auditingType.equals(AuditingType.INSERT) || auditingType.equals(AuditingType.DELETE)) {
                     entityManager.persist(auditing);
@@ -213,20 +212,20 @@ public class Audit {
                         entityManager.persist(auditing);
                     }
                 }
-
+                
                 if (metadatas != null && !metadatas.isEmpty()) {
                     for (AbstractMetadata metadata : metadatas) {
                         entityManager.persist(metadata);
                     }
                 }
-
+                
             }
         } catch (Throwable t) {
             logger.log(Level.SEVERE, t.getMessage(), t);
         }
-
+        
     }
-
+    
     public List<AbstractMetadata> getMetadata(Object object, Object persisted, AbstractAuditing auditing) throws Exception {
         List<Method> methodsGet = getMethods(object);
         List<AbstractMetadata> metadatas = new ArrayList<AbstractMetadata>();
@@ -297,12 +296,12 @@ public class Audit {
                                 } else {
                                     embedableMetadata = getMetadata(fieldValue, getPersisted(fieldValue), auditing);
                                 }
-
+                                
                                 if (embedableMetadata != null && !embedableMetadata.isEmpty()) {
                                     metadatas.addAll(embedableMetadata);
                                 }
                             }
-
+                            
                             Object oldId = null;
                             if (fieldOld instanceof HibernateProxy) {
                                 oldId = ((HibernateProxy) fieldOld).getHibernateLazyInitializer().getIdentifier();
@@ -317,7 +316,7 @@ public class Audit {
                             metadata.setEntity(method.getDeclaringClass().getName());
                             metadata.setNewIdentifier(newId == null ? null : Long.valueOf(newId.toString()));
                             metadata.setNewValue(fieldValue == null ? "" : fieldValue.toString());
-
+                            
                         }
                     } else {
                         if (fieldOld != null) {
@@ -351,7 +350,7 @@ public class Audit {
         }
         return metadatas;
     }
-
+    
     public boolean isOneToOneCascadeAll(Method method) throws Exception {
         Boolean isOneToOneAll = mappedOneToOneCascadeAll.get(method);
         if (isOneToOneAll != null) {
@@ -372,13 +371,13 @@ public class Audit {
             isOneToOneAll = true;
         } else {
             isOneToOneAll = false;
-
+            
         }
         mappedOneToOneCascadeAll.put(method, isOneToOneAll);
         return isOneToOneAll;
-
+        
     }
-
+    
     private String getToString(Object object) {
         if (object instanceof Date) {
             return AUDIT_DATE_FORMAT.format(object);
@@ -388,20 +387,20 @@ public class Audit {
             return object.toString();
         }
     }
-
+    
     public List<Method> getMethods(Object objeto) {
-
+        
         List<Method> methodGet = mappedMethods.get(objeto.getClass());
-
+        
         if (methodGet != null) {
             return methodGet;
         }
-
+        
         methodGet = new ArrayList<Method>();
         Method methods[] = objeto.getClass().getMethods();
-
+        
         List exclude = Arrays.asList(EXCLUDED_FIELDS);
-
+        
         try {
             Field field;
             String fieldName;
@@ -435,7 +434,7 @@ public class Audit {
         mappedMethods.put(objeto.getClass(), methodGet);
         return methodGet;
     }
-
+    
     public String getMethodName(Method method) {
         if (method.getName().startsWith("is")) {
             return method.getName().substring(2, 3).toLowerCase() + method.getName().substring(3);
@@ -444,7 +443,7 @@ public class Audit {
         }
         return null;
     }
-
+    
     public Field getDeclaredField(Class clazz, String fieldName) throws Exception {
         Field field = clazz.getDeclaredField(fieldName);
         if (field == null && clazz.getSuperclass() != null && !clazz.getSuperclass().equals(Object.class)) {

@@ -9,7 +9,7 @@ import java.lang.annotation.Target;
  *
  * @author Ayslan
  */
-@Target(value = {ElementType.METHOD, ElementType.FIELD})
+@Target(value = {ElementType.METHOD, ElementType.FIELD, ElementType.TYPE})
 @Retention(RetentionPolicy.RUNTIME)
 public @interface NotAudited {
 }
