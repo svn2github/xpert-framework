@@ -32,7 +32,7 @@ public class Restriction {
         this.property = property;
         this.restrictionType = restrictionType;
     }
-
+    
     public Restriction(String property, Object value) {
         this.property = property;
         this.value = value;

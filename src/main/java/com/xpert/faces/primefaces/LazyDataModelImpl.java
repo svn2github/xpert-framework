@@ -7,6 +7,7 @@ import com.xpert.persistence.query.JoinBuilder;
 import com.xpert.persistence.query.QueryType;
 import com.xpert.persistence.query.Restriction;
 import com.xpert.persistence.query.RestrictionType;
+import com.xpert.persistence.query.Restrictions;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -27,6 +28,7 @@ public class LazyDataModelImpl<T> extends LazyDataModel {
     private String currentOrderBy;
     private String attributes;
     private OrderByHandler orderByHandler;
+    private FilterByHandler filterByHandler;
     private LazyCountType lazyCountType;
     private Integer currentRowCount;
     /*
@@ -100,11 +102,10 @@ public class LazyDataModelImpl<T> extends LazyDataModel {
         if (orderBy == null || orderBy.trim().isEmpty()) {
             orderBy = defaultOrder;
         } else {
-
+            OrderByHandler orderByHandler = getOrderByHandler();
             if (orderByHandler != null) {
-                orderBy = getOrderByHandler().getOrderBy(orderBy);
+                orderBy = orderByHandler.getOrderBy(orderBy);
             }
-
             if (order.equals(SortOrder.DESCENDING)) {
                 orderBy = orderBy + " DESC";
             }
@@ -125,10 +126,19 @@ public class LazyDataModelImpl<T> extends LazyDataModel {
         if (filters != null && !filters.isEmpty()) {
             for (Entry e : ((Map<String, String>) filters).entrySet()) {
                 if (e.getValue() != null && !e.getValue().toString().isEmpty()) {
-                    if (DEBUG) {
-                        logger.log(Level.INFO, "Restriction added. Name: {0}, Value:  {1}", new Object[]{e.getKey(), e.getValue()});
+                    FilterByHandler filterByHandler = getFilterByHandler();
+                    Restrictions restrictionsFromFilterBy = null;
+                    if (filterByHandler != null) {
+                        restrictionsFromFilterBy = filterByHandler.getFilterBy(e.getKey().toString(), e.getValue());
                     }
-                    currentQueryRestrictions.add(new Restriction(e.getKey().toString(), RestrictionType.DATA_TABLE_FILTER, e.getValue()));
+                    if (filterByHandler != null) {
+                        currentQueryRestrictions.addAll(restrictionsFromFilterBy);
+                    } else {
+                        if (DEBUG) {
+                            logger.log(Level.INFO, "Restriction added. Name: {0}, Value:  {1}", new Object[]{e.getKey(), e.getValue()});
+                        }
+                        currentQueryRestrictions.add(new Restriction(e.getKey().toString(), RestrictionType.DATA_TABLE_FILTER, e.getValue()));
+                    }
                 }
             }
         }
@@ -137,7 +147,6 @@ public class LazyDataModelImpl<T> extends LazyDataModel {
 
         List<T> dados = dao.getQueryBuilder().type(QueryType.SELECT, attributes).from(dao.getEntityClass()).add(currentQueryRestrictions).join(joinBuilder)
                 .orderBy(orderBy).getResultList(first, pageSize);
-
 
         if (DEBUG) {
             logger.log(Level.INFO, "Select on entity {0}, records found: {1} ", new Object[]{dao.getEntityClass().getName(), dados.size()});
@@ -321,4 +330,13 @@ public class LazyDataModelImpl<T> extends LazyDataModel {
     public void setCurrentRowCount(Integer currentRowCount) {
         this.currentRowCount = currentRowCount;
     }
+
+    public FilterByHandler getFilterByHandler() {
+        return filterByHandler;
+    }
+
+    public void setFilterByHandler(FilterByHandler filterByHandler) {
+        this.filterByHandler = filterByHandler;
+    }
+
 }

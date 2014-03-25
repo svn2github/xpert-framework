@@ -28,7 +28,9 @@ public class TestQueryBuilder {
                 .or()
                 .equals("nome", "JOSE")
                 .or()
-                .equals("status", true);
+                .equals("status", true)
+                .or()
+                .addQueryString("dataNascimento IS NULL OR dataNascimento > dataCadastro");
 
 
         printQueryString(restrictions);

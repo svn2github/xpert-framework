@@ -299,19 +299,18 @@ public class QueryBuilder {
         }
     }
 
-    
     /**
      * @param restrictions
      * @param alias
      * @return String of the part after "WHERE" from JPQL generated
      */
     public static String getQueryStringFromRestrictions(List<Restriction> restrictions, String alias) {
-       
+
         int currentParameter = 1;
         StringBuilder queryString = new StringBuilder();
         boolean processPropertyAndValue = false;
         Restriction lastRestriction = null;
-        
+
         for (Restriction restriction : restrictions) {
 
             if (lastRestriction != null) {
@@ -347,31 +346,36 @@ public class QueryBuilder {
                 } else {
                     propertyName = restriction.getProperty();
                 }
-                if (restriction.getRestrictionType().equals(RestrictionType.LIKE) || restriction.getRestrictionType().equals(RestrictionType.NOT_LIKE)) {
-                    queryString.append("UPPER(").append(propertyName).append(")").append(" ");
-                } else if (restriction.getTemporalType() != null && restriction.getTemporalType().equals(TemporalType.DATE)) {
-                    queryString.append("CAST(").append(propertyName).append(" AS date)").append(" ");
+                //custom query string
+                if (restriction.getRestrictionType().equals(RestrictionType.QUERY_STRING)) {
+                    queryString.append(" (").append(restriction.getProperty()).append(") ");
                 } else {
-                    queryString.append(propertyName);
-                }
-                //if Value is null set default to IS NULL
-                if (restriction.getValue() == null) {
-                    //  EQUALS null or IS_NULL
-                    if (restriction.getRestrictionType().equals(RestrictionType.EQUALS) || restriction.getRestrictionType().equals(RestrictionType.NULL)) {
-                        queryString.append(" IS NULL ");
-                    } else if (restriction.getRestrictionType().equals(RestrictionType.NOT_NULL)) {
-                        queryString.append(" IS NOT NULL ");
-                    }
-                } else {
-                    queryString.append(" ").append(restriction.getRestrictionType().getSymbol()).append(" ");
                     if (restriction.getRestrictionType().equals(RestrictionType.LIKE) || restriction.getRestrictionType().equals(RestrictionType.NOT_LIKE)) {
-                        queryString.append("UPPER(?").append(currentParameter).append(")");
-                    } else if (restriction.getRestrictionType().equals(RestrictionType.IN) || restriction.getRestrictionType().equals(RestrictionType.NOT_IN)) {
-                        queryString.append("(?").append(currentParameter).append(")");
+                        queryString.append("UPPER(").append(propertyName).append(")").append(" ");
+                    } else if (restriction.getTemporalType() != null && restriction.getTemporalType().equals(TemporalType.DATE)) {
+                        queryString.append("CAST(").append(propertyName).append(" AS date)").append(" ");
                     } else {
-                        queryString.append("?").append(currentParameter);
+                        queryString.append(propertyName);
                     }
-                    currentParameter++;
+                    //if Value is null set default to IS NULL
+                    if (restriction.getValue() == null) {
+                        //  EQUALS null or IS_NULL
+                        if (restriction.getRestrictionType().equals(RestrictionType.EQUALS) || restriction.getRestrictionType().equals(RestrictionType.NULL)) {
+                            queryString.append(" IS NULL ");
+                        } else if (restriction.getRestrictionType().equals(RestrictionType.NOT_NULL)) {
+                            queryString.append(" IS NOT NULL ");
+                        }
+                    } else {
+                        queryString.append(" ").append(restriction.getRestrictionType().getSymbol()).append(" ");
+                        if (restriction.getRestrictionType().equals(RestrictionType.LIKE) || restriction.getRestrictionType().equals(RestrictionType.NOT_LIKE)) {
+                            queryString.append("UPPER(?").append(currentParameter).append(")");
+                        } else if (restriction.getRestrictionType().equals(RestrictionType.IN) || restriction.getRestrictionType().equals(RestrictionType.NOT_IN)) {
+                            queryString.append("(?").append(currentParameter).append(")");
+                        } else {
+                            queryString.append("?").append(currentParameter);
+                        }
+                        currentParameter++;
+                    }
                 }
             }
         }
@@ -403,7 +407,7 @@ public class QueryBuilder {
         if (normalizedRestrictions != null && !normalizedRestrictions.isEmpty()) {
             queryString.append("WHERE ");
         }
-        
+
         //restrictions
         queryString.append(QueryBuilder.getQueryStringFromRestrictions(normalizedRestrictions, alias));
 

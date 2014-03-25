@@ -1,6 +1,7 @@
 package com.xpert.core.crud;
 
 import com.xpert.core.exception.BusinessException;
+import com.xpert.faces.primefaces.FilterByHandler;
 import com.xpert.faces.primefaces.LazyCountType;
 import com.xpert.faces.utils.FacesMessageUtils;
 import com.xpert.faces.primefaces.PrimeFacesUtils;
@@ -41,6 +42,10 @@ public abstract class AbstractBaseBean<T> {
     public abstract String getDataModelOrder();
 
     public OrderByHandler getOrderByHandler() {
+        return null;
+    }
+    
+    public FilterByHandler getFilterByHandler() {
         return null;
     }
 
@@ -116,6 +121,9 @@ public abstract class AbstractBaseBean<T> {
         return getBO().getDAO();
     }
 
+    /**
+     * @return A List of Restrictions, the Restrictions are used in LazyDataModel
+     */
     public List<Restriction> getDataModelRestrictions() {
         return null;
     }
@@ -145,6 +153,9 @@ public abstract class AbstractBaseBean<T> {
         return null;
     }
 
+    /**
+     * @return A new instance of Type T
+     */
     public final T getEntityNewInstance() {
         try {
             return (T) getEntityClass().newInstance();
@@ -154,11 +165,18 @@ public abstract class AbstractBaseBean<T> {
         }
     }
 
+    /**
+     * Creates a LazyDataModelImpl to entity
+     */
     public void createDataModel() {
         dataModel = new LazyDataModelImpl<T>(getDataModelOrder(), getDataModelRestrictions(), getDAO());
         OrderByHandler orderByHandler = getOrderByHandler();
         if (orderByHandler != null) {
             dataModel.setOrderByHandler(orderByHandler);
+        }
+        FilterByHandler filterByHandler = getFilterByHandler();
+        if (filterByHandler != null) {
+            dataModel.setFilterByHandler(filterByHandler);
         }
         dataModel.setLazyCountType(getDataModelLazyCountType());
     }

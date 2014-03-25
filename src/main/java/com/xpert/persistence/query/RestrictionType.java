@@ -21,6 +21,7 @@ public enum RestrictionType {
     DATA_TABLE_FILTER("LIKE"),
     OR("OR", true),
     START_GROUP("(", true),
+    QUERY_STRING("", true),
     END_GROUP(")", true);
     
     private String symbol;
