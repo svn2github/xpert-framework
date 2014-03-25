@@ -7,6 +7,8 @@
 
     <!-- INTERFACE -->
     <cc:interface>
+        <cc:attribute name="abrir" type="boolean" default="false" />
+        <cc:attribute name="fechar" type="boolean" default="false" />
         <cc:attribute name="edit" type="boolean" default="false"  />
         <cc:attribute name="delete" type="boolean" default="false"  />
         <cc:attribute name="print" type="boolean" default="false"  />
@@ -31,6 +33,9 @@
                 <p:commandButton rendered="#{cc.attrs.download}" styleClass="legends-item" value="#{xmsg['download']}" type="button" icon="ui-icon-disk" />
                 <p:commandButton rendered="#{cc.attrs.replace}" styleClass="legends-item" value="#{xmsg['replace']}" type="button" icon="ui-icon-transferthick-e-w" />
                 <p:commandButton rendered="#{cc.attrs.report}" styleClass="legends-item" value="#{xmsg['report']}" type="button" icon="ui-icon-document" />
+                <p:commandButton rendered="#{cc.attrs.abrir}" styleClass="legenda-tabela" value="#{xmsg['abrir']}" type="button" icon="ui-icon-unlocked" />
+                <p:commandButton rendered="#{cc.attrs.fechar}" styleClass="legenda-tabela" value="#{xmsg['fechar']}" type="button" icon="ui-icon-locked" />
+                
             </h:panelGrid>
         </div>
     </cc:implementation>
