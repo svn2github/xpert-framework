@@ -131,7 +131,7 @@ public class LazyDataModelImpl<T> extends LazyDataModel {
                     if (filterByHandler != null) {
                         restrictionsFromFilterBy = filterByHandler.getFilterBy(e.getKey().toString(), e.getValue());
                     }
-                    if (filterByHandler != null) {
+                    if (filterByHandler != null && restrictionsFromFilterBy != null && !restrictionsFromFilterBy.isEmpty()) {
                         currentQueryRestrictions.addAll(restrictionsFromFilterBy);
                     } else {
                         if (DEBUG) {

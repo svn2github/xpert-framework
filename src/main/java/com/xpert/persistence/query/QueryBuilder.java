@@ -274,7 +274,7 @@ public class QueryBuilder {
                                 Calendar calendar = (Calendar) Calendar.getInstance().clone();
                                 calendar.setTime(dateEnd);
                                 calendar.add(Calendar.DATE, 1);
-                                calendar.set(Calendar.HOUR, 0);
+                                calendar.set(Calendar.HOUR_OF_DAY, 0);
                                 calendar.set(Calendar.MINUTE, 0);
                                 calendar.set(Calendar.SECOND, 0);
                                 calendar.set(Calendar.MILLISECOND, 0);
