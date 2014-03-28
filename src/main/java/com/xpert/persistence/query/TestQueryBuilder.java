@@ -1,5 +1,7 @@
 package com.xpert.persistence.query;
 
+import java.math.BigDecimal;
+
 
 /**
  *
@@ -17,6 +19,16 @@ public class TestQueryBuilder {
     }
 
     public static void main(String[] args) {
+        QueryBuilder queryBuilder = new QueryBuilder(null).from(Object.class).add("teste", "1234");
+        
+        BigDecimal valor = (BigDecimal) queryBuilder.sum("teste");
+        Long count = queryBuilder.count();
+        
+        
+    }
+    
+    
+    public static void main2(String[] args) {
 
 
         //Caso 1

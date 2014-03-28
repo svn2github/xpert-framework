@@ -18,6 +18,7 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 import javax.persistence.Query;
 import javax.persistence.TemporalType;
 import org.apache.commons.beanutils.PropertyUtils;
@@ -149,7 +150,7 @@ public class QueryBuilder {
     }
 
     public QueryBuilder add(String field, Object value) {
-        this.restrictions.add(new Restriction(order, value));
+        this.restrictions.add(new Restriction(field, value));
         return this;
     }
 
@@ -164,11 +165,11 @@ public class QueryBuilder {
         if (type.equals(QueryType.COUNT)) {
             queryString.append("SELECT COUNT(*) ");
         } else if (type.equals(QueryType.MAX)) {
-            queryString.append("SELECT MAX(").append(alias).append(".").append(attributeName).append(") ");
+            queryString.append("SELECT MAX(").append(alias == null ? "" : alias+".").append(attributeName).append(") ");
         } else if (type.equals(QueryType.MIN)) {
-            queryString.append("SELECT MIN(").append(alias).append(".").append(attributeName).append(") ");
+            queryString.append("SELECT MIN(").append(alias == null ? "" : alias+".").append(attributeName).append(") ");
         } else if (type.equals(QueryType.SUM)) {
-            queryString.append("SELECT SUM(").append(alias).append(".").append(attributeName).append(") ");
+            queryString.append("SELECT SUM(").append(alias == null ? "" : alias+".").append(attributeName).append(") ");
         } else if (type.equals(QueryType.SELECT)
                 && ((attributeName != null && !attributeName.isEmpty()) || (select != null && !select.isEmpty()))) {
             queryString.append("SELECT ");
@@ -458,9 +459,33 @@ public class QueryBuilder {
         return parameters;
     }
 
+    public Number sum(String property) {
+        type = QueryType.SUM;
+        attributeName = property;
+        return (Number) getSigleResult();
+    }
+
+    public Long count() {
+        type = QueryType.COUNT;
+        return (Long) getSigleResult();
+    }
+
+    public Object max(String property) {
+        type = QueryType.MAX;
+        attributeName = property;
+        return (Number) getSigleResult();
+    }
+
+    public Object min(String property) {
+        type = QueryType.MIN;
+        attributeName = property;
+        return (Number) getSigleResult();
+    }
+
     public Query createQuery(Integer firstResult, Integer maxResults) {
 
         String queryString = getQueryString();
+        System.out.println(queryString);
         Query query = entityManager.createQuery(queryString);
 
         List<QueryParameter> parameters = getQueryParameters();
@@ -483,6 +508,18 @@ public class QueryBuilder {
             query.setFirstResult(firstResult);
         }
         return query;
+    }
+
+    public Object getSigleResult() {
+        return this.getSigleResult(null);
+    }
+
+    public Object getSigleResult(Integer maxResults) {
+        try {
+            return this.createQuery(maxResults).getSingleResult();
+        } catch (NoResultException ex) {
+            return null;
+        }
     }
 
     public <T> List<T> getResultList(Integer maxResults) {
