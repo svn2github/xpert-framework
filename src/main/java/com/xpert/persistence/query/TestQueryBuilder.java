@@ -19,6 +19,8 @@ public class TestQueryBuilder {
     }
 
     public static void main(String[] args) {
+       
+        
         QueryBuilder queryBuilder = new QueryBuilder(null).from(Object.class).add("teste", "1234");
         
         BigDecimal valor = (BigDecimal) queryBuilder.sum("teste");
