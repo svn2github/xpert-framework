@@ -186,7 +186,7 @@ public class QueryBuilder {
 
     }
 
-    public void loadNormalizedRestrictions() {
+    private void loadNormalizedRestrictions() {
 
         normalizedRestrictions = new ArrayList<Restriction>();
         //normalize result
