@@ -23,7 +23,6 @@ import javax.persistence.NoResultException;
 import javax.persistence.OrderBy;
 import javax.persistence.Query;
 import javax.validation.ConstraintViolationException;
-import org.apache.commons.beanutils.PropertyUtils;
 import org.hibernate.Hibernate;
 import org.hibernate.Session;
 import org.hibernate.collection.internal.PersistentBag;
@@ -266,13 +265,13 @@ public abstract class BaseDAOImpl<T> implements BaseDAO<T> {
     @Override
     public Object findAttribute(String attributeName, Long id) {
 
-        Query query = new QueryBuilder(getEntityManager()).from(entityClass).add(new Restriction(EntityUtils.getIdFieldName(entityClass), id)).type(QueryType.SELECT, attributeName).createQuery();
+        QueryBuilder builder = new QueryBuilder(getEntityManager());
 
-        try {
-            return query.getSingleResult();
-        } catch (NoResultException ex) {
-            return null;
-        }
+        return builder.select(attributeName)
+                .from(entityClass, "o")
+                .add("o." + EntityUtils.getIdFieldName(entityClass), id)
+                .getSigleResult();
+
     }
 
     @Override
@@ -283,13 +282,13 @@ public abstract class BaseDAOImpl<T> implements BaseDAO<T> {
     @Override
     public Object findList(String attributeName, Long id) {
 
-        Query query = new QueryBuilder(getEntityManager()).from(entityClass).add(new Restriction(EntityUtils.getIdFieldName(entityClass), id)).type(QueryType.SELECT, attributeName).createQuery();
+        QueryBuilder builder = new QueryBuilder(getEntityManager());
 
-        try {
-            return query.getResultList();
-        } catch (NoResultException ex) {
-            return null;
-        }
+        return builder.select(attributeName)
+                .from(entityClass, "o")
+                .add("o." + EntityUtils.getIdFieldName(entityClass), id)
+                .getResultList();
+
     }
 
     @Override
@@ -329,7 +328,7 @@ public abstract class BaseDAOImpl<T> implements BaseDAO<T> {
 
     @Override
     public T unique(List<Restriction> restrictions, Class clazz) {
-        Query query = new QueryBuilder(getEntityManager()).from(clazz).add(restrictions).createQuery().setMaxResults(1);
+        Query query = new QueryBuilder(getEntityManager()).from(clazz).add(restrictions).createQuery();
         query.setMaxResults(1);
         try {
             return (T) query.getSingleResult();
@@ -488,31 +487,18 @@ public abstract class BaseDAOImpl<T> implements BaseDAO<T> {
     @Override
     public List<T> list(Class clazz, List<Restriction> restrictions, String order, Integer firstResult, Integer maxResults, String attributes) {
 
-        QueryBuilder queryBuilder = new QueryBuilder(getEntityManager()).from(clazz).type(QueryType.SELECT, attributes).orderBy(order).add(restrictions);
+        return new QueryBuilder(getEntityManager())
+                .select(attributes)
+                .from(clazz)
+                .add(restrictions)
+                .orderBy(order)
+                .getResultList(firstResult, maxResults, clazz);
 
-        Query query = queryBuilder.createQuery();
-        if (maxResults != null) {
-            query.setMaxResults(maxResults);
-        }
-        if (firstResult != null) {
-            query.setFirstResult(firstResult);
-        }
-
-        if (attributes != null && attributes.split(",").length > 0) {
-            return QueryBuilder.getNormalizedResultList(attributes, query.getResultList(), clazz);
-        }
-
-        return query.getResultList();
     }
 
     @Override
     public Long count(Map<String, Object> restrictions) {
-        Query query = new QueryBuilder(getEntityManager()).from(entityClass).type(QueryType.COUNT).add(restrictions).createQuery();
-        try {
-            return (Long) query.getSingleResult();
-        } catch (NoResultException ex) {
-            return null;
-        }
+        return new QueryBuilder(getEntityManager()).from(entityClass).add(restrictions).count();
     }
 
     @Override
@@ -527,12 +513,7 @@ public abstract class BaseDAOImpl<T> implements BaseDAO<T> {
 
     @Override
     public Long count(List<Restriction> restrictions) {
-        Query query = new QueryBuilder(getEntityManager()).from(entityClass).type(QueryType.COUNT).add(restrictions).createQuery();
-        try {
-            return (Long) query.getSingleResult();
-        } catch (NoResultException ex) {
-            return null;
-        }
+        return new QueryBuilder(getEntityManager()).from(entityClass).add(restrictions).count();
     }
 
     @Override
@@ -595,7 +576,6 @@ public abstract class BaseDAOImpl<T> implements BaseDAO<T> {
                     if (orderBy != null && !orderBy.isEmpty()) {
                         queryString.append(" ORDER BY c.").append(orderBy);
                     }
-
 
                     Query query = getEntityManager().createQuery(queryString.toString());
                     query.setParameter(1, owner);

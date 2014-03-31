@@ -459,15 +459,7 @@ public class Restrictions extends ArrayList<Restriction> {
      * @return current query String from added restrictions
      */
     public String getQueryString() {
-        return getQueryString(null);
-    }
-
-    /**
-     * @param alias
-     * @return current query String from added restrictions
-     */
-    public String getQueryString(String alias) {
-        return QueryBuilder.getQueryStringFromRestrictions(this, alias);
+        return QueryBuilder.getQueryStringFromRestrictions(this);
     }
 
 }

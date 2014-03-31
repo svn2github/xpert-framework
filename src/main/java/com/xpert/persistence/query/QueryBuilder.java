@@ -29,10 +29,13 @@ import org.apache.commons.beanutils.PropertyUtils;
  */
 public class QueryBuilder {
 
-    private static final String DATE_FILTER_INTERVAL_SEPARATOR = " ## ";
-    private String order;
-    private String attributeName;
-    private String select;
+  
+    private String orderBy;
+    private String attributes;
+    /**
+     * to be used in SUM, MAX, MIN, COUNT
+     */
+    private String atrribute;
     private Class from;
     private String alias;
     private StringBuilder joins = new StringBuilder();
@@ -40,6 +43,7 @@ public class QueryBuilder {
     private List<Restriction> normalizedRestrictions = new ArrayList<Restriction>();
     private QueryType type;
     private EntityManager entityManager;
+    private static final boolean DEBUG = true;
     private static final Logger logger = Logger.getLogger(QueryBuilder.class.getName());
 
     public QueryBuilder(EntityManager entityManager) {
@@ -62,13 +66,13 @@ public class QueryBuilder {
         return this;
     }
 
-    public QueryBuilder selectDistinct(String select) {
-        this.select = "DISTINCT " + select;
+    public QueryBuilder selectDistinct(String attributes) {
+        this.attributes = "DISTINCT " + attributes;
         return this;
     }
 
-    public QueryBuilder select(String select) {
-        this.select = select;
+    public QueryBuilder select(String attributes) {
+        this.attributes = attributes;
         return this;
     }
 
@@ -104,200 +108,42 @@ public class QueryBuilder {
 
     public QueryBuilder join(JoinBuilder joinBuilder) {
         if (joinBuilder != null) {
-            this.alias = joinBuilder.getAlias();
             this.joins.append(joinBuilder);
         }
         return this;
     }
 
     public QueryBuilder orderBy(String order) {
-        this.order = order;
+        this.orderBy = order;
         return this;
     }
 
-    public QueryBuilder type(QueryType type) {
-        this.type = type;
-        return this;
-    }
-
-    public QueryBuilder type(QueryType type, String attributeName) {
-        this.type = type;
-        this.attributeName = attributeName;
-        return this;
-    }
-
-    public QueryBuilder add(List<Restriction> restrictions) {
-        if (restrictions != null) {
-            this.restrictions.addAll(restrictions);
-        }
-        return this;
-    }
-
-    public QueryBuilder add(Map<String, Object> restrictions) {
-        if (restrictions != null) {
-            for (Map.Entry e : restrictions.entrySet()) {
-                this.restrictions.add(new Restriction(e.getKey().toString(), e.getValue()));
-            }
-        }
-        return this;
-    }
-
-    public QueryBuilder add(Restriction restriction) {
-        if (restriction != null) {
-            this.restrictions.add(restriction);
-        }
-        return this;
-    }
-
-    public QueryBuilder add(String field, Object value) {
-        this.restrictions.add(new Restriction(field, value));
-        return this;
-    }
-
-    public String getQuerySelectClausule() {
-
-        StringBuilder queryString = new StringBuilder();
+    public static String getQuerySelectClausule(QueryType type, String select) {
 
         if (type == null) {
-            type = QueryType.SELECT;
+            return "";
         }
+
+        StringBuilder queryString = new StringBuilder();
 
         if (type.equals(QueryType.COUNT)) {
             queryString.append("SELECT COUNT(*) ");
         } else if (type.equals(QueryType.MAX)) {
-            queryString.append("SELECT MAX(").append(alias == null ? "" : alias+".").append(attributeName).append(") ");
+            queryString.append("SELECT MAX(").append(select).append(") ");
         } else if (type.equals(QueryType.MIN)) {
-            queryString.append("SELECT MIN(").append(alias == null ? "" : alias+".").append(attributeName).append(") ");
+            queryString.append("SELECT MIN(").append(select).append(") ");
         } else if (type.equals(QueryType.SUM)) {
-            queryString.append("SELECT SUM(").append(alias == null ? "" : alias+".").append(attributeName).append(") ");
-        } else if (type.equals(QueryType.SELECT)
-                && ((attributeName != null && !attributeName.isEmpty()) || (select != null && !select.isEmpty()))) {
-            queryString.append("SELECT ");
-
-            if (attributeName != null && !attributeName.isEmpty()) {
-                queryString.append(attributeName).append(" ");
-            }
-
-            if (select != null && !select.isEmpty()) {
-                queryString.append(select).append(" ");
-            }
+            queryString.append("SELECT SUM(").append(select).append(") ");
+        } else if (type.equals(QueryType.SELECT) && (select != null && !select.isEmpty())) {
+            queryString.append("SELECT ").append(select).append(" ");
         }
+
         return queryString.toString();
 
     }
 
     private void loadNormalizedRestrictions() {
-
-        normalizedRestrictions = new ArrayList<Restriction>();
-        //normalize result
-        for (Restriction originalRestriction : restrictions) {
-            boolean ignoreRestriction = false;
-            List<Restriction> moreRestrictions = new ArrayList<Restriction>();
-
-            //copy and create a new restriction
-            Restriction restriction = new Restriction();
-            restriction.setLikeType(originalRestriction.getLikeType());
-            restriction.setProperty(originalRestriction.getProperty());
-            restriction.setRestrictionType(originalRestriction.getRestrictionType());
-            restriction.setTemporalType(originalRestriction.getTemporalType());
-            restriction.setValue(originalRestriction.getValue());
-
-            //if RestrictionType is null set default to EQUALS
-            if (restriction.getRestrictionType() == null) {
-                restriction.setRestrictionType(RestrictionType.EQUALS);
-            }
-
-            //DataTable filter has his own logic
-            if (restriction.getRestrictionType().equals(RestrictionType.DATA_TABLE_FILTER)) {
-                String property = "";
-                if (alias != null && !alias.trim().isEmpty() && restriction.getProperty().indexOf(".") > -1) {
-                    property = restriction.getProperty().substring(restriction.getProperty().indexOf(".") + 1, restriction.getProperty().length());
-                } else {
-                    property = restriction.getProperty();
-                }
-
-                Class propertyType = String.class;
-                try {
-                    //try to get type from property
-                    propertyType = ReflectionUtils.getPropertyType(this.from, property);
-                } catch (IllegalArgumentException ex) {
-                    //type cannot be get, keep String type
-                }
-
-                //set to type to EQUALS when is not String
-                if (!propertyType.equals(String.class)) {
-                    restriction.setRestrictionType(RestrictionType.EQUALS);
-                    if (propertyType.isEnum()) {
-                        restriction.setValue(Enum.valueOf(propertyType, restriction.getValue().toString()));
-                    }
-                    if (propertyType.equals(Integer.class) || propertyType.equals(int.class)) {
-                        restriction.setValue(Integer.valueOf(StringUtils.getOnlyIntegerNumbers(restriction.getValue().toString())));
-                    }
-                    if (propertyType.equals(Long.class) || propertyType.equals(long.class)) {
-                        restriction.setValue(Long.valueOf(StringUtils.getOnlyIntegerNumbers(restriction.getValue().toString())));
-                    }
-                    if (propertyType.equals(BigDecimal.class)) {
-                        restriction.setValue(new BigDecimal(restriction.getValue().toString()));
-                    }
-                    if (propertyType.equals(Boolean.class) || propertyType.equals(boolean.class)) {
-                        restriction.setValue(Boolean.valueOf(restriction.getValue().toString()));
-                    }
-                    //if is a date, then its a interval, set GREATER THAN and LESS THAN
-                    if (propertyType.equals(Date.class) || propertyType.equals(Calendar.class)) {
-
-                        SimpleDateFormat dateFormat = new SimpleDateFormat(I18N.getDatePattern(), I18N.getLocale());
-                        Object value = restriction.getValue().toString();
-                        String[] dateArray = null;
-                        if (value != null) {
-                            dateArray = value.toString().split(DATE_FILTER_INTERVAL_SEPARATOR);
-                        }
-                        String startDateString = null;
-                        String endDateString = null;
-                        if (dateArray != null && dateArray.length > 0) {
-                            startDateString = dateArray[0];
-                            if (dateArray.length > 1) {
-                                endDateString = dateArray[1];
-                            }
-                        }
-                        try {
-                            //if start date is empty then should be ignored
-                            if (startDateString != null && !startDateString.isEmpty()) {
-                                restriction.setValue(dateFormat.parse(startDateString.trim()));
-                                restriction.setTemporalType(TemporalType.TIMESTAMP);
-                                restriction.setRestrictionType(RestrictionType.GREATER_EQUALS_THAN);
-                            } else {
-                                ignoreRestriction = true;
-                            }
-                            //add LESS THAN
-                            if (endDateString != null && !endDateString.trim().isEmpty()) {
-                                Date dateEnd = dateFormat.parse(endDateString.trim());
-                                //add 1 day e set to the first second
-                                Calendar calendar = (Calendar) Calendar.getInstance().clone();
-                                calendar.setTime(dateEnd);
-                                calendar.add(Calendar.DATE, 1);
-                                calendar.set(Calendar.HOUR_OF_DAY, 0);
-                                calendar.set(Calendar.MINUTE, 0);
-                                calendar.set(Calendar.SECOND, 0);
-                                calendar.set(Calendar.MILLISECOND, 0);
-                                dateEnd = calendar.getTime();
-                                moreRestrictions.add(new Restriction(restriction.getProperty(), RestrictionType.LESS_THAN, dateEnd));
-                            }
-                        } catch (ParseException ex) {
-                            logger.log(Level.SEVERE, null, ex);
-                        }
-                    }
-                } else {
-                    restriction.setRestrictionType(RestrictionType.LIKE);
-                }
-
-            }
-            if (ignoreRestriction == false) {
-                normalizedRestrictions.add(restriction);
-            }
-            if (moreRestrictions != null) {
-                normalizedRestrictions.addAll(moreRestrictions);
-            }
-        }
+        normalizedRestrictions = RestrictionsNormalizer.getNormalizedRestrictions(from, restrictions, alias);
     }
 
     /**
@@ -305,7 +151,7 @@ public class QueryBuilder {
      * @param alias
      * @return String of the part after "WHERE" from JPQL generated
      */
-    public static String getQueryStringFromRestrictions(List<Restriction> restrictions, String alias) {
+    public static String getQueryStringFromRestrictions(List<Restriction> restrictions) {
 
         int currentParameter = 1;
         StringBuilder queryString = new StringBuilder();
@@ -341,12 +187,7 @@ public class QueryBuilder {
             lastRestriction = restriction;
 
             if (processPropertyAndValue) {
-                String propertyName;
-                if (alias != null && !alias.trim().isEmpty()) {
-                    propertyName = alias + "." + restriction.getProperty();
-                } else {
-                    propertyName = restriction.getProperty();
-                }
+                String propertyName = restriction.getProperty();
                 //custom query string
                 if (restriction.getRestrictionType().equals(RestrictionType.QUERY_STRING)) {
                     queryString.append(" (").append(restriction.getProperty()).append(") ");
@@ -390,13 +231,23 @@ public class QueryBuilder {
     public String getQueryString() {
 
         StringBuilder queryString = new StringBuilder();
-        //type Ex: (SELECT FROM, SELECT MAX, SELECT MIN)
-        queryString.append(getQuerySelectClausule());
+
+        if (type == null) {
+            type = QueryType.SELECT;
+        }
+
+        if (type.equals(QueryType.SELECT)) {
+            queryString.append(QueryBuilder.getQuerySelectClausule(type, attributes));
+        } else {
+            queryString.append(QueryBuilder.getQuerySelectClausule(type, atrribute));
+        }
 
         queryString.append("FROM ").append(from.getName()).append(" ");
+
         if (alias != null) {
             queryString.append(alias).append(" ");
         }
+
         if (joins != null && joins.length() > 0) {
             queryString.append(joins).append(" ");
         }
@@ -410,11 +261,11 @@ public class QueryBuilder {
         }
 
         //restrictions
-        queryString.append(QueryBuilder.getQueryStringFromRestrictions(normalizedRestrictions, alias));
+        queryString.append(QueryBuilder.getQueryStringFromRestrictions(normalizedRestrictions));
 
         //order by
-        if (order != null && !order.trim().isEmpty()) {
-            queryString.append(" ORDER BY ").append(order).toString();
+        if (type.equals(QueryType.SELECT) && orderBy != null && !orderBy.trim().isEmpty()) {
+            queryString.append(" ORDER BY ").append(orderBy).toString();
         }
 
         return queryString.toString();
@@ -459,33 +310,37 @@ public class QueryBuilder {
         return parameters;
     }
 
-    public Number sum(String property) {
-        type = QueryType.SUM;
-        attributeName = property;
-        return (Number) getSigleResult();
-    }
-
     public Long count() {
         type = QueryType.COUNT;
-        return (Long) getSigleResult();
+        return (Long) createQuery().getSingleResult();
+    }
+
+    public Number sum(String property) {
+        type = QueryType.SUM;
+        atrribute = property;
+        return (Number) createQuery().getSingleResult();
     }
 
     public Object max(String property) {
         type = QueryType.MAX;
-        attributeName = property;
-        return (Number) getSigleResult();
+        atrribute = property;
+        return (Number) createQuery().getSingleResult();
     }
 
     public Object min(String property) {
         type = QueryType.MIN;
-        attributeName = property;
-        return (Number) getSigleResult();
+        atrribute = property;
+        return (Number) createQuery().getSingleResult();
     }
 
     public Query createQuery(Integer firstResult, Integer maxResults) {
 
         String queryString = getQueryString();
-        System.out.println(queryString);
+
+        if (DEBUG == true) {
+            logger.log(Level.INFO, "Query String: {0}", queryString);
+        }
+
         Query query = entityManager.createQuery(queryString);
 
         List<QueryParameter> parameters = getQueryParameters();
@@ -510,42 +365,105 @@ public class QueryBuilder {
         return query;
     }
 
+    /**
+     * @return entityManager.getSigleResult(), returns null when
+     * NoResultExceptionis throw
+     */
     public Object getSigleResult() {
         return this.getSigleResult(null);
     }
 
+    /**
+     * @param maxResults
+     * @return entityManager.getSigleResult(), returns null when
+     * NoResultExceptionis throw
+     */
     public Object getSigleResult(Integer maxResults) {
         try {
+            type = QueryType.SELECT;
             return this.createQuery(maxResults).getSingleResult();
         } catch (NoResultException ex) {
             return null;
         }
     }
 
-    public <T> List<T> getResultList(Integer maxResults) {
-        List list = this.createQuery(maxResults).getResultList();
-        if (list != null && attributeName != null && !attributeName.trim().isEmpty()) {
-            return getNormalizedResultList(attributeName, list, from);
-        }
-        return list;
-    }
-
-    public <T> List<T> getResultList(Integer firstResult, Integer maxResults) {
-        List list = this.createQuery(firstResult, maxResults).getResultList();
-        if (list != null && attributeName != null && !attributeName.trim().isEmpty()) {
-            return getNormalizedResultList(attributeName, list, from);
-        }
-        return list;
-    }
-
+    /**
+     * @param <T> Result Type
+     * @return entityManager.getResultList()
+     */
     public <T> List<T> getResultList() {
-        List list = this.createQuery().getResultList();
-        if (list != null && attributeName != null && !attributeName.trim().isEmpty()) {
-            return getNormalizedResultList(attributeName, list, from);
+        return getResultList(null, null, null);
+    }
+
+    /**
+     * @param <T> Result Type
+     * @param expectedType The expected type in result
+     * @return entityManager.getResultList()
+     */
+    public <T> List<T> getResultList(Class expectedType) {
+        return getResultList(null, null, expectedType);
+    }
+
+    /**
+     * @param <T> Result Type
+     * @param maxResults Max results in query
+     * (entityManager.setMaxResult(maxResults))
+     * @return entityManager.getResultList()
+     */
+    public <T> List<T> getResultList(Integer maxResults) {
+        return getResultList(null, maxResults);
+    }
+
+    /**
+     *
+     * @param <T> Result Type
+     * @param maxResults Max results in query
+     * (entityManager.setMaxResult(maxResults))
+     * @param expectedType The expected type in result
+     * @return entityManager.getResultList()
+     */
+    public <T> List<T> getResultList(Integer maxResults, Class expectedType) {
+        return getResultList(null, maxResults, expectedType);
+    }
+
+    /**
+     * @param <T> Result Type
+     * @param firstResult First results in query
+     * (entityManager.setFirstResult(maxResults))
+     * @param maxResults Max results in query
+     * (entityManager.setMaxResult(maxResults))
+     * @return entityManager.getResultList()
+     */
+    public <T> List<T> getResultList(Integer firstResult, Integer maxResults) {
+        return getResultList(firstResult, maxResults, null);
+    }
+
+    /**
+     *
+     * @param <T> Result Type
+     * @param firstResult First results in query
+     * (entityManager.setFirstResult(maxResults))
+     * @param maxResults Max results in query
+     * (entityManager.setMaxResult(maxResults))
+     * @param expectedType The expected type in result
+     * @return
+     */
+    public <T> List<T> getResultList(Integer firstResult, Integer maxResults, Class expectedType) {
+        type = QueryType.SELECT;
+        List list = this.createQuery(firstResult, maxResults).getResultList();
+        if (list != null && attributes != null && !attributes.trim().isEmpty() && expectedType != null) {
+            return getNormalizedResultList(attributes, list, expectedType);
         }
         return list;
     }
 
+    /**
+     * @param <T> Result Type
+     * @param attributes Attributes to select
+     * @param resultList The Query Result List
+     * @param clazz The expected type in result
+     * @return
+     */
     public static <T> List<T> getNormalizedResultList(String attributes, List resultList, Class<T> clazz) {
         if (attributes != null && attributes.split(",").length > 0) {
             List result = new ArrayList();
@@ -634,4 +552,490 @@ public class QueryBuilder {
     public List<Restriction> getNormalizedRestrictions() {
         return normalizedRestrictions;
     }
+
+    /**
+     * Add a restriction map
+     *
+     * @param restrictions
+     * @return Current QueryBuilder with added restriction
+     */
+    public QueryBuilder add(Map<String, Object> restrictions) {
+        if (restrictions != null) {
+            for (Map.Entry e : restrictions.entrySet()) {
+                this.restrictions.add(new Restriction(e.getKey().toString(), e.getValue()));
+            }
+        }
+        return this;
+    }
+
+    /**
+     * Add a restriction list
+     *
+     * @param restrictions
+     * @return Current QueryBuilder with added restriction
+     */
+    public QueryBuilder add(List<Restriction> restrictions) {
+        if (restrictions != null) {
+            this.restrictions.addAll(restrictions);
+        }
+        return this;
+    }
+
+    /**
+     * Add a restriction
+     *
+     * @param restriction
+     * @return Current QueryBuilder with added restriction
+     */
+    public QueryBuilder add(Restriction restriction) {
+        if (restriction != null) {
+            this.restrictions.add(restriction);
+        }
+        return this;
+    }
+
+    /**
+     * Add a restriction
+     *
+     * @param property
+     * @param restrictionType
+     * @return Current QueryBuilder with added restriction
+     */
+    public QueryBuilder add(String property, RestrictionType restrictionType) {
+        this.add(new Restriction(property, restrictionType));
+        return this;
+    }
+
+    /**
+     * Add a RestrictionType.EQUALS
+     *
+     * @param property
+     * @param value
+     * @return Current QueryBuilder with added restriction
+     */
+    public QueryBuilder add(String property, Object value) {
+        this.add(new Restriction(property, value));
+        return this;
+    }
+
+    /**
+     * Add a Date restriction
+     *
+     * @param property
+     * @param restrictionType
+     * @param value
+     * @param temporalType
+     * @return Current QueryBuilder with added restriction
+     */
+    public QueryBuilder add(String property, RestrictionType restrictionType, Date value, TemporalType temporalType) {
+        this.add(new Restriction(property, restrictionType, value, temporalType));
+        return this;
+    }
+
+    /**
+     * Add a Calendar restriction
+     *
+     * @param property
+     * @param restrictionType
+     * @param value
+     * @param temporalType
+     * @return Current QueryBuilder with added restriction
+     */
+    public QueryBuilder add(String property, RestrictionType restrictionType, Calendar value, TemporalType temporalType) {
+        this.add(new Restriction(property, restrictionType, value, temporalType));
+        return this;
+    }
+
+    /**
+     * Add a restriction
+     *
+     * @param property
+     * @param restrictionType
+     * @param value
+     * @return Current QueryBuilder with added restriction
+     */
+    public QueryBuilder add(String property, RestrictionType restrictionType, Object value) {
+        this.add(new Restriction(property, restrictionType, value));
+        return this;
+    }
+
+    /**
+     * Add a restriction
+     *
+     * @param property
+     * @param restrictionType
+     * @param value
+     * @param likeType
+     * @return Current QueryBuilder with added restriction
+     */
+    public QueryBuilder add(String property, RestrictionType restrictionType, Object value, LikeType likeType) {
+        this.add(new Restriction(property, restrictionType, value, likeType));
+        return this;
+    }
+
+    /**
+     * Add a RestrictionType.QUERY_STRING
+     *
+     * @param property
+     * @return Current QueryBuilder with added restriction
+     */
+    public QueryBuilder addQueryString(String property) {
+        this.add(new Restriction(property, RestrictionType.QUERY_STRING));
+        return this;
+    }
+
+    /**
+     * Add a RestrictionType.NULL (property 'is null')
+     *
+     * @param property
+     * @return Current QueryBuilder with added restriction
+     */
+    public QueryBuilder isNull(String property) {
+        this.add(new Restriction(property, RestrictionType.NULL));
+        return this;
+    }
+
+    /**
+     * Add a RestrictionType.NOT_NULL (property 'is not null')
+     *
+     * @param property
+     * @return Current QueryBuilder with added restriction
+     */
+    public QueryBuilder isNotNull(String property) {
+        this.add(new Restriction(property, RestrictionType.NOT_NULL));
+        return this;
+    }
+
+    /**
+     * Add a RestrictionType.LIKE (property 'like' value)
+     *
+     * @param property
+     * @param value
+     * @return Current QueryBuilder with added restriction
+     */
+    public QueryBuilder like(String property, Object value) {
+        this.add(new Restriction(property, RestrictionType.LIKE, value));
+        return this;
+    }
+
+    /**
+     * Add a RestrictionType.LIKE (property 'like' value)
+     *
+     * @param property
+     * @param value
+     * @param likeType
+     * @return Current QueryBuilder with added restriction
+     */
+    public QueryBuilder like(String property, Object value, LikeType likeType) {
+        this.add(new Restriction(property, RestrictionType.LIKE, value, likeType));
+        return this;
+    }
+
+    /**
+     * Add a RestrictionType.NOT_LIKE (property 'not like' value)
+     *
+     * @param property
+     * @param value
+     * @return Current QueryBuilder with added restriction
+     */
+    public QueryBuilder notLike(String property, Object value) {
+        this.add(new Restriction(property, RestrictionType.NOT_LIKE, value));
+        return this;
+    }
+
+    /**
+     * Add a RestrictionType.NOT_LIKE (property 'not like' value)
+     *
+     * @param property
+     * @param value
+     * @param likeType
+     * @return Current QueryBuilder with added restriction
+     */
+    public QueryBuilder notLike(String property, Object value, LikeType likeType) {
+        this.add(new Restriction(property, RestrictionType.NOT_LIKE, value, likeType));
+        return this;
+    }
+
+    /**
+     * Add a RestrictionType.GREATER_THAN (property '>' value)
+     *
+     * @param property
+     * @param value
+     * @return Current QueryBuilder with added restriction
+     */
+    public QueryBuilder greaterThan(String property, Object value) {
+        this.add(new Restriction(property, RestrictionType.GREATER_THAN, value));
+        return this;
+    }
+
+    /**
+     * Add a Date RestrictionType.GREATER_THAN (property '>' value)
+     *
+     * @param property
+     * @param value
+     * @param temporalType
+     * @return Current QueryBuilder with added restriction
+     */
+    public QueryBuilder greaterThan(String property, Date value, TemporalType temporalType) {
+        this.add(new Restriction(property, RestrictionType.GREATER_THAN, value, temporalType));
+        return this;
+    }
+
+    /**
+     * Add a Calendar RestrictionType.GREATER_THAN (property '>' value)
+     *
+     * @param property
+     * @param value
+     * @param temporalType
+     * @return Current QueryBuilder with added restriction
+     */
+    public QueryBuilder greaterThan(String property, Calendar value, TemporalType temporalType) {
+        this.add(new Restriction(property, RestrictionType.GREATER_THAN, value, temporalType));
+        return this;
+    }
+
+    /**
+     * Add a RestrictionType.GREATER_EQUALS_THAN (property '>=' value)
+     *
+     * @param property
+     * @param value
+     * @return Current QueryBuilder with added restriction
+     */
+    public QueryBuilder greaterEqualsThan(String property, Object value) {
+        this.add(new Restriction(property, RestrictionType.GREATER_EQUALS_THAN, value));
+        return this;
+    }
+
+    /**
+     * Add a Date RestrictionType.GREATER_EQUALS_THAN (property '>=' value)
+     *
+     * @param property
+     * @param value
+     * @param temporalType
+     * @return Current QueryBuilder with added restriction
+     */
+    public QueryBuilder greaterEqualsThan(String property, Date value, TemporalType temporalType) {
+        this.add(new Restriction(property, RestrictionType.GREATER_EQUALS_THAN, value, temporalType));
+        return this;
+    }
+
+    /**
+     * Add a Calendar RestrictionType.GREATER_EQUALS_THAN (property '>=' value)
+     *
+     * @param property
+     * @param value
+     * @param temporalType
+     * @return Current QueryBuilder with added restriction
+     */
+    public QueryBuilder greaterEqualsThan(String property, Calendar value, TemporalType temporalType) {
+        this.add(new Restriction(property, RestrictionType.GREATER_EQUALS_THAN, value, temporalType));
+        return this;
+    }
+
+    /**
+     * Add a RestrictionType.LESS_THAN (property '&lt' value)
+     *
+     * @param property
+     * @param value
+     * @return Current QueryBuilder with added restriction
+     */
+    public QueryBuilder lessThan(String property, Object value) {
+        this.add(new Restriction(property, RestrictionType.LESS_THAN, value));
+        return this;
+    }
+
+    /**
+     * Add a Date RestrictionType.LESS_THAN (property '&lt' value)
+     *
+     * @param property
+     * @param value
+     * @param temporalType
+     * @return Current QueryBuilder with added restriction
+     */
+    public QueryBuilder lessThan(String property, Date value, TemporalType temporalType) {
+        this.add(new Restriction(property, RestrictionType.LESS_THAN, value, temporalType));
+        return this;
+    }
+
+    /**
+     * Add a Calendar RestrictionType.LESS_THAN (property '&lt' value)
+     *
+     * @param property
+     * @param value
+     * @param temporalType
+     * @return
+     */
+    public QueryBuilder lessThan(String property, Calendar value, TemporalType temporalType) {
+        this.add(new Restriction(property, RestrictionType.LESS_THAN, value, temporalType));
+        return this;
+    }
+
+    /**
+     * Add a RestrictionType.LESS_EQUALS_THAN (property '&lt=' value)
+     *
+     * @param property
+     * @param value
+     * @return Current QueryBuilder with added restriction
+     */
+    public QueryBuilder lessEqualsThan(String property, Object value) {
+        this.add(new Restriction(property, RestrictionType.LESS_EQUALS_THAN, value));
+        return this;
+    }
+
+    /**
+     * Add a Date RestrictionType.LESS_EQUALS_THAN (property '&lt=' value)
+     *
+     * @param property
+     * @param value
+     * @param temporalType
+     * @return Current QueryBuilder with added restriction
+     */
+    public QueryBuilder lessEqualsThan(String property, Date value, TemporalType temporalType) {
+        this.add(new Restriction(property, RestrictionType.LESS_EQUALS_THAN, value, temporalType));
+        return this;
+    }
+
+    /**
+     * Add a Calendar RestrictionType.LESS_EQUALS_THAN (property '&lt=' value)
+     *
+     * @param property
+     * @param value
+     * @param temporalType
+     * @return Current QueryBuilder with added restriction
+     */
+    public QueryBuilder lessEqualsThan(String property, Calendar value, TemporalType temporalType) {
+        this.add(new Restriction(property, RestrictionType.LESS_EQUALS_THAN, value, temporalType));
+        return this;
+    }
+
+    /**
+     * Add a RestrictionType.IN (property 'in' value)
+     *
+     * @param property
+     * @param value
+     * @return Current QueryBuilder with added restriction
+     */
+    public QueryBuilder in(String property, Object value) {
+        this.add(new Restriction(property, RestrictionType.IN, value));
+        return this;
+    }
+
+    /**
+     * Add a RestrictionType.NOT_IN (property 'not in' value)
+     *
+     * @param property
+     * @param value
+     * @return Current QueryBuilder with added restriction
+     */
+    public QueryBuilder notIn(String property, Object value) {
+        this.add(new Restriction(property, RestrictionType.NOT_IN, value));
+        return this;
+    }
+
+    /**
+     * Add a RestrictionType.EQUALS (property '=' value)
+     *
+     * @param property
+     * @param value
+     * @return Current QueryBuilder with added restriction
+     */
+    public QueryBuilder equals(String property, Object value) {
+        this.add(new Restriction(property, RestrictionType.EQUALS, value));
+        return this;
+    }
+
+    /**
+     * Add a Date RestrictionType.EQUALS (property '=' value)
+     *
+     * @param property
+     * @param value
+     * @param temporalType
+     * @return Current QueryBuilder with added restriction
+     */
+    public QueryBuilder equals(String property, Date value, TemporalType temporalType) {
+        this.add(new Restriction(property, RestrictionType.EQUALS, value, temporalType));
+        return this;
+    }
+
+    /**
+     * Add a Calendar RestrictionType.EQUALS (property '=' value)
+     *
+     * @param property
+     * @param value
+     * @param temporalType
+     * @return Current QueryBuilder with added restriction
+     */
+    public QueryBuilder equals(String property, Calendar value, TemporalType temporalType) {
+        this.add(new Restriction(property, RestrictionType.EQUALS, value, temporalType));
+        return this;
+    }
+
+    /**
+     * Add a RestrictionType.NOT_EQUALS (property '!=' value)
+     *
+     * @param property
+     * @param value
+     * @return Current QueryBuilder with added restriction
+     */
+    public QueryBuilder notEquals(String property, Object value) {
+        this.add(new Restriction(property, RestrictionType.NOT_EQUALS, value));
+        return this;
+    }
+
+    /**
+     * Add a Date RestrictionType.NOT_EQUALS (property '!=' value)
+     *
+     * @param property
+     * @param value
+     * @param temporalType
+     * @return Current QueryBuilder with added restriction
+     */
+    public QueryBuilder notEquals(String property, Date value, TemporalType temporalType) {
+        this.add(new Restriction(property, RestrictionType.NOT_EQUALS, value, temporalType));
+        return this;
+    }
+
+    /**
+     * Add a Calendar RestrictionType.NOT_EQUALS (property '!=' value)
+     *
+     * @param property
+     * @param value
+     * @param temporalType
+     * @return Current QueryBuilder with added restriction
+     */
+    public QueryBuilder notEquals(String property, Calendar value, TemporalType temporalType) {
+        this.add(new Restriction(property, RestrictionType.NOT_EQUALS, value, temporalType));
+        return this;
+    }
+
+    /**
+     * Add a RestrictionType.OR
+     *
+     * @return Current QueryBuilder with added restriction
+     */
+    public QueryBuilder or() {
+        this.add(new Restriction(RestrictionType.OR));
+        return this;
+    }
+
+    /**
+     * Add a RestrictionType.START_GROUP
+     *
+     * @return Current QueryBuilder with added restriction
+     */
+    public QueryBuilder startGroup() {
+        this.add(new Restriction(RestrictionType.START_GROUP));
+        return this;
+    }
+
+    /**
+     * Add a RestrictionType.END_GROUP
+     *
+     * @return Current QueryBuilder with added restriction
+     */
+    public QueryBuilder endGroup() {
+        this.add(new Restriction(RestrictionType.END_GROUP));
+        return this;
+    }
+
 }

@@ -1,10 +1,8 @@
 package com.xpert.faces.primefaces;
 
-import com.xpert.core.crud.AbstractBaseBean;
 import com.xpert.i18n.XpertResourceBundle;
 import com.xpert.persistence.dao.BaseDAO;
 import com.xpert.persistence.query.JoinBuilder;
-import com.xpert.persistence.query.QueryType;
 import com.xpert.persistence.query.Restriction;
 import com.xpert.persistence.query.RestrictionType;
 import com.xpert.persistence.query.Restrictions;
@@ -145,7 +143,7 @@ public class LazyDataModelImpl<T> extends LazyDataModel {
 
         this.currentOrderBy = orderBy;
 
-        List<T> dados = dao.getQueryBuilder().type(QueryType.SELECT, attributes).from(dao.getEntityClass()).add(currentQueryRestrictions).join(joinBuilder)
+        List<T> dados = dao.getQueryBuilder().select(attributes).from(dao.getEntityClass()).add(currentQueryRestrictions).join(joinBuilder)
                 .orderBy(orderBy).getResultList(first, pageSize);
 
         if (DEBUG) {
@@ -170,8 +168,8 @@ public class LazyDataModelImpl<T> extends LazyDataModel {
 
         queryRestrictions = currentQueryRestrictions;
 
-        long end = System.currentTimeMillis();
         if (DEBUG) {
+            long end = System.currentTimeMillis();
             logger.log(Level.INFO, "Load method executed in {0} milliseconds", (end - begin));
         }
         return dados;
@@ -215,7 +213,7 @@ public class LazyDataModelImpl<T> extends LazyDataModel {
      * @return
      */
     public List getAllResults(String orderBy) {
-        return dao.getQueryBuilder().type(QueryType.SELECT, attributes).from(dao.getEntityClass()).add(queryRestrictions).join(joinBuilder)
+        return dao.getQueryBuilder().from(dao.getEntityClass()).select(attributes).add(queryRestrictions).join(joinBuilder)
                 .orderBy(orderBy).getResultList();
     }
 

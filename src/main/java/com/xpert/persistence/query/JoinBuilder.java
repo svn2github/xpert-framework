@@ -7,11 +7,9 @@ package com.xpert.persistence.query;
 public class JoinBuilder {
 
     private StringBuilder builder;
-    private String alias;
 
-    public JoinBuilder(String alias) {
-        this.alias = alias;
-        this.builder = new StringBuilder();
+    public JoinBuilder() {
+        builder = new StringBuilder();
     }
 
     public JoinBuilder leftJoin(String join) {
@@ -42,10 +40,6 @@ public class JoinBuilder {
     public JoinBuilder joinFetch(String join) {
         this.builder.append("JOIN FETCH ").append(join).append(" ");
         return this;
-    }
-
-    public String getAlias() {
-        return alias;
     }
 
     @Override
