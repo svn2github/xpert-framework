@@ -1,12 +1,17 @@
 package com.xpert.persistence.query;
 
+import com.xpert.persistence.dao.BaseDAO;
+import com.xpert.persistence.dao.BaseDAOImpl;
 import java.math.BigDecimal;
+import javax.persistence.EntityManager;
 
 /**
  *
  * @author Ayslan
  */
 public class TestQueryBuilder {
+    
+    
 
     public static void printQueryString(Restrictions restrictions) {
         QueryBuilder builder = new QueryBuilder(null);
@@ -16,8 +21,24 @@ public class TestQueryBuilder {
         System.out.println(builder.getQueryString());
         System.out.println(builder.getQueryParameters());
     }
-
+    
     public static void main(String[] args) {
+        
+        BaseDAO baseDAO = new BaseDAOImpl() {
+
+            @Override
+            public EntityManager getEntityManager() {
+                return null;
+            }
+        };
+        
+        baseDAO.setEntityClass(String.class);
+
+        baseDAO.listAttributes("campo", "valor", "teste, outro, mais");
+        
+    }
+
+    public static void main3(String[] args) {
 
         QueryBuilder queryBuilder = new QueryBuilder(null).selectDistinct("b")
                 .from(Object.class, "o")
