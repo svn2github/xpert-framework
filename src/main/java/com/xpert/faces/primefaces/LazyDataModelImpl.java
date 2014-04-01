@@ -88,15 +88,12 @@ public class LazyDataModelImpl<T> extends LazyDataModel {
         this.joinBuilder = joinBuilder;
     }
 
-    @Override
-    public List load(int first, int pageSize, String orderBy, SortOrder order, Map filters) {
-
-        long begin = System.currentTimeMillis();
-
-        LazyCountType lazyCountType = getLazyCountType();
-        if (lazyCountType == null) {
-            lazyCountType = LazyCountType.ALWAYS;
-        }
+    /**
+     * @param orderBy String from primefaces
+     * @param order Order from primefaces
+     * @return The "Order By" to the data model
+     */
+    public String getOrderBy(String orderBy, SortOrder order) {
         if (orderBy == null || orderBy.trim().isEmpty()) {
             orderBy = defaultOrder;
         } else {
@@ -108,49 +105,79 @@ public class LazyDataModelImpl<T> extends LazyDataModel {
                 orderBy = orderBy + " DESC";
             }
         }
+
+        return orderBy;
+    }
+
+    /**
+     * @param filters Filters from "load" method
+     * @return The filter map converted into "restrictions"
+     */
+    public List<Restriction> getRestrictionsFromFilterMap(Map filters) {
+        
+        List<Restriction> filterRestrictions = new ArrayList<Restriction>();
+        
+        if (filters != null && !filters.isEmpty()) {
+            for (Entry e : ((Map<String, String>) filters).entrySet()) {
+                if (e.getValue() != null && !e.getValue().toString().isEmpty()) {
+                    FilterByHandler filterByHandler = getFilterByHandler();
+                    Restrictions restrictionsFromFilterByHandler = null;
+                    if (filterByHandler != null) {
+                        restrictionsFromFilterByHandler = filterByHandler.getFilterBy(e.getKey().toString(), e.getValue());
+                    }
+                    if (filterByHandler != null && restrictionsFromFilterByHandler != null && !restrictionsFromFilterByHandler.isEmpty()) {
+                        filterRestrictions.addAll(restrictionsFromFilterByHandler);
+                    } else {
+                        if (DEBUG) {
+                            logger.log(Level.INFO, "Restriction added. Name: {0}, Value:  {1}", new Object[]{e.getKey(), e.getValue()});
+                        }
+                        filterRestrictions.add(new Restriction(e.getKey().toString(), RestrictionType.DATA_TABLE_FILTER, e.getValue()));
+                    }
+                }
+            }
+        }
+        return filterRestrictions;
+    }
+
+    @Override
+    public List load(int first, int pageSize, String orderBy, SortOrder order, Map filters) {
+
+        long begin = System.currentTimeMillis();
+
+        LazyCountType lazyCountType = getLazyCountType();
+        if (lazyCountType == null) {
+            lazyCountType = LazyCountType.ALWAYS;
+        }
+
+        orderBy = getOrderBy(orderBy, order);
+
         if (DEBUG) {
             logger.log(Level.INFO, "Lazy Count Type: {0}. Using order by {1}", new Object[]{lazyCountType, orderBy});
         }
 
         List<Restriction> currentQueryRestrictions = new ArrayList<Restriction>();
 
-        // queryRestrictions = new ArrayList<Restriction>();
         if (restrictions != null && !restrictions.isEmpty()) {
             currentQueryRestrictions.addAll(restrictions);
         }
         if (restriction != null) {
             currentQueryRestrictions.add(restriction);
         }
+        //restrictions from filter
         if (filters != null && !filters.isEmpty()) {
-            for (Entry e : ((Map<String, String>) filters).entrySet()) {
-                if (e.getValue() != null && !e.getValue().toString().isEmpty()) {
-                    FilterByHandler filterByHandler = getFilterByHandler();
-                    Restrictions restrictionsFromFilterBy = null;
-                    if (filterByHandler != null) {
-                        restrictionsFromFilterBy = filterByHandler.getFilterBy(e.getKey().toString(), e.getValue());
-                    }
-                    if (filterByHandler != null && restrictionsFromFilterBy != null && !restrictionsFromFilterBy.isEmpty()) {
-                        currentQueryRestrictions.addAll(restrictionsFromFilterBy);
-                    } else {
-                        if (DEBUG) {
-                            logger.log(Level.INFO, "Restriction added. Name: {0}, Value:  {1}", new Object[]{e.getKey(), e.getValue()});
-                        }
-                        currentQueryRestrictions.add(new Restriction(e.getKey().toString(), RestrictionType.DATA_TABLE_FILTER, e.getValue()));
-                    }
-                }
-            }
+            currentQueryRestrictions.addAll(getRestrictionsFromFilterMap(filters));
         }
 
         this.currentOrderBy = orderBy;
 
         List<T> dados = dao.getQueryBuilder().select(attributes)
-                                            .from(dao.getEntityClass())
-                                            .join(joinBuilder)
-                                            .add(currentQueryRestrictions)
-                                            .orderBy(orderBy)
-                                            .setFirstResult(first)
-                                            .setMaxResults(pageSize)
-                                            .getResultList();
+                .from(dao.getEntityClass())
+                .join(joinBuilder)
+                .add(currentQueryRestrictions)
+                .orderBy(orderBy)
+                .setFirstResult(first)
+                .setMaxResults(pageSize)
+                .getResultList();
 
         if (DEBUG) {
             logger.log(Level.INFO, "Select on entity {0}, records found: {1} ", new Object[]{dao.getEntityClass().getName(), dados.size()});
@@ -224,9 +251,7 @@ public class LazyDataModelImpl<T> extends LazyDataModel {
     }
 
     /**
-     * Return all objects from data base, based on filters from data table
-     *
-     * @return
+     * @return all objects from data base, based on filters from data table
      */
     public List getAllResults() {
         return getAllResults(currentOrderBy);
