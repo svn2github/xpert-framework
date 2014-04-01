@@ -267,7 +267,7 @@ public abstract class BaseDAOImpl<T> implements BaseDAO<T> {
 
         QueryBuilder builder = new QueryBuilder(getEntityManager());
 
-        return builder.select(attributeName)
+        return builder.select("o."+attributeName)
                 .from(entityClass, "o")
                 .add("o." + EntityUtils.getIdFieldName(entityClass), id)
                 .getSigleResult();
@@ -284,7 +284,7 @@ public abstract class BaseDAOImpl<T> implements BaseDAO<T> {
 
         QueryBuilder builder = new QueryBuilder(getEntityManager());
 
-        return builder.select(attributeName)
+        return builder.select("o."+attributeName)
                 .from(entityClass, "o")
                 .add("o." + EntityUtils.getIdFieldName(entityClass), id)
                 .getResultList();

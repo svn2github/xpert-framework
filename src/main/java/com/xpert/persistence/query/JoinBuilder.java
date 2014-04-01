@@ -1,49 +1,111 @@
 package com.xpert.persistence.query;
 
+import java.util.ArrayList;
+
 /**
  *
  * @author Ayslan
  */
-public class JoinBuilder {
+public class JoinBuilder extends ArrayList<Join> {
 
-    private StringBuilder builder;
+    public String getJoinString() {
+        StringBuilder builder = new StringBuilder();
+        for (Join join : this) {
+            builder.append(join.getType().getClausule());
+            if (join.isFetch()) {
+                builder.append(" FETCH");
+            }
+            builder.append(" ");
+            builder.append(join.getProperty());
+            if (join.getAlias() != null && !join.getAlias().isEmpty()) {
+                builder.append(" ");
+                builder.append(join.getAlias());
+            }
+        }
+        return builder.toString();
+    }
 
     public JoinBuilder() {
-        builder = new StringBuilder();
     }
 
     public JoinBuilder leftJoin(String join) {
-        this.builder.append("LEFT JOIN ").append(join).append(" ");
+        add(new Join(join, JoinType.LEFT_JOIN));
         return this;
     }
 
-    public JoinBuilder innerJoin(String join) {
-        this.builder.append("INNER JOIN ").append(join).append(" ");
-        return this;
-    }
-
-    public JoinBuilder join(String join) {
-        this.builder.append("JOIN ").append(join).append(" ");
+    public JoinBuilder leftJoin(String join, String alias) {
+        add(new Join(join, alias, JoinType.LEFT_JOIN));
         return this;
     }
 
     public JoinBuilder leftJoinFetch(String join) {
-        this.builder.append("LEFT JOIN FETCH ").append(join).append(" ");
+        add(new Join(join, JoinType.LEFT_JOIN, true));
+        return this;
+    }
+
+    public JoinBuilder leftJoinFetch(String join, String alias) {
+        add(new Join(join, alias, JoinType.LEFT_JOIN, true));
+        return this;
+    }
+
+    public JoinBuilder innerJoin(String join) {
+        add(new Join(join, JoinType.INNER_JOIN));
+        return this;
+    }
+
+    public JoinBuilder innerJoin(String join, String alias) {
+        add(new Join(join, alias, JoinType.INNER_JOIN));
         return this;
     }
 
     public JoinBuilder innerJoinFetch(String join) {
-        this.builder.append("INNER JOIN FETCH ").append(join).append(" ");
+        add(new Join(join, JoinType.INNER_JOIN, true));
+        return this;
+    }
+
+    public JoinBuilder innerJoinFetch(String join, String alias) {
+        add(new Join(join, alias, JoinType.INNER_JOIN, true));
+        return this;
+    }
+
+    public JoinBuilder join(String join) {
+        add(new Join(join, JoinType.JOIN));
+        return this;
+    }
+
+    public JoinBuilder join(String join, String alias) {
+        add(new Join(join, alias, JoinType.JOIN));
         return this;
     }
 
     public JoinBuilder joinFetch(String join) {
-        this.builder.append("JOIN FETCH ").append(join).append(" ");
+        add(new Join(join, JoinType.JOIN, true));
         return this;
     }
 
-    @Override
-    public String toString() {
-        return builder.toString();
+    public JoinBuilder joinFetch(String join, String alias) {
+        add(new Join(join, alias, JoinType.JOIN, true));
+        return this;
     }
+
+    public JoinBuilder rightJoin(String join) {
+        add(new Join(join, JoinType.RIGHT_JOIN));
+        return this;
+    }
+
+    public JoinBuilder rightJoin(String join, String alias) {
+        add(new Join(join, alias, JoinType.RIGHT_JOIN));
+        return this;
+    }
+
+    public JoinBuilder rightJoinFetch(String join) {
+        add(new Join(join, JoinType.RIGHT_JOIN, true));
+        return this;
+    }
+
+    public JoinBuilder rightJoinFetch(String join, String alias) {
+        add(new Join(join, alias, JoinType.RIGHT_JOIN, true));
+        return this;
+    }
+
 }

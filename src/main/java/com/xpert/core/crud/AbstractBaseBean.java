@@ -12,6 +12,7 @@ import com.xpert.utils.StringUtils;
 import com.xpert.faces.utils.FacesUtils;
 import com.xpert.persistence.dao.BaseDAO;
 import com.xpert.persistence.exception.DeleteException;
+import com.xpert.persistence.query.JoinBuilder;
 import com.xpert.persistence.query.Restriction;
 import java.lang.reflect.ParameterizedType;
 import java.util.List;
@@ -42,6 +43,10 @@ public abstract class AbstractBaseBean<T> {
     public abstract String getDataModelOrder();
 
     public OrderByHandler getOrderByHandler() {
+        return null;
+    }
+    
+    public JoinBuilder getDataModelJoinBuilder(){
         return null;
     }
     
@@ -179,6 +184,7 @@ public abstract class AbstractBaseBean<T> {
             dataModel.setFilterByHandler(filterByHandler);
         }
         dataModel.setLazyCountType(getDataModelLazyCountType());
+        dataModel.setJoinBuilder(getDataModelJoinBuilder());
     }
 
     public void onLoadList() {

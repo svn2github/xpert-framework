@@ -1,15 +1,10 @@
 package com.xpert.persistence.query;
 
-import com.xpert.i18n.I18N;
 import com.xpert.persistence.exception.QueryFileNotFoundException;
-import com.xpert.utils.StringUtils;
 import java.io.BufferedInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.math.BigDecimal;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -29,7 +24,6 @@ import org.apache.commons.beanutils.PropertyUtils;
  */
 public class QueryBuilder {
 
-  
     private String orderBy;
     private String attributes;
     /**
@@ -38,11 +32,11 @@ public class QueryBuilder {
     private String atrribute;
     private Class from;
     private String alias;
-    private StringBuilder joins = new StringBuilder();
-    private List<Restriction> restrictions = new ArrayList<Restriction>();
+    private final JoinBuilder joins = new JoinBuilder();
+    private final List<Restriction> restrictions = new ArrayList<Restriction>();
     private List<Restriction> normalizedRestrictions = new ArrayList<Restriction>();
     private QueryType type;
-    private EntityManager entityManager;
+    private final EntityManager entityManager;
     private Integer maxResults;
     private Integer firstResult;
     private static final boolean DEBUG = true;
@@ -70,43 +64,6 @@ public class QueryBuilder {
 
     public QueryBuilder select(String attributes) {
         this.attributes = attributes;
-        return this;
-    }
-
-    public QueryBuilder leftJoin(String join) {
-        this.joins.append("LEFT JOIN ").append(join).append(" ");
-        return this;
-    }
-
-    public QueryBuilder innerJoin(String join) {
-        this.joins.append("INNER JOIN ").append(join).append(" ");
-        return this;
-    }
-
-    public QueryBuilder join(String join) {
-        this.joins.append("JOIN ").append(join).append(" ");
-        return this;
-    }
-
-    public QueryBuilder leftJoinFetch(String join) {
-        this.joins.append("LEFT JOIN FETCH ").append(join).append(" ");
-        return this;
-    }
-
-    public QueryBuilder innerJoinFetch(String join) {
-        this.joins.append("INNER JOIN FETCH ").append(join).append(" ");
-        return this;
-    }
-
-    public QueryBuilder joinFetch(String join) {
-        this.joins.append("JOIN FETCH ").append(join).append(" ");
-        return this;
-    }
-
-    public QueryBuilder join(JoinBuilder joinBuilder) {
-        if (joinBuilder != null) {
-            this.joins.append(joinBuilder);
-        }
         return this;
     }
 
@@ -245,8 +202,8 @@ public class QueryBuilder {
             queryString.append(alias).append(" ");
         }
 
-        if (joins != null && joins.length() > 0) {
-            queryString.append(joins).append(" ");
+        if (joins != null && joins.size() > 0) {
+            queryString.append(joins.getJoinString()).append(" ");
         }
 
         //normalize
@@ -324,10 +281,13 @@ public class QueryBuilder {
 
     public Query createQuery() {
 
+        long begin = System.currentTimeMillis();
+
         String queryString = getQueryString();
 
         if (DEBUG == true) {
             logger.log(Level.INFO, "Query String: {0}", queryString);
+            logger.log(Level.INFO, "Parameters: Max Results: {0}, First result: {1}, Order By: {2}, Restrictions: {3}", new Object[]{maxResults, firstResult, orderBy, normalizedRestrictions});
         }
 
         Query query = entityManager.createQuery(queryString);
@@ -369,7 +329,7 @@ public class QueryBuilder {
 
     /**
      * @param maxResults max results in Query
-     * @return 
+     * @return
      */
     public QueryBuilder setMaxResults(Integer maxResults) {
         this.maxResults = maxResults;
@@ -377,15 +337,14 @@ public class QueryBuilder {
     }
 
     /**
-     * 
+     *
      * @param firstResult min results in Query
-     * @return 
+     * @return
      */
     public QueryBuilder setFirstResult(Integer firstResult) {
         this.firstResult = firstResult;
         return this;
     }
-    
 
     /**
      * @param <T> Result Type
@@ -395,12 +354,12 @@ public class QueryBuilder {
         return getResultList(null);
     }
 
-   /**
-    * 
-    * @param <T> Result Type
-    * @param expectedType The expected type in result
-    * @return entityManager.getResultList()
-    */
+    /**
+     *
+     * @param <T> Result Type
+     * @param expectedType The expected type in result
+     * @return entityManager.getResultList()
+     */
     public <T> List<T> getResultList(Class expectedType) {
         type = QueryType.SELECT;
         List list = this.createQuery().getResultList();
@@ -425,12 +384,16 @@ public class QueryBuilder {
                 try {
                     Object entity = clazz.newInstance();
                     for (int i = 0; i < fields.length; i++) {
-                        String property = fields[i].trim().replaceAll("/s", "");
-                        initializeCascade(property, entity);
-                        if (object instanceof Object[]) {
-                            PropertyUtils.setProperty(entity, property, ((Object[]) object)[i]);
-                        } else {
-                            PropertyUtils.setProperty(entity, property, object);
+                        try {
+                            String property = fields[i].trim().replaceAll("/s", "");
+                            initializeCascade(property, entity);
+                            if (object instanceof Object[]) {
+                                PropertyUtils.setProperty(entity, property, ((Object[]) object)[i]);
+                            } else {
+                                PropertyUtils.setProperty(entity, property, object);
+                            }
+                        } catch (Exception ex) {
+                            logger.log(Level.SEVERE, null, ex);
                         }
                     }
                     result.add(entity);
@@ -988,6 +951,91 @@ public class QueryBuilder {
      */
     public QueryBuilder endGroup() {
         this.add(new Restriction(RestrictionType.END_GROUP));
+        return this;
+    }
+
+    public QueryBuilder join(JoinBuilder joinBuilder) {
+        joins.addAll(joinBuilder);
+        return this;
+    }
+
+    public QueryBuilder leftJoin(String join) {
+        joins.leftJoin(join);
+        return this;
+    }
+
+    public QueryBuilder leftJoin(String join, String alias) {
+        joins.leftJoin(join, alias);
+        return this;
+    }
+
+    public QueryBuilder leftJoinFetch(String join) {
+        joins.leftJoinFetch(join);
+        return this;
+    }
+
+    public QueryBuilder leftJoinFetch(String join, String alias) {
+        joins.leftJoin(join, alias);
+        return this;
+    }
+
+    public QueryBuilder innerJoin(String join) {
+        joins.innerJoin(join);
+        return this;
+    }
+
+    public QueryBuilder innerJoin(String join, String alias) {
+        joins.innerJoin(join, alias);
+        return this;
+    }
+
+    public QueryBuilder innerJoinFetch(String join) {
+        joins.innerJoinFetch(join);
+        return this;
+    }
+
+    public QueryBuilder innerJoinFetch(String join, String alias) {
+        joins.innerJoinFetch(join, alias);
+        return this;
+    }
+
+    public QueryBuilder join(String join) {
+        joins.join(join);
+        return this;
+    }
+
+    public QueryBuilder join(String join, String alias) {
+        joins.join(join, alias);
+        return this;
+    }
+
+    public QueryBuilder joinFetch(String join) {
+        joins.join(join);
+        return this;
+    }
+
+    public QueryBuilder joinFetch(String join, String alias) {
+        joins.joinFetch(join, alias);
+        return this;
+    }
+
+    public QueryBuilder rightJoin(String join) {
+        joins.rightJoin(join);
+        return this;
+    }
+
+    public QueryBuilder rightJoin(String join, String alias) {
+        joins.rightJoin(join, alias);
+        return this;
+    }
+
+    public QueryBuilder rightJoinFetch(String join) {
+        joins.rightJoinFetch(join);
+        return this;
+    }
+
+    public QueryBuilder rightJoinFetch(String join, String alias) {
+        joins.rightJoinFetch(join, alias);
         return this;
     }
 
