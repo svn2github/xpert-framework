@@ -50,11 +50,6 @@ public class QueryBuilder {
         this.entityManager = entityManager;
     }
 
-    public QueryBuilder(EntityManager entityManager, String alias) {
-        this.entityManager = entityManager;
-        this.alias = alias;
-    }
-
     public QueryBuilder from(Class from) {
         this.from = from;
         return this;
