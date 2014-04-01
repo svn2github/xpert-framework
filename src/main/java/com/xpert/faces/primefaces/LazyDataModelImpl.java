@@ -143,8 +143,14 @@ public class LazyDataModelImpl<T> extends LazyDataModel {
 
         this.currentOrderBy = orderBy;
 
-        List<T> dados = dao.getQueryBuilder().select(attributes).from(dao.getEntityClass()).add(currentQueryRestrictions).join(joinBuilder)
-                .orderBy(orderBy).getResultList(first, pageSize);
+        List<T> dados = dao.getQueryBuilder().select(attributes)
+                                            .from(dao.getEntityClass())
+                                            .join(joinBuilder)
+                                            .add(currentQueryRestrictions)
+                                            .orderBy(orderBy)
+                                            .setFirstResult(first)
+                                            .setMaxResults(pageSize)
+                                            .getResultList();
 
         if (DEBUG) {
             logger.log(Level.INFO, "Select on entity {0}, records found: {1} ", new Object[]{dao.getEntityClass().getName(), dados.size()});

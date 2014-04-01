@@ -488,11 +488,13 @@ public abstract class BaseDAOImpl<T> implements BaseDAO<T> {
     public List<T> list(Class clazz, List<Restriction> restrictions, String order, Integer firstResult, Integer maxResults, String attributes) {
 
         return new QueryBuilder(getEntityManager())
-                .select(attributes)
-                .from(clazz)
-                .add(restrictions)
-                .orderBy(order)
-                .getResultList(firstResult, maxResults, clazz);
+                            .select(attributes)
+                            .from(clazz)
+                            .add(restrictions)
+                            .orderBy(order)
+                            .setFirstResult(firstResult)
+                            .setMaxResults(maxResults)
+                            .getResultList(clazz);
 
     }
 

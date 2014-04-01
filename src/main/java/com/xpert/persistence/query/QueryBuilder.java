@@ -43,6 +43,8 @@ public class QueryBuilder {
     private List<Restriction> normalizedRestrictions = new ArrayList<Restriction>();
     private QueryType type;
     private EntityManager entityManager;
+    private Integer maxResults;
+    private Integer firstResult;
     private static final boolean DEBUG = true;
     private static final Logger logger = Logger.getLogger(QueryBuilder.class.getName());
 
@@ -266,14 +268,6 @@ public class QueryBuilder {
         return queryString.toString();
     }
 
-    public Query createQuery() {
-        return createQuery(null);
-    }
-
-    public Query createQuery(Integer maxResults) {
-        return createQuery(null, maxResults);
-    }
-
     public List<QueryParameter> getQueryParameters() {
         int position = 1;
         List<QueryParameter> parameters = new ArrayList<QueryParameter>();
@@ -328,7 +322,7 @@ public class QueryBuilder {
         return (Number) createQuery().getSingleResult();
     }
 
-    public Query createQuery(Integer firstResult, Integer maxResults) {
+    public Query createQuery() {
 
         String queryString = getQueryString();
 
@@ -365,87 +359,51 @@ public class QueryBuilder {
      * NoResultExceptionis throw
      */
     public Object getSigleResult() {
-        return this.getSigleResult(null);
-    }
-
-    /**
-     * @param maxResults
-     * @return entityManager.getSigleResult(), returns null when
-     * NoResultExceptionis throw
-     */
-    public Object getSigleResult(Integer maxResults) {
         try {
             type = QueryType.SELECT;
-            return this.createQuery(maxResults).getSingleResult();
+            return this.createQuery().getSingleResult();
         } catch (NoResultException ex) {
             return null;
         }
     }
 
     /**
+     * @param maxResults max results in Query
+     * @return 
+     */
+    public QueryBuilder setMaxResults(Integer maxResults) {
+        this.maxResults = maxResults;
+        return this;
+    }
+
+    /**
+     * 
+     * @param firstResult min results in Query
+     * @return 
+     */
+    public QueryBuilder setFirstResult(Integer firstResult) {
+        this.firstResult = firstResult;
+        return this;
+    }
+    
+
+    /**
      * @param <T> Result Type
      * @return entityManager.getResultList()
      */
     public <T> List<T> getResultList() {
-        return getResultList(null, null, null);
+        return getResultList(null);
     }
 
-    /**
-     * @param <T> Result Type
-     * @param expectedType The expected type in result
-     * @return entityManager.getResultList()
-     */
+   /**
+    * 
+    * @param <T> Result Type
+    * @param expectedType The expected type in result
+    * @return entityManager.getResultList()
+    */
     public <T> List<T> getResultList(Class expectedType) {
-        return getResultList(null, null, expectedType);
-    }
-
-    /**
-     * @param <T> Result Type
-     * @param maxResults Max results in query
-     * (entityManager.setMaxResult(maxResults))
-     * @return entityManager.getResultList()
-     */
-    public <T> List<T> getResultList(Integer maxResults) {
-        return getResultList(null, maxResults);
-    }
-
-    /**
-     *
-     * @param <T> Result Type
-     * @param maxResults Max results in query
-     * (entityManager.setMaxResult(maxResults))
-     * @param expectedType The expected type in result
-     * @return entityManager.getResultList()
-     */
-    public <T> List<T> getResultList(Integer maxResults, Class expectedType) {
-        return getResultList(null, maxResults, expectedType);
-    }
-
-    /**
-     * @param <T> Result Type
-     * @param firstResult First results in query
-     * (entityManager.setFirstResult(maxResults))
-     * @param maxResults Max results in query
-     * (entityManager.setMaxResult(maxResults))
-     * @return entityManager.getResultList()
-     */
-    public <T> List<T> getResultList(Integer firstResult, Integer maxResults) {
-        return getResultList(firstResult, maxResults, null);
-    }
-
-    /**
-     *
-     * @param <T> Result Type
-     * @param firstResult First results in query
-     * (entityManager.setFirstResult(maxResults))
-     * @param maxResults Max results in query
-     * (entityManager.setMaxResult(maxResults))
-     * @param expectedType The expected type in result
-     * @return
-     */
-    public <T> List<T> getResultList(Integer firstResult, Integer maxResults, Class expectedType) {
         type = QueryType.SELECT;
-        List list = this.createQuery(firstResult, maxResults).getResultList();
+        List list = this.createQuery().getResultList();
         if (list != null && attributes != null && !attributes.trim().isEmpty() && expectedType != null) {
             return getNormalizedResultList(attributes, list, expectedType);
         }
