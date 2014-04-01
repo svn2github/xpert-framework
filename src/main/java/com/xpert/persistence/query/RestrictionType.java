@@ -6,34 +6,55 @@ package com.xpert.persistence.query;
  */
 public enum RestrictionType {
 
-    EQUALS("="), 
-    NOT_EQUALS("!="), 
-    GREATER_THAN(">"), 
-    LESS_THAN("<"), 
-    GREATER_EQUALS_THAN(">="), 
-    LESS_EQUALS_THAN("<="), 
-    LIKE("LIKE"), 
-    NOT_LIKE("NOT LIKE"), 
-    IN("IN"),
-    NOT_IN("NOT IN"), 
-    NULL("IS NULL", true),
-    NOT_NULL("IS NOT NULL", true),
+    EQUALS("=", "eq"), 
+    NOT_EQUALS("!=", "ne"), 
+    GREATER_THAN(">", "gt"), 
+    LESS_THAN("<", "lt"), 
+    GREATER_EQUALS_THAN(">=", "gte"), 
+    LESS_EQUALS_THAN("<=", "lte"), 
+    LIKE("LIKE", "like"), 
+    NOT_LIKE("NOT LIKE", "notlike"), 
+    IN("IN", "in"),
+    NOT_IN("NOT IN", "notin"), 
+    NULL("IS NULL", "null", true),
+    NOT_NULL("IS NOT NULL", "notnull", true),
     DATA_TABLE_FILTER("LIKE"),
     OR("OR", true),
     START_GROUP("(", true),
     QUERY_STRING("", true),
     END_GROUP(")", true);
     
-    private String symbol;
+    private final String symbol;
+    private String acronym;
     private boolean ignoreParameter;
 
     private RestrictionType(String symbol) {
         this.symbol = symbol;
     }
 
+    private RestrictionType(String symbol, String acronym) {
+        this.symbol = symbol;
+        this.acronym = acronym;
+    }
+    
     private RestrictionType(String symbol, boolean ignoreParameter) {
         this.symbol = symbol;
         this.ignoreParameter = ignoreParameter;
+    }
+
+    private RestrictionType(String symbol, String acronym, boolean ignoreParameter) {
+        this.symbol = symbol;
+        this.acronym = acronym;
+        this.ignoreParameter = ignoreParameter;
+    }
+    
+    public static RestrictionType getByAcronym(String acronym){
+        for(RestrictionType restrictionType : RestrictionType.values()){
+            if(restrictionType.getAcronym() != null && restrictionType.getAcronym().equals(acronym.trim())){
+                return restrictionType;
+            }
+        }
+        return null;
     }
     
     public String getSymbol() {
@@ -43,6 +64,12 @@ public enum RestrictionType {
     public boolean isIgnoreParameter() {
         return ignoreParameter;
     }
+
+    public String getAcronym() {
+        return acronym;
+    }
+    
+    
     
     
 }

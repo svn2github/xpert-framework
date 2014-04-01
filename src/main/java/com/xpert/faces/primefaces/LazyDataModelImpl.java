@@ -114,9 +114,9 @@ public class LazyDataModelImpl<T> extends LazyDataModel {
      * @return The filter map converted into "restrictions"
      */
     public List<Restriction> getRestrictionsFromFilterMap(Map filters) {
-        
+
         List<Restriction> filterRestrictions = new ArrayList<Restriction>();
-        
+
         if (filters != null && !filters.isEmpty()) {
             for (Entry e : ((Map<String, String>) filters).entrySet()) {
                 if (e.getValue() != null && !e.getValue().toString().isEmpty()) {
@@ -170,14 +170,21 @@ public class LazyDataModelImpl<T> extends LazyDataModel {
 
         this.currentOrderBy = orderBy;
 
-        List<T> dados = dao.getQueryBuilder().select(attributes)
-                .from(dao.getEntityClass())
-                .join(joinBuilder)
-                .add(currentQueryRestrictions)
-                .orderBy(orderBy)
-                .setFirstResult(first)
-                .setMaxResults(pageSize)
-                .getResultList();
+        String select = null;
+        if (attributes != null && !attributes.isEmpty()) {
+            select = attributes;
+        } else if (joinBuilder != null && joinBuilder.getRootAlias() != null && !joinBuilder.getRootAlias().isEmpty()) {
+            select = joinBuilder.getRootAlias();
+        }
+
+        List<T> dados = dao.getQueryBuilder().select(select)
+                                            .from(dao.getEntityClass(), (joinBuilder != null ? joinBuilder.getRootAlias() : null))
+                                            .join(joinBuilder)
+                                            .add(currentQueryRestrictions)
+                                            .orderBy(orderBy)
+                                            .setFirstResult(first)
+                                            .setMaxResults(pageSize)
+                                            .getResultList();
 
         if (DEBUG) {
             logger.log(Level.INFO, "Select on entity {0}, records found: {1} ", new Object[]{dao.getEntityClass().getName(), dados.size()});

@@ -72,6 +72,20 @@ public class QueryBuilder {
         return this;
     }
 
+    public QueryBuilder orderBy(List<String> order) {
+        if (order != null) {
+            StringBuilder builder = new StringBuilder();
+            for (String s : order) {
+                if (builder.length() > 0) {
+                    builder.append(",");
+                }
+                builder.append(s);
+            }
+            this.orderBy = builder.toString();
+        }
+        return this;
+    }
+
     public static String getQuerySelectClausule(QueryType type, String select) {
 
         if (type == null) {
@@ -287,7 +301,7 @@ public class QueryBuilder {
 
         if (DEBUG == true) {
             logger.log(Level.INFO, "Query String: {0}", queryString);
-            logger.log(Level.INFO, "Parameters: Max Results: {0}, First result: {1}, Order By: {2}, Restrictions: {3}", new Object[]{maxResults, firstResult, orderBy, normalizedRestrictions});
+            logger.log(Level.INFO, "Parameters: Max Results: {0}, First result: {1}, Order By: {2}, Restrictions: {3}, Joins: {4}", new Object[]{maxResults, firstResult, orderBy, normalizedRestrictions, joins});
         }
 
         Query query = entityManager.createQuery(queryString);
@@ -955,7 +969,9 @@ public class QueryBuilder {
     }
 
     public QueryBuilder join(JoinBuilder joinBuilder) {
-        joins.addAll(joinBuilder);
+        if (joinBuilder != null) {
+            joins.addAll(joinBuilder);
+        }
         return this;
     }
 

@@ -8,9 +8,12 @@ import java.util.ArrayList;
  */
 public class JoinBuilder extends ArrayList<Join> {
 
+    private String rootAlias;
+    
     public String getJoinString() {
         StringBuilder builder = new StringBuilder();
         for (Join join : this) {
+            builder.append(" ");
             builder.append(join.getType().getClausule());
             if (join.isFetch()) {
                 builder.append(" FETCH");
@@ -24,10 +27,15 @@ public class JoinBuilder extends ArrayList<Join> {
         }
         return builder.toString();
     }
+    
 
     public JoinBuilder() {
     }
 
+    public JoinBuilder(String rootAlias) {
+        this.rootAlias = rootAlias;
+    }
+    
     public JoinBuilder leftJoin(String join) {
         add(new Join(join, JoinType.LEFT_JOIN));
         return this;
@@ -108,4 +116,9 @@ public class JoinBuilder extends ArrayList<Join> {
         return this;
     }
 
+    public String getRootAlias() {
+        return rootAlias;
+    }
+
+    
 }
