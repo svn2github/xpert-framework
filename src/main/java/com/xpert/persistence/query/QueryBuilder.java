@@ -39,7 +39,7 @@ public class QueryBuilder {
     private final EntityManager entityManager;
     private Integer maxResults;
     private Integer firstResult;
-    private static final boolean DEBUG = true;
+    private boolean debug;
     private static final Logger logger = Logger.getLogger(QueryBuilder.class.getName());
 
     public QueryBuilder(EntityManager entityManager) {
@@ -83,6 +83,11 @@ public class QueryBuilder {
             }
             this.orderBy = builder.toString();
         }
+        return this;
+    }
+
+    public QueryBuilder debug() {
+        this.debug = true;
         return this;
     }
 
@@ -270,27 +275,84 @@ public class QueryBuilder {
         return parameters;
     }
 
+    /**
+     * @return Value of clausule "SELECT COUNT(*)"
+     */
     public Long count() {
         type = QueryType.COUNT;
         return (Long) createQuery().getSingleResult();
     }
 
+    /**
+     *
+     * @param property Property to query
+     * @return Value of clausule "SELECT SUM(property)"
+     */
     public Number sum(String property) {
         type = QueryType.SUM;
         atrribute = property;
         return (Number) createQuery().getSingleResult();
     }
 
+    /**
+     *
+     * @param property property Property to query
+     * @param valueWhenNull Return value when query result is null
+     * @return Value of clausule "SELECT SUM(property)"
+     */
+    public Number sum(String property, Number valueWhenNull) {
+        Number number = sum(property);
+        if (number == null) {
+            return valueWhenNull;
+        }
+        return number;
+    }
+
+    /**
+     * @param property Property to query
+     * @return Value of clausule "SELECT max(property)"
+     */
     public Object max(String property) {
         type = QueryType.MAX;
         atrribute = property;
-        return (Number) createQuery().getSingleResult();
+        return createQuery().getSingleResult();
     }
 
+    /**
+     * @param property Property to query
+     * @param valueWhenNull Return value when query result is null
+     * @return Value of clausule "SELECT max(property)"
+     */
+    public Object max(String property, Object valueWhenNull) {
+        Object value = max(property);
+        if (value == null) {
+            return valueWhenNull;
+        }
+        return value;
+    }
+
+    /**
+     *
+     * @param property Property to query
+     * @return Value of clausule "SELECT min(property)"
+     */
     public Object min(String property) {
         type = QueryType.MIN;
         atrribute = property;
-        return (Number) createQuery().getSingleResult();
+        return createQuery().getSingleResult();
+    }
+
+    /**
+     * @param property Property to query
+     * @param valueWhenNull Return value when query result is null
+     * @return Value of clausule "SELECT min(property)"
+     */
+    public Object min(String property, Object valueWhenNull) {
+        Object value = min(property);
+        if (value == null) {
+            return valueWhenNull;
+        }
+        return value;
     }
 
     public Query createQuery() {
@@ -299,7 +361,7 @@ public class QueryBuilder {
 
         String queryString = getQueryString();
 
-        if (DEBUG == true) {
+        if (debug == true) {
             logger.log(Level.INFO, "Query String: {0}", queryString);
             logger.log(Level.INFO, "Parameters: Max Results: {0}, First result: {1}, Order By: {2}, Restrictions: {3}, Joins: {4}", new Object[]{maxResults, firstResult, orderBy, normalizedRestrictions, joins});
         }
