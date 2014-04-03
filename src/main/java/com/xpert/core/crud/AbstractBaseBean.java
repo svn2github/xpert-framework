@@ -45,11 +45,11 @@ public abstract class AbstractBaseBean<T> {
     public OrderByHandler getOrderByHandler() {
         return null;
     }
-    
-    public JoinBuilder getDataModelJoinBuilder(){
+
+    public JoinBuilder getDataModelJoinBuilder() {
         return null;
     }
-    
+
     public FilterByHandler getFilterByHandler() {
         return null;
     }
@@ -127,7 +127,8 @@ public abstract class AbstractBaseBean<T> {
     }
 
     /**
-     * @return A List of Restrictions, the Restrictions are used in LazyDataModel
+     * @return A List of Restrictions, the Restrictions are used in
+     * LazyDataModel
      */
     public List<Restriction> getDataModelRestrictions() {
         return null;
@@ -202,6 +203,17 @@ public abstract class AbstractBaseBean<T> {
                 postDelete();
                 id = null;
             }
+        } catch (DeleteException ex) {
+            FacesMessageUtils.error(XpertResourceBundle.get("objectCannotBeDeleted"));
+        }
+    }
+
+    public void remove() {
+        try {
+            preDelete();
+            getBO().remove(getEntity());
+            FacesMessageUtils.sucess();
+            postDelete();
         } catch (DeleteException ex) {
             FacesMessageUtils.error(XpertResourceBundle.get("objectCannotBeDeleted"));
         }
