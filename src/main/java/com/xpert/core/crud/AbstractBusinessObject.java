@@ -49,4 +49,13 @@ public abstract class AbstractBusinessObject<T> {
     public void delete(Long id) throws DeleteException {
         getDAO().delete(id);
     }
+    
+    public void remove(Long id) throws DeleteException {
+        Object object = getDAO().find(id);
+        getDAO().remove(object);
+    }
+    
+    public void remove(T object) throws DeleteException {
+        getDAO().remove(object);
+    }
 }
