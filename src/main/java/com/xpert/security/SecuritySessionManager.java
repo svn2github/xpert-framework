@@ -61,7 +61,14 @@ public class SecuritySessionManager {
         for (Role role : roles) {
             if (role.getUrl() != null && !role.getUrl().isEmpty()) {
                 for (String url : role.getUrl().split(",")) {
-                    urlsMap.put(url.trim(), url.trim());
+                    String urlFormated = null;
+                    int indexOfQuery = url.indexOf("?");
+                    if (indexOfQuery > -1) {
+                        urlFormated = url.substring(0, indexOfQuery).trim();
+                    } else {
+                        urlFormated = url.trim();
+                    }
+                    urlsMap.put(urlFormated, urlFormated);
                 }
             }
         }
