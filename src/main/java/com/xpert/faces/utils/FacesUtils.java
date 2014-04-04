@@ -92,7 +92,6 @@ public class FacesUtils {
      *
      * @param <T>
      * @param beanName
-     * @param clazz
      * @return
      */
     public static <T> T getBeanByEl(String beanName) {
@@ -104,8 +103,7 @@ public class FacesUtils {
      * Get a bean form EL context
      *
      * @param <T>
-     * @param beanName
-     * @param clazz
+     * @param expression
      * @return
      */
     public static <T> T evaluateExpressionGet(String expression) {
