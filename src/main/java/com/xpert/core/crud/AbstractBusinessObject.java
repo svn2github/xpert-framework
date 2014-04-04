@@ -57,12 +57,12 @@ public abstract class AbstractBusinessObject<T> {
 
     /**
      * Saves entity:
-     * 
-     *  1 - calls "validate(object)"
-     *  2 - calls "validateUniqueFields(object)"
-     *  3 - check if any excpetion occurred
-     *  4 - if entity id is null then calls "save", if not, calls "merge"
-     * 
+     * <ol>
+     * <li>calls "validate(object)"</li>
+     * <li>calls "validateUniqueFields(object)"</li>
+     * <li>check if any excpetion occurred</li>
+     * <li>if entity id is null then calls "save", if not, calls "merge"</li>
+     * </ol>
      * @param object
      * @throws BusinessException 
      */
