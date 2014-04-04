@@ -38,8 +38,14 @@ public abstract class AbstractBaseBean<T> {
     private boolean loadEntityOnPostConstruct = true;
     private static final String ENTITY_CLASS_TO_LOAD = "xpert.entityClassToLoad";
 
+    /**
+     * @return a AbstractBusinessObject instance to be used in operations
+     */
     public abstract AbstractBusinessObject getBO();
 
+    /**
+     * @return Default order od LazyDatamodel
+     */
     public abstract String getDataModelOrder();
 
     public OrderByHandler getOrderByHandler() {
@@ -55,9 +61,7 @@ public abstract class AbstractBaseBean<T> {
     }
 
     /**
-     * Called after
-     *
-     * @PostConstruct
+     * Called after "@PostConstruct"
      */
     public void init() {
     }
@@ -72,9 +76,7 @@ public abstract class AbstractBaseBean<T> {
     }
 
     /**
-     * Method called on
-     *
-     * @PostConstruct event
+     * Method called on "@PostConstruct" event
      */
     @PostConstruct
     public void postConstruct() {
@@ -95,6 +97,9 @@ public abstract class AbstractBaseBean<T> {
         createDataModel();
     }
 
+    /**
+     * @return A Long instance of id passed in parameter
+     */
     private Long getIdFromParameter() {
         String parameter = FacesUtils.getParameter(ID);
         if (parameter == null || parameter.isEmpty()) {
@@ -108,7 +113,13 @@ public abstract class AbstractBaseBean<T> {
     }
 
     /**
-     * Persists entity
+     * Persists entity:
+     *
+     * 1 - call "preSave()" 
+     * 2 - call " getBO().save()" 
+     * 3 - call "postSave()" 
+     * 4 - close dialog (if is defined)
+     *
      */
     public void save() {
         try {
@@ -122,6 +133,9 @@ public abstract class AbstractBaseBean<T> {
         }
     }
 
+    /**
+     * @return BaseDAO defined in "getBO()"
+     */
     public BaseDAO<T> getDAO() {
         return getBO().getDAO();
     }
@@ -134,9 +148,15 @@ public abstract class AbstractBaseBean<T> {
         return null;
     }
 
+    /**
+     * Method called before save entity
+     */
     public void preSave() {
     }
 
+    /**
+     * Method called after asve entity (only if save is successful)
+     */
     public void postSave() {
     }
 
@@ -147,6 +167,9 @@ public abstract class AbstractBaseBean<T> {
         entity = getEntityNewInstance();
     }
 
+    /**
+     * @return The class in generic Type
+     */
     public Class getEntityClass() {
         if (getClass().getGenericSuperclass() != null && !getClass().getGenericSuperclass().equals(Object.class)) {
             if (getClass().getGenericSuperclass() instanceof ParameterizedType) {
@@ -186,12 +209,6 @@ public abstract class AbstractBaseBean<T> {
         }
         dataModel.setLazyCountType(getDataModelLazyCountType());
         dataModel.setJoinBuilder(getDataModelJoinBuilder());
-    }
-
-    public void onLoadList() {
-    }
-
-    public void onLoadCreate() {
     }
 
     public void delete() {
@@ -253,9 +270,15 @@ public abstract class AbstractBaseBean<T> {
         }
     }
 
+    /**
+     * Called before "delete()" and "remove()" methods
+     */
     public void preDelete() {
     }
 
+    /**
+     * Called after "delete()" and "remove()" methods (only if deletion is successful)
+     */
     public void postDelete() {
     }
 
@@ -291,6 +314,10 @@ public abstract class AbstractBaseBean<T> {
         this.entity = entity;
     }
 
+    /**
+     * @return true if the entity must be loaded from parameter "id", default
+     * value is true
+     */
     public boolean isLoadEntityOnPostConstruct() {
         return loadEntityOnPostConstruct;
     }

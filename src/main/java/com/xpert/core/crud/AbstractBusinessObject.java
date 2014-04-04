@@ -15,20 +15,57 @@ import java.util.List;
  */
 public abstract class AbstractBusinessObject<T> {
 
+    /**
+     * @return The BusinessObject BaseDAO
+     */
     public abstract BaseDAO getDAO();
 
+    /**
+     * Define the UniqueFields to be used in method "validateUniqueFields"
+     * 
+     * @return 
+     */
     public abstract List<UniqueField> getUniqueFields();
 
+    /**
+     * Determine if entity will be audited on method "save()"
+     * 
+     * @return 
+     */
     public abstract boolean isAudit();
 
+    /**
+     * Your own logic to validate the object
+     * 
+     * @param object
+     * @throws BusinessException 
+     */
     public abstract void validate(T object) throws BusinessException;
 
+    
+    /**
+     * Validate unique field based on "getUniqueFields()"
+     * 
+     * @param object
+     * @throws UniqueFieldException 
+     */
     public void validateUniqueFields(Object object) throws UniqueFieldException {
         if (getUniqueFields() != null && !getUniqueFields().isEmpty()) {
             UniqueFieldsValidation.validateUniqueFields(getUniqueFields(), object, getDAO());
         }
     }
 
+    /**
+     * Saves entity:
+     * 
+     *  1 - call "validate(object)"
+     *  2 - call "validateUniqueFields(object)"
+     *  3 - check if any excpetion occurred
+     *  4 - if entity id is null then call "save", if not, call "merge"
+     * 
+     * @param object
+     * @throws BusinessException 
+     */
     public void save(T object) throws BusinessException {
 
         BusinessException exception = new BusinessException();
@@ -46,15 +83,33 @@ public abstract class AbstractBusinessObject<T> {
         }
     }
 
+    /**
+     * Call "baseDAO.delete()" to delete entity
+     * 
+     * @param id entity id
+     * @throws DeleteException 
+     */
     public void delete(Long id) throws DeleteException {
         getDAO().delete(id);
     }
     
+    /**
+     * Call "baseDAO.remove()" to delete entity
+     * 
+     * @param id Entity id
+     * @throws DeleteException 
+     */
     public void remove(Long id) throws DeleteException {
         Object object = getDAO().find(id);
         getDAO().remove(object);
     }
     
+    /**
+     * Call "baseDAO.remove()" to delete entity
+     * 
+     * @param object Object to delete
+     * @throws DeleteException 
+     */
     public void remove(T object) throws DeleteException {
         getDAO().remove(object);
     }
