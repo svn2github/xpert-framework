@@ -115,9 +115,9 @@ public abstract class AbstractBaseBean<T> {
     /**
      * Persists entity:
      *
-     * 1 - call "preSave()" 
-     * 2 - call " getBO().save()" 
-     * 3 - call "postSave()" 
+     * 1 - calls "preSave()" 
+     * 2 - calls " getBO().save()" 
+     * 3 - calls "postSave()" 
      * 4 - close dialog (if is defined)
      *
      */
@@ -211,6 +211,14 @@ public abstract class AbstractBaseBean<T> {
         dataModel.setJoinBuilder(getDataModelJoinBuilder());
     }
 
+   /**
+     *  This method will delete the current entity calling "bo.delete()":
+     * 
+     *  1 - calls "preDelete()"
+     *  2 - calls "getBO().remove"
+     *  2 - calls "postDelete()" if deletion is successful
+     *  
+     */
     public void delete() {
         try {
             preDelete();
@@ -225,6 +233,14 @@ public abstract class AbstractBaseBean<T> {
         }
     }
 
+    /**
+     * This method will delete the current entity calling "bo.remove()":
+     * 
+     *  1 - calls "preDelete()"
+     *  2 - calls "getBO().remove"
+     *  2 - calls "postDelete()" if deletion is successful
+     *  
+     */
     public void remove() {
         try {
             preDelete();

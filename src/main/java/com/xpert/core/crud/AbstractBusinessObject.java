@@ -58,10 +58,10 @@ public abstract class AbstractBusinessObject<T> {
     /**
      * Saves entity:
      * 
-     *  1 - call "validate(object)"
-     *  2 - call "validateUniqueFields(object)"
+     *  1 - calls "validate(object)"
+     *  2 - calls "validateUniqueFields(object)"
      *  3 - check if any excpetion occurred
-     *  4 - if entity id is null then call "save", if not, call "merge"
+     *  4 - if entity id is null then calls "save", if not, calls "merge"
      * 
      * @param object
      * @throws BusinessException 
@@ -84,7 +84,7 @@ public abstract class AbstractBusinessObject<T> {
     }
 
     /**
-     * Call "baseDAO.delete()" to delete entity
+     * Calls "baseDAO.delete()" to delete entity
      * 
      * @param id entity id
      * @throws DeleteException 
@@ -94,7 +94,7 @@ public abstract class AbstractBusinessObject<T> {
     }
     
     /**
-     * Call "baseDAO.remove()" to delete entity
+     * Calls "baseDAO.remove()" to delete entity
      * 
      * @param id Entity id
      * @throws DeleteException 
@@ -105,7 +105,7 @@ public abstract class AbstractBusinessObject<T> {
     }
     
     /**
-     * Call "baseDAO.remove()" to delete entity
+     * Calls "baseDAO.remove()" to delete entity
      * 
      * @param object Object to delete
      * @throws DeleteException 
