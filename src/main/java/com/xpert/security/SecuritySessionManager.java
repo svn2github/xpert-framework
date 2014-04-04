@@ -41,7 +41,6 @@ public class SecuritySessionManager {
      */
     public static void putRoles(ServletRequest request, List<Role> roles) {
 
-
         if (roles == null || roles.isEmpty()) {
             return;
         }
@@ -81,7 +80,7 @@ public class SecuritySessionManager {
     /**
      * same as hasURL(String url, ServletRequest request) but uses FacesContext
      *
-     * @param key
+     * @param url
      * @return
      */
     public static boolean hasURL(String url) {
@@ -91,7 +90,8 @@ public class SecuritySessionManager {
     /**
      * Verify if user can acess url.
      *
-     * @param key
+     * @param url
+     * @param request
      * @return
      */
     public static boolean hasURL(String url, ServletRequest request) {
@@ -132,7 +132,6 @@ public class SecuritySessionManager {
      * Same as getRole(String key, ServletRequest request) but uses FacesContext
      *
      * @param key
-     * @param request
      * @return
      */
     public static Role getRole(String key) {
