@@ -1,7 +1,9 @@
 package com.xpert.audit;
 
 import com.xpert.audit.model.AbstractAuditing;
+import com.xpert.audit.model.AbstractMetadata;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import javax.faces.context.FacesContext;
 
@@ -49,6 +51,18 @@ public class AuditContext {
      */
     public AbstractAuditing getAuditing(Object object) {
         return auditValues.get(object);
+    }
+    
+    /**
+     * @param object
+     * @return The current metadatas of object
+     */
+    public List<AbstractMetadata> getMetadata(Object object){
+        AbstractAuditing auditing = getAuditing(object);
+        if(auditing != null){
+            return auditing.getMetadatas();
+        }
+        return null;
     }
 
     /**
