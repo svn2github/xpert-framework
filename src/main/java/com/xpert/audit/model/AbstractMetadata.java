@@ -37,6 +37,14 @@ public abstract class AbstractMetadata {
         return field;
     }
 
+    public String getFieldName() {
+        AbstractAuditing auditing = getAuditing();
+        if (auditing != null && auditing.getAuditClass() != null) {
+            return getFieldName(auditing.getAuditClass());
+        }
+        return field;
+    }
+
     public String getEntity() {
         return entity;
     }

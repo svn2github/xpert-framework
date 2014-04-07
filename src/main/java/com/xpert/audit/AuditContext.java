@@ -9,7 +9,7 @@ import javax.faces.context.FacesContext;
  * Represents que current context of audit, the "audits" form a object must be
  * added to a map, with this it can be retrieve in other moment.
  * 
- * The values are put in facesContext.getAttributes()
+ * The values are put in "facesContext.getExternalContext().getRequestMap()"
  *
  * @author ayslan
  */
@@ -25,7 +25,7 @@ public class AuditContext {
 
     /**
      * Current instance associated with the request. The value is stored in
-     * facesContext.getAttributes()
+     * "facesContext.getExternalContext().getRequestMap()"
      *
      * @return A AuditContext instance, returns null if
      * FacesContext.getCurrentInstance() is null
@@ -33,10 +33,10 @@ public class AuditContext {
     public static AuditContext getCurrentInstance() {
         FacesContext facesContext = FacesContext.getCurrentInstance();
         if (facesContext != null) {
-            AuditContext auditContext = (AuditContext) facesContext.getAttributes().get(INSTANCE_KEY);
+            AuditContext auditContext = (AuditContext) facesContext.getExternalContext().getRequestMap().get(INSTANCE_KEY);
             if (auditContext == null) {
                 auditContext = new AuditContext();
-                facesContext.getAttributes().put(INSTANCE_KEY, auditContext);
+                facesContext.getExternalContext().getRequestMap().put(INSTANCE_KEY, auditContext);
             }
             return auditContext;
         }

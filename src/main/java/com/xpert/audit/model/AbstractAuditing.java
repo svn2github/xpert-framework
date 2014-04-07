@@ -11,6 +11,9 @@ import javax.persistence.*;
 @MappedSuperclass
 public abstract class AbstractAuditing {
 
+    @Transient
+    private Class auditClass;
+    
     private String entity;
     
     @Temporal(TemporalType.TIMESTAMP)
@@ -71,6 +74,14 @@ public abstract class AbstractAuditing {
 
     public void setIp(String ip) {
         this.ip = ip;
+    }
+
+    public Class getAuditClass() {
+        return auditClass;
+    }
+
+    public void setAuditClass(Class auditClass) {
+        this.auditClass = auditClass;
     }
     
     

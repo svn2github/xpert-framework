@@ -204,6 +204,7 @@ public class Audit {
                 auditing.setAuditingType(auditingType);
                 auditing.setEventDate(new Date());
                 auditing.setIp(FacesUtils.getIP());
+                auditing.setAuditClass(object.getClass());
                 AbstractAuditingListener listener = Configuration.getAuditingListener();
                 if (listener != null) {
                     listener.onSave(auditing);
