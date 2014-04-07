@@ -1,0 +1,64 @@
+package com.xpert.audit;
+
+import com.xpert.audit.model.AbstractAuditing;
+import java.util.HashMap;
+import java.util.Map;
+import javax.faces.context.FacesContext;
+
+/**
+ * Represents que current context of audit, the "audits" form a object must be
+ * added to a map, with this it can be retrieve in other moment.
+ * 
+ * The values are put in facesContext.getAttributes()
+ *
+ * @author ayslan
+ */
+public class AuditContext {
+
+    private static final String INSTANCE_KEY = AuditContext.class.getName();
+
+    private final Map<Object, AbstractAuditing> auditValues = new HashMap<Object, AbstractAuditing>();
+
+    private AuditContext() {
+
+    }
+
+    /**
+     * Current instance associated with the request. The value is stored in
+     * facesContext.getAttributes()
+     *
+     * @return A AuditContext instance, returns null if
+     * FacesContext.getCurrentInstance() is null
+     */
+    public static AuditContext getCurrentInstance() {
+        FacesContext facesContext = FacesContext.getCurrentInstance();
+        if (facesContext != null) {
+            AuditContext auditContext = (AuditContext) facesContext.getAttributes().get(INSTANCE_KEY);
+            if (auditContext == null) {
+                auditContext = new AuditContext();
+                facesContext.getAttributes().put(INSTANCE_KEY, auditContext);
+            }
+            return auditContext;
+        }
+        return null;
+    }
+
+    /**
+     * @param object
+     * @return The current audit of object
+     */
+    public AbstractAuditing getAuditing(Object object) {
+        return auditValues.get(object);
+    }
+
+    /**
+     * Set the current audit in object
+     *
+     * @param object
+     * @param auditing
+     */
+    public void setAuditing(Object object, AbstractAuditing auditing) {
+        auditValues.put(object, auditing);
+    }
+
+}
