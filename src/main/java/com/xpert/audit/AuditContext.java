@@ -57,7 +57,7 @@ public class AuditContext {
      * @param object
      * @return The current metadatas of object
      */
-    public List<AbstractMetadata> getMetadata(Object object){
+    public List getMetadata(Object object){
         AbstractAuditing auditing = getAuditing(object);
         if(auditing != null){
             return auditing.getMetadatas();
