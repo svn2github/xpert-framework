@@ -85,7 +85,7 @@ public abstract class FindAllBean {
                     Object id = PropertyUtils.getProperty(bean, EntityUtils.getIdFieldName(clazz));
                     options[count] = new SelectItem(id, itemLabel);
                 } else {
-                    options[count] = new SelectItem(bean, itemLabel);
+                    options[count] = new SelectItem(((Enum)bean).name(), itemLabel);
                 }
 
                 count++;
