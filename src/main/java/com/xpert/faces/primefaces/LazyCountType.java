@@ -1,7 +1,8 @@
 package com.xpert.faces.primefaces;
 
 /**
- *
+ * Define a count type for LazyDataModelImpl, used in query to count records
+ * 
  * @author ayslan
  */
 public enum LazyCountType {

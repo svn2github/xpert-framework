@@ -15,6 +15,12 @@ import java.util.logging.Logger;
 import org.primefaces.model.LazyDataModel;
 import org.primefaces.model.SortOrder;
 
+/**
+ * A JPA based implementation os primefaces LazyDataModel
+ *
+ * @author ayslan
+ * @param <T>
+ */
 public class LazyDataModelImpl<T> extends LazyDataModel {
 
     private static boolean DEBUG = false;
@@ -37,6 +43,12 @@ public class LazyDataModelImpl<T> extends LazyDataModel {
     private Restriction restriction;
     private JoinBuilder joinBuilder;
 
+    /**
+     * @param attributes Attributes of object thet will be loaded
+     * @param defaultOrder The default data model "Order By"
+     * @param restriction A restriction to be added in query
+     * @param dao An instance of BaseDAO
+     */
     public LazyDataModelImpl(String attributes, String defaultOrder, Restriction restriction, BaseDAO<T> dao) {
         this.dao = dao;
         this.attributes = attributes;
@@ -44,6 +56,12 @@ public class LazyDataModelImpl<T> extends LazyDataModel {
         this.restriction = restriction;
     }
 
+    /**
+     * @param attributes Attributes of object thet will be loaded
+     * @param defaultOrder The default data model "Order By"
+     * @param restrictions Restrictions to be added in query
+     * @param dao An instance of BaseDAO
+     */
     public LazyDataModelImpl(String attributes, String defaultOrder, List<Restriction> restrictions, BaseDAO<T> dao) {
         this.dao = dao;
         this.attributes = attributes;
@@ -51,23 +69,45 @@ public class LazyDataModelImpl<T> extends LazyDataModel {
         this.restrictions = restrictions;
     }
 
+    /**
+     * @param defaultOrder The default data model "Order By"
+     * @param restriction Restrictions to be added in query
+     * @param dao An instance of BaseDAO
+     */
     public LazyDataModelImpl(String defaultOrder, Restriction restriction, BaseDAO<T> dao) {
         this.dao = dao;
         this.defaultOrder = defaultOrder;
         this.restriction = restriction;
     }
 
+    /**
+     *
+     * @param defaultOrder The default data model "Order By"
+     * @param restrictions Restrictions to be added in query
+     * @param dao An instance of BaseDAO
+     */
     public LazyDataModelImpl(String defaultOrder, List<Restriction> restrictions, BaseDAO<T> dao) {
         this.dao = dao;
         this.defaultOrder = defaultOrder;
         this.restrictions = restrictions;
     }
 
+    /**
+     * @param defaultOrder The default data model "Order By"
+     * @param dao An instance of BaseDAO
+     */
     public LazyDataModelImpl(String defaultOrder, BaseDAO<T> dao) {
         this.dao = dao;
         this.defaultOrder = defaultOrder;
     }
 
+    /**
+     *
+     * @param defaultOrder The default data model "Order By"
+     * @param restriction A restriction to be added in query
+     * @param dao An instance of BaseDAO
+     * @param joinBuilder Joins to be added in Query
+     */
     public LazyDataModelImpl(String defaultOrder, Restriction restriction, BaseDAO<T> dao, JoinBuilder joinBuilder) {
         this.dao = dao;
         this.defaultOrder = defaultOrder;
@@ -75,6 +115,13 @@ public class LazyDataModelImpl<T> extends LazyDataModel {
         this.joinBuilder = joinBuilder;
     }
 
+    /**
+     *
+     * @param defaultOrder The default data model "Order By"
+     * @param restrictions Restrictions to be added in query
+     * @param dao An instance of BaseDAO
+     * @param joinBuilder Joins to be added in Query
+     */
     public LazyDataModelImpl(String defaultOrder, List<Restriction> restrictions, BaseDAO<T> dao, JoinBuilder joinBuilder) {
         this.dao = dao;
         this.defaultOrder = defaultOrder;
@@ -82,6 +129,12 @@ public class LazyDataModelImpl<T> extends LazyDataModel {
         this.joinBuilder = joinBuilder;
     }
 
+    /**
+     *
+     * @param defaultOrder The default data model "Order By"
+     * @param dao An instance of BaseDAO
+     * @param joinBuilder Joins to be added in Query
+     */
     public LazyDataModelImpl(String defaultOrder, BaseDAO<T> dao, JoinBuilder joinBuilder) {
         this.dao = dao;
         this.defaultOrder = defaultOrder;
@@ -118,7 +171,7 @@ public class LazyDataModelImpl<T> extends LazyDataModel {
         List<Restriction> filterRestrictions = new ArrayList<Restriction>();
 
         if (filters != null && !filters.isEmpty()) {
-            for (Entry e : ((Map<String, String>) filters).entrySet()) {
+            for (Entry e : ((Map<String, Object>) filters).entrySet()) {
                 if (e.getValue() != null && !e.getValue().toString().isEmpty()) {
                     FilterByHandler filterByHandler = getFilterByHandler();
                     Restrictions restrictionsFromFilterByHandler = null;
@@ -131,7 +184,12 @@ public class LazyDataModelImpl<T> extends LazyDataModel {
                         if (DEBUG) {
                             logger.log(Level.INFO, "Restriction added. Name: {0}, Value:  {1}", new Object[]{e.getKey(), e.getValue()});
                         }
-                        filterRestrictions.add(new Restriction(e.getKey().toString(), RestrictionType.DATA_TABLE_FILTER, e.getValue()));
+                        //primefaces 5 can add custom types in filter not only String
+                        if (e.getValue() instanceof String) {
+                            filterRestrictions.add(new Restriction(e.getKey().toString(), RestrictionType.DATA_TABLE_FILTER, e.getValue()));
+                        }else{
+                            filterRestrictions.add(new Restriction(e.getKey().toString(), RestrictionType.EQUALS, e.getValue()));
+                        }
                     }
                 }
             }
@@ -178,13 +236,13 @@ public class LazyDataModelImpl<T> extends LazyDataModel {
         }
 
         List<T> dados = dao.getQueryBuilder().select(select)
-                                            .from(dao.getEntityClass(), (joinBuilder != null ? joinBuilder.getRootAlias() : null))
-                                            .join(joinBuilder)
-                                            .add(currentQueryRestrictions)
-                                            .orderBy(orderBy)
-                                            .setFirstResult(first)
-                                            .setMaxResults(pageSize)
-                                            .getResultList();
+                .from(dao.getEntityClass(), (joinBuilder != null ? joinBuilder.getRootAlias() : null))
+                .join(joinBuilder)
+                .add(currentQueryRestrictions)
+                .orderBy(orderBy)
+                .setFirstResult(first)
+                .setMaxResults(pageSize)
+                .getResultList();
 
         if (DEBUG) {
             logger.log(Level.INFO, "Select on entity {0}, records found: {1} ", new Object[]{dao.getEntityClass().getName(), dados.size()});
