@@ -140,7 +140,9 @@ public class BeanValidator extends javax.faces.validator.BeanValidator {
      *
      * Ex: Class Person and attribute name - person.name
      *
-     * @return
+     * @param valueReference
+     * @param clazz
+     * @return 
      */
     public String getAttributeName(ValueReference valueReference, Class clazz) {
         return I18N.getAttributeName(clazz,  valueReference.getProperty().toString());
