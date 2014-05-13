@@ -80,6 +80,18 @@ public abstract class AbstractBaseBean<T> {
      */
     @PostConstruct
     public void postConstruct() {
+        loadEntityFromParameter();
+        if(entity == null){
+            create();
+        }
+        init();
+        createDataModel();
+    }
+    
+    /**
+     * Load the entity from parameter "id"
+     */
+    public void loadEntityFromParameter(){
         Long entityId = null;
         if (isLoadEntityOnPostConstruct()) {
             entityId = getIdFromParameter();
@@ -90,11 +102,7 @@ public abstract class AbstractBaseBean<T> {
             if (entityClassToLoad != null && entityClassToLoad.equals(this.getClass())) {
                 entity = findById(entityId);
             }
-        } else {
-            create();
-        }
-        init();
-        createDataModel();
+        } 
     }
 
     /**
