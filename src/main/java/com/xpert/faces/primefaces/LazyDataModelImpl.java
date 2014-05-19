@@ -42,6 +42,7 @@ public class LazyDataModelImpl<T> extends LazyDataModel {
     private List<Restriction> queryRestrictions;
     private Restriction restriction;
     private JoinBuilder joinBuilder;
+    private boolean loadData = true;
 
     /**
      * @param attributes Attributes of object thet will be loaded
@@ -200,6 +201,11 @@ public class LazyDataModelImpl<T> extends LazyDataModel {
     @Override
     public List load(int first, int pageSize, String orderBy, SortOrder order, Map filters) {
 
+        if(isLoadData() == false){
+            setRowCount(0);
+            return null;
+        }
+        
         long begin = System.currentTimeMillis();
 
         LazyCountType lazyCountType = getLazyCountType();
@@ -251,7 +257,8 @@ public class LazyDataModelImpl<T> extends LazyDataModel {
         //If ALWAYS or (ONLY_ONCE and not set currentRowCount or restrictions has changed)
         if (lazyCountType.equals(LazyCountType.ALWAYS)
                 || (lazyCountType.equals(LazyCountType.ONLY_ONCE) && (currentRowCount == null || !currentQueryRestrictions.equals(queryRestrictions)))) {
-            currentRowCount = dao.count(currentQueryRestrictions).intValue();
+            currentRowCount = dao.getQueryBuilder().from(dao.getEntityClass(), (joinBuilder != null ? joinBuilder.getRootAlias() : null))
+                                                   .add(currentQueryRestrictions).count().intValue();
             if (DEBUG) {
                 logger.log(Level.INFO, "Count on entity {0}, records found: {1} ", new Object[]{dao.getEntityClass().getName(), currentRowCount});
             }
@@ -338,6 +345,19 @@ public class LazyDataModelImpl<T> extends LazyDataModel {
         this.dao = dao;
     }
 
+    /**
+     * Indicates if data will be loaded
+     * 
+     * @return 
+     */
+    public boolean isLoadData() {
+        return loadData;
+    }
+
+    public void setLoadData(boolean loadData) {
+        this.loadData = loadData;
+    }
+    
     /**
      * Default order by of query
      *

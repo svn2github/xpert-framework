@@ -207,7 +207,8 @@ public abstract class AbstractBaseBean<T> {
      * Creates a LazyDataModelImpl to entity
      */
     public void createDataModel() {
-        dataModel = new LazyDataModelImpl<T>(getDataModelOrder(), getDataModelRestrictions(), getDAO());
+        dataModel = new LazyDataModelImpl<T>(getDataModelOrder(), getDAO());
+        dataModel.setRestrictions(getDataModelRestrictions());
         OrderByHandler orderByHandler = getOrderByHandler();
         if (orderByHandler != null) {
             dataModel.setOrderByHandler(orderByHandler);
