@@ -194,7 +194,7 @@ public abstract class AbstractBaseBean<T> {
     /**
      * @return A new instance of Type T
      */
-    public final T getEntityNewInstance() {
+    public T getEntityNewInstance() {
         try {
             return (T) getEntityClass().newInstance();
         } catch (Exception ex) {
@@ -290,7 +290,7 @@ public abstract class AbstractBaseBean<T> {
         return LazyCountType.ALWAYS;
     }
 
-    public final String getEntitySimpleName() {
+    public String getEntitySimpleName() {
         if (entity != null) {
             return entity.getClass().getSimpleName();
         } else {
