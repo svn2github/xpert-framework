@@ -62,10 +62,15 @@ public abstract class AbstractSecurityFilter implements Filter {
      */
     public abstract String[] getIgnoredUrls();
     
+    
+    public AbstractUserSession getSessionBean(ServletRequest request){
+        return (AbstractUserSession) getFromSession(request, getUserSessionName());
+    }
+    
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
         
         
-        AbstractUserSession userSession = (AbstractUserSession) getFromSession(request, getUserSessionName());
+        AbstractUserSession userSession = getSessionBean(request);
         
         if (userSession == null || !isAuthenticated(userSession)) {
             if (isDebug()) {
