@@ -63,6 +63,13 @@ public abstract class AbstractSecurityFilter implements Filter {
     public abstract String[] getIgnoredUrls();
     
     
+    
+    /**
+     * Return a AbstractUserSession. This method can be override a custom way to obtain a AbstractUserSession instance.
+     * 
+     * @param request a ServletRequest from filter method "doFilter
+     * @return AbstractUserSession from session usually a Session Scoped
+     */ 
     public AbstractUserSession getSessionBean(ServletRequest request){
         return (AbstractUserSession) getFromSession(request, getUserSessionName());
     }
@@ -99,10 +106,21 @@ public abstract class AbstractSecurityFilter implements Filter {
         
     }
     
+    /**
+     * @param request
+     * @param attribute Attribute name of the object in session
+     * @return a Object from session
+     */
     public Object getFromSession(ServletRequest request, String attribute) {
         return ((HttpServletRequest) request).getSession().getAttribute(attribute);
     }
     
+    /**
+     * Return true if the current session contains the current URL
+     * 
+     * @param request
+     * @return 
+     */
     public boolean hasUrl(HttpServletRequest request) {
         String currentView = request.getRequestURI().replaceFirst(request.getContextPath(), "");
         if (getIgnoredUrls() != null && Arrays.asList(getIgnoredUrls()).contains(currentView)) {
@@ -126,6 +144,12 @@ public abstract class AbstractSecurityFilter implements Filter {
         return true;
     }
     
+    /**
+     * Return true if userSession has a user authenticated calling method AbstractUserSession.isAuthenticated
+     * 
+     * @param userSession
+     * @return 
+     */
     public boolean isAuthenticated(AbstractUserSession userSession) {
         return userSession.isAuthenticated();
     }
