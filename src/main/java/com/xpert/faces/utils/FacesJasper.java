@@ -33,20 +33,20 @@ public class FacesJasper {
     }
 
     public static JasperPrint fillReport(List dataSource, Map parameters, String path, EntityManager entityManager) throws JRException {
-        String layout = FacesContext.getCurrentInstance().getExternalContext().getRealPath(path);
         JRBeanCollectionDataSource jRBeanCollectionDataSource = new JRBeanCollectionDataSource(dataSource, entityManager);
         if (jRBeanCollectionDataSource.getData() == null || jRBeanCollectionDataSource.getData().isEmpty()) {
             JREmptyDataSource jREmptyDataSource = new JREmptyDataSource();
-            return JasperFillManager.fillReport(layout, parameters, jREmptyDataSource);
+            return JasperFillManager.fillReport(path, parameters, jREmptyDataSource);
         } else {
-            return JasperFillManager.fillReport(layout, parameters, jRBeanCollectionDataSource);
+            return JasperFillManager.fillReport(path, parameters, jRBeanCollectionDataSource);
         }
     }
 
     public static void createJasperReport(List dataSource, Map parameters, String path, String fileName, EntityManager entityManager) {
 
         try {
-            JasperPrint jasperPrint = fillReport(dataSource, parameters, path, entityManager);
+            String layout = FacesContext.getCurrentInstance().getExternalContext().getRealPath(path);
+            JasperPrint jasperPrint = fillReport(dataSource, parameters, layout, entityManager);
             FacesUtils.download(JasperExportManager.exportReportToPdf(jasperPrint), "application/pdf", fileName.endsWith(".pdf") ? fileName : fileName + ".pdf");
         } catch (JRException ex) {
             logger.log(Level.SEVERE, null, ex);
