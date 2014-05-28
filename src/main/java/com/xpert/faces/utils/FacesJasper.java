@@ -28,18 +28,25 @@ public class FacesJasper {
         createJasperReport(dataSource, parameters, path, fileName, null);
     }
 
+    public static JasperPrint fillReport(List dataSource, Map parameters, String path) throws JRException {
+        return fillReport(dataSource, parameters, path,  null);
+    }
+
+    public static JasperPrint fillReport(List dataSource, Map parameters, String path, EntityManager entityManager) throws JRException {
+        String layout = FacesContext.getCurrentInstance().getExternalContext().getRealPath(path);
+        JRBeanCollectionDataSource jRBeanCollectionDataSource = new JRBeanCollectionDataSource(dataSource, entityManager);
+        if (jRBeanCollectionDataSource.getData() == null || jRBeanCollectionDataSource.getData().isEmpty()) {
+            JREmptyDataSource jREmptyDataSource = new JREmptyDataSource();
+            return JasperFillManager.fillReport(layout, parameters, jREmptyDataSource);
+        } else {
+            return JasperFillManager.fillReport(layout, parameters, jRBeanCollectionDataSource);
+        }
+    }
+
     public static void createJasperReport(List dataSource, Map parameters, String path, String fileName, EntityManager entityManager) {
 
         try {
-            String layout = FacesContext.getCurrentInstance().getExternalContext().getRealPath(path);
-            JasperPrint jasperPrint;
-            JRBeanCollectionDataSource jRBeanCollectionDataSource = new JRBeanCollectionDataSource(dataSource, entityManager);
-            if (jRBeanCollectionDataSource.getData() == null || jRBeanCollectionDataSource.getData().isEmpty()) {
-                JREmptyDataSource jREmptyDataSource = new JREmptyDataSource();
-                jasperPrint = JasperFillManager.fillReport(layout, parameters, jREmptyDataSource);
-            } else {
-                jasperPrint = JasperFillManager.fillReport(layout, parameters, jRBeanCollectionDataSource);
-            }
+            JasperPrint jasperPrint = fillReport(dataSource, parameters, path, entityManager);
             FacesUtils.download(JasperExportManager.exportReportToPdf(jasperPrint), "application/pdf", fileName.endsWith(".pdf") ? fileName : fileName + ".pdf");
         } catch (JRException ex) {
             logger.log(Level.SEVERE, null, ex);
