@@ -154,6 +154,10 @@ public class LazyDataModelImpl<T> extends LazyDataModel {
             OrderByHandler orderByHandler = getOrderByHandler();
             if (orderByHandler != null) {
                 orderBy = orderByHandler.getOrderBy(orderBy);
+            }else{
+                if(joinBuilder != null && joinBuilder.getRootAlias() != null){
+                    orderBy = joinBuilder.getRootAlias()+"."+orderBy;
+                }
             }
             if (order.equals(SortOrder.DESCENDING)) {
                 orderBy = orderBy + " DESC";
@@ -186,10 +190,14 @@ public class LazyDataModelImpl<T> extends LazyDataModel {
                             logger.log(Level.INFO, "Restriction added. Name: {0}, Value:  {1}", new Object[]{e.getKey(), e.getValue()});
                         }
                         //primefaces 5 can add custom types in filter not only String
+                        String property = e.getKey().toString();
+                        if(joinBuilder != null && joinBuilder.getRootAlias() != null){
+                            property = joinBuilder.getRootAlias()+"."+property;
+                        }
                         if (e.getValue() instanceof String) {
-                            filterRestrictions.add(new Restriction(e.getKey().toString(), RestrictionType.DATA_TABLE_FILTER, e.getValue()));
+                            filterRestrictions.add(new Restriction(property, RestrictionType.DATA_TABLE_FILTER, e.getValue()));
                         }else{
-                            filterRestrictions.add(new Restriction(e.getKey().toString(), RestrictionType.EQUALS, e.getValue()));
+                            filterRestrictions.add(new Restriction(property, RestrictionType.EQUALS, e.getValue()));
                         }
                     }
                 }
