@@ -10,10 +10,10 @@ import javax.faces.context.FacesContext;
 import javax.persistence.EntityManager;
 import net.sf.jasperreports.engine.JREmptyDataSource;
 import net.sf.jasperreports.engine.JRException;
-import net.sf.jasperreports.engine.JRExporterParameter;
 import net.sf.jasperreports.engine.JasperExportManager;
 import net.sf.jasperreports.engine.JasperFillManager;
 import net.sf.jasperreports.engine.JasperPrint;
+import net.sf.jasperreports.engine.export.JExcelApiExporterParameter;
 import net.sf.jasperreports.engine.export.ooxml.JRXlsxExporter;
 
 /**
@@ -67,14 +67,19 @@ public class FacesJasper {
                 jasperPrint = JasperFillManager.fillReport(layout, parameters, jRBeanCollectionDataSource);
             }
 
-            ByteArrayOutputStream xlsReport = new ByteArrayOutputStream();
-            JRXlsxExporter Xlsxexporter = new JRXlsxExporter();
-            Xlsxexporter.setParameter(JRExporterParameter.JASPER_PRINT, jasperPrint);
-            Xlsxexporter.setParameter(JRExporterParameter.OUTPUT_STREAM, xlsReport);
-            Xlsxexporter.setParameter(JRExporterParameter.IGNORE_PAGE_MARGINS, true);
-            Xlsxexporter.exportReport();
+            ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
 
-            FacesUtils.download(xlsReport.toByteArray(), "application/vnd.ms-excel", fileName.endsWith(".xls") ? fileName : fileName + ".xls");
+            JRXlsxExporter xlsxExporter = new JRXlsxExporter();
+            xlsxExporter.setParameter(JExcelApiExporterParameter.JASPER_PRINT, jasperPrint);
+            xlsxExporter.setParameter(JExcelApiExporterParameter.OUTPUT_STREAM, outputStream);
+            xlsxExporter.setParameter(JExcelApiExporterParameter.IS_WHITE_PAGE_BACKGROUND, Boolean.TRUE);
+            xlsxExporter.setParameter(JExcelApiExporterParameter.IS_ONE_PAGE_PER_SHEET, Boolean.TRUE);
+            xlsxExporter.setParameter(JExcelApiExporterParameter.IS_DETECT_CELL_TYPE, Boolean.TRUE);
+            xlsxExporter.setParameter(JExcelApiExporterParameter.IS_IGNORE_CELL_BORDER, Boolean.FALSE);
+            xlsxExporter.setParameter(JExcelApiExporterParameter.CHARACTER_ENCODING, "UTF-8");
+            xlsxExporter.exportReport();
+
+            FacesUtils.download(outputStream.toByteArray(), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", fileName.endsWith(".xlsx") ? fileName : fileName + ".xlsx");
         } catch (JRException ex) {
             logger.log(Level.SEVERE, null, ex);
             throw new RuntimeException(ex);
