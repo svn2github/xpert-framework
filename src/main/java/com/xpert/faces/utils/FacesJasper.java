@@ -8,6 +8,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.faces.context.FacesContext;
 import javax.persistence.EntityManager;
+import net.sf.jasperreports.engine.JRDataSource;
 import net.sf.jasperreports.engine.JREmptyDataSource;
 import net.sf.jasperreports.engine.JRException;
 import net.sf.jasperreports.engine.JasperExportManager;
@@ -29,16 +30,21 @@ public class FacesJasper {
     }
 
     public static JasperPrint fillReport(List dataSource, Map parameters, String path) throws JRException {
-        return fillReport(dataSource, parameters, path,  null);
+        return fillReport(dataSource, parameters, path, null);
     }
 
     public static JasperPrint fillReport(List dataSource, Map parameters, String path, EntityManager entityManager) throws JRException {
-        JRBeanCollectionDataSource jRBeanCollectionDataSource = new JRBeanCollectionDataSource(dataSource, entityManager);
-        if (jRBeanCollectionDataSource.getData() == null || jRBeanCollectionDataSource.getData().isEmpty()) {
+        if (dataSource == null || dataSource.isEmpty()) {
             JREmptyDataSource jREmptyDataSource = new JREmptyDataSource();
             return JasperFillManager.fillReport(path, parameters, jREmptyDataSource);
         } else {
-            return JasperFillManager.fillReport(path, parameters, jRBeanCollectionDataSource);
+            JRDataSource jRDataSource = null;
+            if (entityManager != null) {
+                jRDataSource = new JRBeanCollectionDataSource(dataSource, entityManager);
+            } else {
+                jRDataSource = new net.sf.jasperreports.engine.data.JRBeanCollectionDataSource(dataSource);
+            }
+            return JasperFillManager.fillReport(path, parameters, jRDataSource);
         }
     }
 
