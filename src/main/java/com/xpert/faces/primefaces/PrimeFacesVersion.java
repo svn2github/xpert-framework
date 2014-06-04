@@ -11,7 +11,12 @@ package com.xpert.faces.primefaces;
  */
 public enum PrimeFacesVersion {
     
-    VERSION_3("Version 3", "primefaces3"), VERSION_4("Version 4", "primefaces4");
+    VERSION_3("Version 3", "primefaces3"), 
+    VERSION_4("Version 4", "primefaces4"),
+    /*
+     version 5 is the same as version 4 in CRUD generation
+    */
+    VERSION_5("Version 5", "primefaces4");
     
     private final String description;
     private final String packageName;
