@@ -54,7 +54,7 @@
                 </p:column>
                 </#if>
                 </#list>
-                <p:column styleClass="uix-datatable-actions">
+                <p:column styleClass="uix-datatable-actions" exportable="false">
                     <f:facet name="header">
                         <xc:legends detail="true" edit="true" delete="true"/>
                     </f:facet>
