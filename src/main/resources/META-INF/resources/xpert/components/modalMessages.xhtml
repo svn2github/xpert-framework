@@ -24,7 +24,11 @@
                         <div class="modal-messages">
                             <p:messages/>
                             <div align="center">
-                                <p:commandButton id="buttonConfirmMessage" onclick="xpertModalDialogMessages.hide();$('.faces-modal-messages').remove();$('div[id*=xpertModalMessages]').remove();" type="button" value="Ok" />
+                                <p:commandButton rendered="#{primeFacesVersion.primeFaces3}"
+                                                 onclick="xpertModalDialogMessages.hide();$('.faces-modal-messages').remove();$('div[id*=xpertModalMessages]').remove();" type="button" value="Ok" />
+                               
+                                <p:commandButton rendered="#{not primeFacesVersion.primeFaces3}"
+                                                 onclick="PF('xpertModalDialogMessages').hide();$('.faces-modal-messages').remove();$('div[id*=xpertModalMessages]').remove();" type="button" value="Ok" />
                             </div>
                         </div>
                     </p:dialog>

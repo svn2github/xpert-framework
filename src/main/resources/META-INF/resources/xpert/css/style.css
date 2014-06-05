@@ -15,6 +15,9 @@
 .legends-item{font-size: 9px !important; font-weight: normal !important; margin-bottom: 1px; width: 62px; border: 0 !important;}
 .panel-calendar-filter{width: 140px;margin: 0 auto;}
 .panel-calendar-filter table td{padding: 0 !important; border: 0 !important;}
+.panel-calendar-filter > table {table-layout: auto;}
+.panel-calendar-filter .ui-inputfield {width: 55px;}
+.panel-calendar-filter .calendar-filter{white-space: nowrap;}
 .calendar-filter{}
 .calendar-filter input{width: 70px;padding: 2px; }
 .uix-center{text-align: center;}

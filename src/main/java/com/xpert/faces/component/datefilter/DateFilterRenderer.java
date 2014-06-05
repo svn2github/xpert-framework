@@ -1,19 +1,20 @@
 package com.xpert.faces.component.datefilter;
 
+import com.xpert.faces.primefaces.PrimeFacesUtils;
 import com.xpert.i18n.I18N;
 import com.xpert.i18n.XpertResourceBundle;
 import java.io.IOException;
+import java.lang.reflect.Method;
 import javax.faces.FacesException;
 import javax.faces.component.UIComponent;
+import javax.faces.component.behavior.ClientBehavior;
 import javax.faces.context.FacesContext;
 import javax.faces.context.ResponseWriter;
 import javax.faces.render.Renderer;
-import org.primefaces.component.behavior.ajax.AjaxBehavior;
 import org.primefaces.component.calendar.Calendar;
 import org.primefaces.component.calendar.CalendarRenderer;
 import org.primefaces.component.column.Column;
 import org.primefaces.component.datatable.DataTable;
-import org.primefaces.component.inputtext.InputText;
 
 /**
  *
@@ -100,20 +101,21 @@ public class DateFilterRenderer extends Renderer {
         if (column == null) {
             throw new FacesException("Date Filter musto be child of a Column");
         }
-        
+
         column.setFilterStyle("display: none;");
         DataTable dataTable = (DataTable) column.getParent();
         String widgetVar = dataTable.resolveWidgetVar();
 
-        AjaxBehavior ajaxBehavior = new AjaxBehavior();
-        ajaxBehavior.setProcess(":" + dataTable.getClientId());
-        ajaxBehavior.setUpdate(":" + dataTable.getClientId());
+        if (!PrimeFacesUtils.isVersion3()) {
+            widgetVar = "PF('" + widgetVar + "')";
+        }
 
         String filterScript = "Xpert.dateFilter('" + calendarEnd.getClientId() + "');" + widgetVar + ".filter(); return false;";
-        ajaxBehavior.setOnstart(filterScript);
 
-        calendarStart.addClientBehavior("dateSelect", ajaxBehavior);
-        calendarEnd.addClientBehavior("dateSelect", ajaxBehavior);
+        ClientBehavior clientBehavior = createClientBehavior(filterScript);
+
+        calendarStart.addClientBehavior("dateSelect", clientBehavior);
+        calendarEnd.addClientBehavior("dateSelect", clientBehavior);
 
         calendarStart.setParent(component);
         calendarEnd.setParent(component);
@@ -156,14 +158,44 @@ public class DateFilterRenderer extends Renderer {
         calendarStart.setParent(null);
         calendarEnd.setParent(null);
 
+    }
 
+    public ClientBehavior createClientBehavior(String scriptOnStart) {
+        ClientBehavior clientBehavior = null;
 
+        if (AJAX_BEHAVIOR_CLASS == null) {
+            try {
+                AJAX_BEHAVIOR_CLASS = Class.forName(AJAX_BEHAVIOR_CLASS_PRIMEFACES_3_AND_4);
+            } catch (ClassNotFoundException ex) {
+                try {
+                    AJAX_BEHAVIOR_CLASS = Class.forName(AJAX_BEHAVIOR_CLASS_PRIMEFACES_5);
+                } catch (ClassNotFoundException ex1) {
+                    throw new RuntimeException(ex1);
+                }
+            }
+        }
 
-
+        try {
+            if (SET_ON_START_METHOD == null) {
+                SET_ON_START_METHOD = AJAX_BEHAVIOR_CLASS.getMethod(SET_ON_START_METHOD_NAME, String.class);
+            }
+            clientBehavior = (ClientBehavior) AJAX_BEHAVIOR_CLASS.newInstance();
+            SET_ON_START_METHOD.invoke(clientBehavior, scriptOnStart);
+        } catch (Exception ex) {
+            throw new RuntimeException(ex);
+        }
+        return clientBehavior;
     }
 
     @Override
     public boolean getRendersChildren() {
         return true;
     }
+
+    public static final String AJAX_BEHAVIOR_CLASS_PRIMEFACES_3_AND_4 = "org.primefaces.component.behavior.ajax.AjaxBehavior";
+    public static final String AJAX_BEHAVIOR_CLASS_PRIMEFACES_5 = "org.primefaces.behavior.ajax.AjaxBehavior";
+    public static final String SET_ON_START_METHOD_NAME = "setOnstart";
+    public static Method SET_ON_START_METHOD = null;
+    public static Class AJAX_BEHAVIOR_CLASS = null;
+
 }
