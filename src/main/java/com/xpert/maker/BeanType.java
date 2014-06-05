@@ -13,7 +13,7 @@ public enum BeanType {
     //xhtml
     VIEW_LIST("view-list.ftl", "xhtml", true, true),
     VIEW_DETAIL("view-detail.ftl", "xhtml", true, true),
-    VIEW_FORM_CREATE("view-form-create.ftl", "xhtml", true, true),
+    VIEW_FORM_CREATE("view-form-create.ftl", "xhtml", true),
     VIEW_MENU("view-menu.ftl", "xhtml", true),
     VIEW_CREATE("view-create.ftl", "xhtml", true);
     private String template;
