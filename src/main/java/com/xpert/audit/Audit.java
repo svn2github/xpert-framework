@@ -11,6 +11,7 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.faces.context.FacesContext;
 import javax.persistence.*;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -203,7 +204,9 @@ public class Audit {
                 auditing.setEntity(getEntityName(object.getClass()));
                 auditing.setAuditingType(auditingType);
                 auditing.setEventDate(new Date());
-                auditing.setIp(FacesUtils.getIP());
+                if(FacesContext.getCurrentInstance() != null){
+                    auditing.setIp(FacesUtils.getIP());
+                }
                 auditing.setAuditClass(object.getClass());
                 AbstractAuditingListener listener = Configuration.getAuditingListener();
                 if (listener != null) {
