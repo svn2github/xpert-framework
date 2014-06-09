@@ -99,7 +99,7 @@ public class DateFilterRenderer extends Renderer {
 
         Column column = (Column) getColumnParent(component);
         if (column == null) {
-            throw new FacesException("Date Filter musto be child of a Column");
+            throw new FacesException("Date Filter must be child of a Column");
         }
 
         column.setFilterStyle("display: none;");
