@@ -4,13 +4,21 @@ import java.lang.reflect.Field;
 import org.primefaces.context.RequestContext;
 
 /**
- * 
+ *
  * @author Ayslan
  */
 public class PrimeFacesUtils {
+    
+    public static String normalizeDialog(String dialog) {
+        if (dialog != null && !PrimeFacesUtils.isVersion3()) {
+            return "PF('" + dialog + "')";
+        }
+        return dialog;
+    }
 
     public static void closeDialog(String dialog) {
         if (dialog != null && !dialog.trim().isEmpty()) {
+            dialog = normalizeDialog(dialog);
             RequestContext requestContext = RequestContext.getCurrentInstance();
             requestContext.execute(dialog + ".hide()");
         }
@@ -18,6 +26,7 @@ public class PrimeFacesUtils {
 
     public static void showDialog(String dialog) {
         if (dialog != null && !dialog.trim().isEmpty()) {
+            dialog = normalizeDialog(dialog);
             RequestContext requestContext = RequestContext.getCurrentInstance();
             requestContext.execute(dialog + ".show()");
         }
