@@ -107,6 +107,18 @@ public class SecuritySessionManager {
      * to get the request
      *
      * @param key
+     * @param context
+     * @return 
+     */
+    public static boolean hasRole(String key, FacesContext context) {
+        return hasRole(key, (ServletRequest) context.getExternalContext().getRequest());
+    }
+
+    /**
+     * same as hasRole(String key, ServletRequest request) but uses FacesContext
+     * to get the request
+     *
+     * @param key
      * @return
      */
     public static boolean hasRole(String key) {

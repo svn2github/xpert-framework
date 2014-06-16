@@ -16,7 +16,7 @@ public class SecurityAreaRenderer extends Renderer {
     public void encodeEnd(FacesContext context, UIComponent component) throws IOException {
         SecurityArea securityArea = (SecurityArea) component;
         if (securityArea.isRendered() && securityArea.getChildCount() > 0) {
-            if (SecuritySessionManager.hasRole(securityArea.getRolesAllowed())) {
+            if (SecuritySessionManager.hasRole(securityArea.getRolesAllowed(), context)) {
                 for (UIComponent child : securityArea.getChildren()) {
                     if (child.isRendered()) {
                         child.encodeAll(context);
