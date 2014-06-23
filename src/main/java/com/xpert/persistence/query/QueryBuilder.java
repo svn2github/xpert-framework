@@ -1053,7 +1053,7 @@ public class QueryBuilder {
     }
 
     public QueryBuilder leftJoinFetch(String join, String alias) {
-        joins.leftJoin(join, alias);
+        joins.leftJoinFetch(join, alias);
         return this;
     }
 
