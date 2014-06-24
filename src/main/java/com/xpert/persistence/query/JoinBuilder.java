@@ -11,11 +11,14 @@ public class JoinBuilder extends ArrayList<Join> {
     private String rootAlias;
     
     public String getJoinString() {
+        return getJoinString(QueryType.SELECT);
+    }
+    public String getJoinString(QueryType queryType) {
         StringBuilder builder = new StringBuilder();
         for (Join join : this) {
             builder.append(" ");
             builder.append(join.getType().getClausule());
-            if (join.isFetch()) {
+            if (join.isFetch() && queryType != null && queryType.equals(QueryType.SELECT)) {
                 builder.append(" FETCH");
             }
             builder.append(" ");

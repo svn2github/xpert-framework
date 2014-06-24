@@ -265,7 +265,9 @@ public class LazyDataModelImpl<T> extends LazyDataModel {
         //If ALWAYS or (ONLY_ONCE and not set currentRowCount or restrictions has changed)
         if (lazyCountType.equals(LazyCountType.ALWAYS)
                 || (lazyCountType.equals(LazyCountType.ONLY_ONCE) && (currentRowCount == null || !currentQueryRestrictions.equals(queryRestrictions)))) {
+            
             currentRowCount = dao.getQueryBuilder().from(dao.getEntityClass(), (joinBuilder != null ? joinBuilder.getRootAlias() : null))
+                                                   .join(joinBuilder)
                                                    .add(currentQueryRestrictions).count().intValue();
             if (DEBUG) {
                 logger.log(Level.INFO, "Count on entity {0}, records found: {1} ", new Object[]{dao.getEntityClass().getName(), currentRowCount});

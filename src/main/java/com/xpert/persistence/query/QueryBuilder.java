@@ -222,7 +222,7 @@ public class QueryBuilder {
         }
 
         if (joins != null && joins.size() > 0) {
-            queryString.append(joins.getJoinString()).append(" ");
+            queryString.append(joins.getJoinString(type)).append(" ");
         }
 
         //normalize
