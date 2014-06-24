@@ -5,8 +5,7 @@
       xmlns:f="http://java.sun.com/jsf/core"
       xmlns:ui="http://java.sun.com/jsf/facelets"
       xmlns:p="http://primefaces.org/ui"
-      xmlns:x="http://xpert.com/faces"
-      xmlns:xc="http://java.sun.com/jsf/composite/xpert/components">
+      xmlns:x="http://xpert.com/faces">
 
     <f:view locale="${sharp}{localeBean.locale}">
         <h:head>

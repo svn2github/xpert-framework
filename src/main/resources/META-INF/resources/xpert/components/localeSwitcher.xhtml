@@ -13,7 +13,7 @@
 
     <!-- IMPLEMENTATION -->
     <cc:implementation>
-        <table>
+        <table id="#{cc.attrs.clientId}">
             <tr>
                 <ui:repeat var="locale" value="#{localeBean.locales}">
                     <td valign="middle">

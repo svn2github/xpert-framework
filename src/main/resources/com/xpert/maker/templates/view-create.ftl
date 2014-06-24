@@ -4,8 +4,7 @@
                  xmlns:ui="http://java.sun.com/jsf/facelets"
                  xmlns:p="http://primefaces.org/ui"
                  template="${template}"
-                 xmlns:x="http://xpert.com/faces"
-                 xmlns:xc="http://java.sun.com/jsf/composite/xpert/components">
+                 xmlns:x="http://xpert.com/faces">
    <ui:param name="title" value="${sharp}{${resourceBundle}['${entity.nameLower}.create']}" />
    <ui:define name="body">
        <ui:include src="menu${entity.name}.xhtml" />

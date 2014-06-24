@@ -34,17 +34,21 @@
 
     <!-- IMPLEMENTATION -->
     <cc:implementation>
-        <p:inputText  readonly="#{cc.attrs.readonly}" id="input" style="#{cc.attrs.style}"  
-                      styleClass="#{cc.attrs.styleClass}" value="#{cc.attrs.value}"
-                      disabled="#{cc.attrs.disabled}"
-                      required="#{cc.attrs.required}" requiredMessage="#{cc.attrs.requiredMessage}"
-                      size="#{cc.attrs.size}" converterMessage="#{cc.attrs.converterMessage}" >
-            <f:convertNumber maxFractionDigits="#{cc.attrs.centsLimit}" locale="#{view.locale}"
-                             minFractionDigits="#{cc.attrs.centsLimit}" />
-        </p:inputText>
-        <h:outputScript library="xpert" name="scripts/jquery.price_format.js" target="head" />
-        <h:panelGroup rendered="#{not cc.attrs.readonly and not cc.attrs.disabled}">
-            <script type="text/javascript">$(function() {$('#'+'#{cc.attrs.clientId}'.replace(/:/g,'\\:')+'\\:input').priceFormat({limit: #{cc.attrs.limit}, prefix: '',  centsSeparator: '#{cc.attrs.centsSeparator == null ? localeBean.decimalSeparator : cc.attrs.centsSeparator}', thousandsSeparator: '#{cc.attrs.thousandsSeparator == null ? localeBean.groupingSeparator : cc.attrs.thousandsSeparator}', allowNegative:#{cc.attrs.allowNegative}, centsLimit: #{cc.attrs.centsLimit}});});</script>
-        </h:panelGroup>
+        <span id="#{cc.attrs.clientId}">
+            <p:inputText  readonly="#{cc.attrs.readonly}" id="input" style="#{cc.attrs.style}"  
+                          styleClass="#{cc.attrs.styleClass}" value="#{cc.attrs.value}"
+                          disabled="#{cc.attrs.disabled}"
+                          required="#{cc.attrs.required}" requiredMessage="#{cc.attrs.requiredMessage}"
+                          size="#{cc.attrs.size}" converterMessage="#{cc.attrs.converterMessage}" >
+                <f:convertNumber maxFractionDigits="#{cc.attrs.centsLimit}" locale="#{view.locale}"
+                                 minFractionDigits="#{cc.attrs.centsLimit}" />
+            </p:inputText>
+            <h:outputScript library="xpert" name="scripts/jquery.price_format.js" target="head" />
+            <h:panelGroup rendered="#{not cc.attrs.readonly and not cc.attrs.disabled}">
+                <script type="text/javascript">$(function() {
+                    $('#' + '#{cc.attrs.clientId}'.replace(/:/g, '\\:') + '\\:input').priceFormat({limit: #{cc.attrs.limit}, prefix: '', centsSeparator: '#{cc.attrs.centsSeparator == null ? localeBean.decimalSeparator : cc.attrs.centsSeparator}', thousandsSeparator: '#{cc.attrs.thousandsSeparator == null ? localeBean.groupingSeparator : cc.attrs.thousandsSeparator}', allowNegative:#{cc.attrs.allowNegative}, centsLimit: #{cc.attrs.centsLimit}});
+                });</script>
+            </h:panelGroup>
+        </span>
     </cc:implementation>
 </html>

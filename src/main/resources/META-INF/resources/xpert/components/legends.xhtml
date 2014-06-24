@@ -24,7 +24,7 @@
     <!-- IMPLEMENTATION -->
     <cc:implementation>
         <h:outputStylesheet library="xpert" name="css/style.css" />
-        <div class="uix-legends">
+        <div class="uix-legends" id="#{cc.attrs.clientId}">
             <h:panelGrid class="uix-legends-grid" columns="#{cc.attrs.vertical ? 1 : 2}" >
                 <p:commandButton rendered="#{cc.attrs.edit}" styleClass="legends-item" value="#{xmsg['edit']}" type="button" icon="ui-icon-pencil" />
                 <p:commandButton rendered="#{cc.attrs.delete}" styleClass="legends-item" value="#{xmsg['delete']}" type="button" icon="ui-icon-trash" />

@@ -4,13 +4,12 @@
                  xmlns:ui="http://java.sun.com/jsf/facelets"
                  xmlns:p="http://primefaces.org/ui"
                  template="${template}"
-                 xmlns:x="http://xpert.com/faces"
-                 xmlns:xc="http://java.sun.com/jsf/composite/xpert/components">
+                 xmlns:x="http://xpert.com/faces">
     <ui:param name="title" value="${sharp}{msg['${entity.nameLower}.list']}" />
     <ui:define name="body">
         <ui:include src="menu${entity.name}.xhtml" />
         <h:form id="formList${entity.name}">
-            <xc:modalMessages/>
+            <x:modalMessages/>
             <p:dataTable paginator="true" rows="10" rowsPerPageTemplate="10,20,30" paginatorPosition="bottom" emptyMessage="${sharp}{xmsg['noRecordFound']}"
                          var="${entity.nameLower}" rowIndexVar="index" widgetVar="dataTable${entity.name}Widget" styleClass="table-responsive"
                          currentPageReportTemplate="${sharp}{${entity.nameLower}${configuration.managedBeanSuffix}.dataModel.currentPageReportTemplate}"
@@ -56,7 +55,7 @@
                 </#list>
                 <p:column styleClass="uix-datatable-actions" exportable="false">
                     <f:facet name="header">
-                        <xc:legends detail="true" edit="true" delete="true"/>
+                        <x:legends detail="true" edit="true" delete="true"/>
                     </f:facet>
                     <p:commandButton oncomplete="PF('widget${entity.name}Detail').show();"  icon="ui-icon-zoomin" 
                                      process="@form" update=":formDetail${entity.name}" title="${sharp}{xmsg['detail']}" >
@@ -77,7 +76,7 @@
                 </p:column>
                 <f:facet name="footer">
                     <x:securityArea rolesAllowed="${entity.nameLower}.audit">
-                        <xc:auditDelete for="${sharp}{${entity.nameLower}${configuration.managedBeanSuffix}.entityClass}"/>
+                        <x:auditDelete for="${sharp}{${entity.nameLower}${configuration.managedBeanSuffix}.entityClass}"/>
                     </x:securityArea>
                 </f:facet>
             </p:dataTable>

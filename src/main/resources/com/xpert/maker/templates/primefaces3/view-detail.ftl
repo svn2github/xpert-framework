@@ -3,8 +3,7 @@
                  xmlns:f="http://java.sun.com/jsf/core"
                  xmlns:ui="http://java.sun.com/jsf/facelets"
                  xmlns:p="http://primefaces.org/ui"
-                 xmlns:x="http://xpert.com/faces"
-                 xmlns:xc="http://java.sun.com/jsf/composite/xpert/components">
+                 xmlns:x="http://xpert.com/faces">
     <h:form id="formDetail${entity.name}">
         <h:panelGrid columns="4" styleClass="grid-detail">
         <#list entity.fields as field>
@@ -40,7 +39,7 @@
         <div style="text-align: center;">
             <p:commandButton type="button" value="${sharp}{xmsg['close']}" onclick="widget${entity.name}Detail.hide()" />
             <x:securityArea rolesAllowed="${entity.nameLower}.audit">
-                <xc:audit for="${sharp}{${entity.nameLower}${configuration.managedBeanSuffix}.entity}"/>
+                <x:audit for="${sharp}{${entity.nameLower}${configuration.managedBeanSuffix}.entity}"/>
             </x:securityArea>
         </div>
     </h:form>

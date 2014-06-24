@@ -5,7 +5,6 @@
       xmlns:p="http://primefaces.org/ui"
       xmlns:f="http://java.sun.com/jsf/core"
       xmlns:ui="http://java.sun.com/jsf/facelets"
-      xmlns:xc="http://java.sun.com/jsf/composite/xpert/components"
       xmlns:x="http://xpert.com/faces"
       xmlns:h="http://java.sun.com/jsf/html">
 
@@ -65,7 +64,7 @@
                                     <h:outputText value="#{audit.ip}" />
                                 </p:column>
                                 <p:column>  
-                                    <xc:audit for="#{audit}" forClass="#{cc.attrs.for}"/>
+                                    <x:audit for="#{audit}" forClass="#{cc.attrs.for}"/>
                                 </p:column>
                             </p:dataTable>
                         </p:tab>

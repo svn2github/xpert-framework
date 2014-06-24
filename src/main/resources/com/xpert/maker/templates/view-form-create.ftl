@@ -3,13 +3,12 @@
                  xmlns:f="http://java.sun.com/jsf/core"
                  xmlns:ui="http://java.sun.com/jsf/facelets"
                  xmlns:p="http://primefaces.org/ui"
-                 xmlns:x="http://xpert.com/faces"
-                 xmlns:xc="http://java.sun.com/jsf/composite/xpert/components">
+                 xmlns:x="http://xpert.com/faces">
     
   
     <h:form id="formCreate${entity.name}">
         <p:fieldset legend="${sharp}{xmsg['generalData']}">
-            <xc:modalMessages/>
+            <x:modalMessages/>
             <h:panelGrid columns="2" styleClass="grid-form">
                  <#list entity.fields as field>
                  <#if field.id == false>
@@ -29,7 +28,7 @@
                      </#if>
                      <#-- Decimal (BigDecimal, Double) -->
                      <#if field.decimal == true>
-                     <xc:inputNumber value="${sharp}{${entity.nameLower}${configuration.managedBeanSuffix}.entity.${field.name}}" />
+                     <x:inputNumber value="${sharp}{${entity.nameLower}${configuration.managedBeanSuffix}.entity.${field.name}}" />
                      </#if>
                      <#-- Date -->
                      <#if field.date == true>
@@ -69,7 +68,7 @@
                    <p:commandButton process="@form" update="@form" action="${sharp}{${entity.nameLower}${configuration.managedBeanSuffix}.save}" value="${sharp}{xmsg['save']}" />
               </x:securityArea>
               <x:securityArea rolesAllowed="${entity.nameLower}.audit">
-                   <xc:audit for="${sharp}{${entity.nameLower}${configuration.managedBeanSuffix}.entity}"/>
+                   <x:audit for="${sharp}{${entity.nameLower}${configuration.managedBeanSuffix}.entity}"/>
               </x:securityArea>
           </div>
        </h:form>
