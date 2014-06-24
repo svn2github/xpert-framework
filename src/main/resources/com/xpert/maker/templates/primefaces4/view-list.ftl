@@ -11,7 +11,7 @@
         <h:form id="formList${entity.name}">
             <x:modalMessages/>
             <p:dataTable paginator="true" rows="10" rowsPerPageTemplate="10,20,30" paginatorPosition="bottom" emptyMessage="${sharp}{xmsg['noRecordFound']}"
-                         var="${entity.nameLower}" rowIndexVar="index" widgetVar="dataTable${entity.name}Widget" styleClass="table-responsive"
+                         var="${entity.nameLower}" rowIndexVar="index" id="dataTable${entity.name}" widgetVar="dataTable${entity.name}Widget" styleClass="table-responsive"
                          currentPageReportTemplate="${sharp}{${entity.nameLower}${configuration.managedBeanSuffix}.dataModel.currentPageReportTemplate}"
                          paginatorTemplate="${sharp}{${entity.nameLower}${configuration.managedBeanSuffix}.dataModel.paginatorTemplate}"
                          value="${sharp}{${entity.nameLower}${configuration.managedBeanSuffix}.dataModel}" lazy="true" >
