@@ -7,6 +7,7 @@ import com.xpert.Configuration;
 import com.xpert.faces.utils.FacesUtils;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.logging.Level;
@@ -183,10 +184,10 @@ public class Audit {
 
     /**
      * Persists a Audit
-     * 
+     *
      * @param object
      * @param persisted
-     * @param auditingType 
+     * @param auditingType
      */
     public void audit(Object object, Object persisted, AuditingType auditingType) {
 
@@ -204,7 +205,7 @@ public class Audit {
                 auditing.setEntity(getEntityName(object.getClass()));
                 auditing.setAuditingType(auditingType);
                 auditing.setEventDate(new Date());
-                if(FacesContext.getCurrentInstance() != null){
+                if (FacesContext.getCurrentInstance() != null) {
                     auditing.setIp(FacesUtils.getIP());
                 }
                 auditing.setAuditClass(object.getClass());
@@ -226,12 +227,12 @@ public class Audit {
                         auditPersited = true;
                     }
                 }
-                
+
                 auditing.setMetadatas(metadatas);
                 //add to context
-                if(auditPersited == true){
+                if (auditPersited == true) {
                     AuditContext context = AuditContext.getCurrentInstance();
-                    if(context != null){
+                    if (context != null) {
                         context.setAuditing(object, auditing);
                     }
                 }
@@ -356,7 +357,7 @@ public class Audit {
                                 addMetadata = true;
                             }
                         } else {
-                            if ((fieldOld == null && fieldValue != null) || (fieldOld != null && fieldValue == null) || (fieldOld != null && !fieldOld.equals(fieldValue))) {
+                            if (!isEquals(fieldOld, fieldValue)) {
                                 addMetadata = true;
                             }
                         }
@@ -372,6 +373,34 @@ public class Audit {
             }
         }
         return metadatas;
+    }
+
+    public boolean isEquals(Object fieldOld, Object fieldValue) {
+        //both null, return true
+        if (fieldOld == null && fieldValue == null) {
+            return true;
+        }
+        if (fieldOld == null && fieldValue != null) {
+            return false;
+        }
+        if (fieldValue == null && fieldOld != null) {
+            return false;
+        }
+        if (fieldOld != null && fieldValue != null) {
+            if (fieldOld instanceof Date) {
+                return ((Date) fieldOld).compareTo((Date) fieldValue) == 0;
+            }
+            if (fieldOld instanceof Calendar) {
+                return ((Calendar) fieldOld).compareTo((Calendar) fieldValue) == 0;
+            }
+            if (fieldOld instanceof BigDecimal) {
+                return ((BigDecimal) fieldOld).compareTo((BigDecimal) fieldValue) == 0;
+            }
+        }
+        if (fieldOld != null) {
+            return fieldOld.equals(fieldValue);
+        }
+        return false;
     }
 
     public boolean isOneToOneCascadeAll(Method method) throws Exception {
