@@ -22,32 +22,31 @@ public abstract class AbstractBusinessObject<T> {
 
     /**
      * Define the UniqueFields to be used in method "validateUniqueFields"
-     * 
-     * @return 
+     *
+     * @return
      */
     public abstract List<UniqueField> getUniqueFields();
 
     /**
      * Determine if entity will be audited on method "save()"
-     * 
-     * @return 
+     *
+     * @return
      */
     public abstract boolean isAudit();
 
     /**
      * Your own logic to validate the object
-     * 
+     *
      * @param object
-     * @throws BusinessException 
+     * @throws BusinessException
      */
     public abstract void validate(T object) throws BusinessException;
 
-    
     /**
      * Validate unique field based on "getUniqueFields()"
-     * 
+     *
      * @param object
-     * @throws UniqueFieldException 
+     * @throws UniqueFieldException
      */
     public void validateUniqueFields(Object object) throws UniqueFieldException {
         if (getUniqueFields() != null && !getUniqueFields().isEmpty()) {
@@ -63,19 +62,14 @@ public abstract class AbstractBusinessObject<T> {
      * <li>check if any excpetion occurred</li>
      * <li>if entity id is null then calls "save", if not, calls "merge"</li>
      * </ol>
+     *
      * @param object
-     * @throws BusinessException 
+     * @throws BusinessException
      */
     public void save(T object) throws BusinessException {
 
-        BusinessException exception = new BusinessException();
-        try {
-            validate(object);
-            validateUniqueFields(object);
-        } catch (BusinessException ex) {
-            exception.add(ex);
-        }
-        exception.check();
+        validate(object);
+        validateUniqueFields(object);
         if (!EntityUtils.isPersisted(object)) {
             getDAO().save(object, isAudit());
         } else {
@@ -85,30 +79,30 @@ public abstract class AbstractBusinessObject<T> {
 
     /**
      * Calls "baseDAO.delete()" to delete entity
-     * 
+     *
      * @param id entity id
-     * @throws DeleteException 
+     * @throws DeleteException
      */
     public void delete(Long id) throws DeleteException {
         getDAO().delete(id);
     }
-    
+
     /**
      * Calls "baseDAO.remove()" to delete entity
-     * 
+     *
      * @param id Entity id
-     * @throws DeleteException 
+     * @throws DeleteException
      */
     public void remove(Long id) throws DeleteException {
         Object object = getDAO().find(id);
         getDAO().remove(object);
     }
-    
+
     /**
      * Calls "baseDAO.remove()" to delete entity
-     * 
+     *
      * @param object Object to delete
-     * @throws DeleteException 
+     * @throws DeleteException
      */
     public void remove(T object) throws DeleteException {
         getDAO().remove(object);
