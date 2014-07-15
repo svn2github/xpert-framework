@@ -14,6 +14,7 @@ import com.xpert.persistence.dao.BaseDAO;
 import com.xpert.persistence.exception.DeleteException;
 import com.xpert.persistence.query.JoinBuilder;
 import com.xpert.persistence.query.Restriction;
+import com.xpert.persistence.utils.EntityUtils;
 import java.lang.reflect.ParameterizedType;
 import java.util.List;
 import java.util.Map;
@@ -28,7 +29,7 @@ import javax.faces.context.FacesContext;
  * @param <T> type of entity
  */
 public abstract class AbstractBaseBean<T> {
-
+    
     private static final Logger logger = Logger.getLogger(AbstractBaseBean.class.getName());
     private static final String ID = "id";
     private Long id;
@@ -47,15 +48,15 @@ public abstract class AbstractBaseBean<T> {
      * @return Default order od LazyDatamodel
      */
     public abstract String getDataModelOrder();
-
+    
     public OrderByHandler getOrderByHandler() {
         return null;
     }
-
+    
     public JoinBuilder getDataModelJoinBuilder() {
         return null;
     }
-
+    
     public FilterByHandler getFilterByHandler() {
         return null;
     }
@@ -65,7 +66,7 @@ public abstract class AbstractBaseBean<T> {
      */
     public void init() {
     }
-
+    
     public AbstractBaseBean() {
         if (isLoadEntityOnPostConstruct()) {
             Map<String, Object> requestMap = FacesContext.getCurrentInstance().getExternalContext().getRequestMap();
@@ -81,17 +82,17 @@ public abstract class AbstractBaseBean<T> {
     @PostConstruct
     public void postConstruct() {
         loadEntityFromParameter();
-        if(entity == null){
+        if (entity == null) {
             create();
         }
         init();
         createDataModel();
     }
-    
+
     /**
      * Load the entity from parameter "id"
      */
-    public void loadEntityFromParameter(){
+    public void loadEntityFromParameter() {
         Long entityId = null;
         if (isLoadEntityOnPostConstruct()) {
             entityId = getIdFromParameter();
@@ -102,7 +103,7 @@ public abstract class AbstractBaseBean<T> {
             if (entityClassToLoad != null && entityClassToLoad.equals(this.getClass())) {
                 entity = findById(entityId);
             }
-        } 
+        }        
     }
 
     /**
@@ -263,7 +264,19 @@ public abstract class AbstractBaseBean<T> {
             FacesMessageUtils.error(XpertResourceBundle.get("objectCannotBeDeleted"));
         }
     }
-
+    
+    /**
+     * Reload a entity calling "dao.find(id)"
+     */
+    public void reloadEntity() {
+        if (getEntity() != null) {
+            Object entityId = EntityUtils.getId(getEntity());
+            if (entityId != null) {
+                setEntity(getDAO().find(entityId));
+            }
+        }
+    }
+    
     public T findById(Object id) {
         if (id != null) {
             Object object = (T) getDAO().find(id);
@@ -289,7 +302,7 @@ public abstract class AbstractBaseBean<T> {
     public LazyCountType getDataModelLazyCountType() {
         return LazyCountType.ALWAYS;
     }
-
+    
     public String getEntitySimpleName() {
         if (entity != null) {
             return entity.getClass().getSimpleName();
@@ -310,35 +323,35 @@ public abstract class AbstractBaseBean<T> {
      */
     public void postDelete() {
     }
-
+    
     public String getDialog() {
         return dialog;
     }
-
+    
     public void setDialog(String dialog) {
         this.dialog = dialog;
     }
-
+    
     public Long getId() {
         return id;
     }
-
+    
     public void setId(Long id) {
         this.id = id;
     }
-
+    
     public LazyDataModelImpl<T> getDataModel() {
         return dataModel;
     }
-
+    
     public void setDataModel(LazyDataModelImpl<T> dataModel) {
         this.dataModel = dataModel;
     }
-
+    
     public T getEntity() {
         return entity;
     }
-
+    
     public void setEntity(T entity) {
         this.entity = entity;
     }
@@ -350,7 +363,7 @@ public abstract class AbstractBaseBean<T> {
     public boolean isLoadEntityOnPostConstruct() {
         return loadEntityOnPostConstruct;
     }
-
+    
     public void setLoadEntityOnPostConstruct(boolean loadEntityOnPostConstruct) {
         this.loadEntityOnPostConstruct = loadEntityOnPostConstruct;
     }

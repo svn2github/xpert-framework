@@ -1,6 +1,7 @@
 package com.xpert.audit.model;
 
 /**
+ * Possible type to audit events
  *
  * @author Ayslan
  */
@@ -9,7 +10,7 @@ public enum AuditingType {
     INSERT("insert"),
     UPDATE("update"),
     DELETE("delete");
-    
+
     private String description;
 
     AuditingType(String description) {
@@ -19,5 +20,5 @@ public enum AuditingType {
     public String getDescription() {
         return description;
     }
-    
+
 }

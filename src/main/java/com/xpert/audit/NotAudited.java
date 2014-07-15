@@ -6,6 +6,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
+ * Define to not audit the Class/Field/Method
  *
  * @author Ayslan
  */

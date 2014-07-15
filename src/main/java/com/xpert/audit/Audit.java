@@ -22,6 +22,9 @@ import org.hibernate.ejb.EntityManagerImpl;
 import org.hibernate.proxy.HibernateProxy;
 
 /**
+ * This class audits a entity. The audit types are represented by enum
+ * AuditingType. The values are compared by reflection. Classes, fields and
+ * methdos annotated with @NotAudit must be ignored.
  *
  * @author Ayslan
  */
@@ -40,6 +43,13 @@ public class Audit {
         this.entityManager = entityManager;
     }
 
+    /**
+     * Returns the object id. This method must get id if object is a
+     * HibernateProxy
+     *
+     * @param object
+     * @return
+     */
     public Object getId(Object object) {
         if (object == null) {
             return null;
@@ -74,6 +84,12 @@ public class Audit {
         return null;
     }
 
+    /**
+     * Get the object from database
+     *
+     * @param object
+     * @return the object from database
+     */
     public Object getPersisted(Object object) {
         Object id = getId(object);
         if (id != null) {
@@ -109,15 +125,43 @@ public class Audit {
         return getSession().getSessionFactory();
     }
 
+    /**
+     * Audit a "insert" event. Must be called after merge/persist the entity.
+     *
+     * Usage example:
+     * <pre>
+     * {@code
+     * Audit audit = new Audit(entityManager);
+     * object = entityManager.merge(object);
+     * audit.insert(object);
+     * }
+     * </pre>
+     *
+     * @param object Object to be audited
+     */
     public void insert(Object object) {
-        if (!isAudit(object)) {
+        if (!Audit.isAudit(object)) {
             return;
         }
         audit(object, null, AuditingType.INSERT);
     }
 
+    /**
+     * Audit a "update" event. Must be called before merge/persist the entity.
+     *
+     * Usage example:
+     * <pre>
+     * {@code
+     * Audit audit = new Audit(entityManager);
+     * audit.update(object);
+     * object = entityManager.merge(object);
+     * }
+     * </pre>
+     *
+     * @param object Object to be audited
+     */
     public void update(Object object) {
-        if (!isAudit(object)) {
+        if (!Audit.isAudit(object)) {
             return;
         }
         Object persisted = getPersisted(object);
@@ -125,19 +169,48 @@ public class Audit {
             audit(object, persisted, AuditingType.UPDATE);
             entityManager.detach(persisted);
         } else {
-            logger.log(Level.SEVERE, "Entity passed to update in Xpert Audit, is a transient instance");
+            logger.log(Level.SEVERE, "Entity {0} passed to update in Xpert Audit, is a transient instance", new Object[]{object.getClass().getName()});
         }
     }
 
+    /**
+     * Audit a "delete" event. Must be called before delete/remove the entity.
+     *
+     * Usage example:
+     * <pre>
+     * {@code
+     * Audit audit = new Audit(entityManager);
+     * audit.delete(id, Person.class);
+     * getEntityManager().remove(object);
+     * }
+     * </pre>
+     *
+     * @param id Entity Id
+     * @param clazz Entity Class
+     */
     public void delete(Object id, Class clazz) {
-        if (!isAudit(clazz)) {
+        if (!Audit.isAudit(clazz)) {
             return;
         }
         audit(getPersistedById(id, clazz), null, AuditingType.DELETE);
     }
 
+    /**
+     * Audit a "delete" event. Must be called before delete/remove the entity.
+     *
+     * Usage example:
+     * <pre>
+     * {@code
+     * Audit audit = new Audit(entityManager);
+     * audit.delete(object);
+     * getEntityManager().remove(object);
+     * }
+     * </pre>
+     *
+     * @param object Entity to be audited
+     */
     public void delete(Object object) {
-        if (!isAudit(object)) {
+        if (!Audit.isAudit(object)) {
             return;
         }
         audit(object, null, AuditingType.DELETE);
@@ -168,14 +241,27 @@ public class Audit {
         return name;
     }
 
-    public boolean isAudit(Object object) {
+    /**
+     * Method to verify if object must be audited
+     * 
+     * @param object
+     * @return true if object must be audited
+     */
+    public static boolean isAudit(Object object) {
         if (object == null) {
             return false;
         }
         return isAudit(object.getClass());
     }
 
-    public boolean isAudit(Class entity) {
+    
+    /**
+     * Method to verify if class must be audited
+     * 
+     * @param entity
+     * @return true if class must be audited
+     */
+    public static boolean isAudit(Class entity) {
         if (entity.isAnnotationPresent(NotAudited.class)) {
             return false;
         }
@@ -260,6 +346,10 @@ public class Audit {
                 Object fieldOld = null;
                 if (persisted != null) {
                     fieldOld = method.invoke(persisted);
+                    //both null values dont audit
+                    if (fieldOld == null && fieldValue == null) {
+                        continue;
+                    }
                 }
                 AbstractMetadata metadata = Configuration.getAbstractMetadata();
                 if (fieldValue != null && fieldValue.getClass().isAnnotationPresent(Embeddable.class)) {
@@ -269,37 +359,48 @@ public class Audit {
                     }
                 } else {
                     boolean addMetadata = persisted == null;
-                    if (fieldValue instanceof Collection) { //para as coleções
+                    //for list types
+                    if (method.getReturnType().equals(Collection.class) || method.getReturnType().equals(List.class) || method.getReturnType().equals(Set.class)) { //para as coleções
                         Collection collectionNew = (Collection<Object>) fieldValue;
                         Collection collectionOld = (Collection<Object>) fieldOld;
                         StringBuilder newValue = new StringBuilder();
                         if (fieldOld == null) {
-                            for (Object item : collectionNew) {
-                                newValue.append(item.toString()).append("; ");
+                            if (collectionNew != null) {
+                                for (Object item : collectionNew) {
+                                    newValue.append(item.toString()).append("; ");
+                                }
+                                addMetadata = true;
                             }
-                            addMetadata = true;
                         } else {
                             StringBuilder oldValue = new StringBuilder();
                             if ((!(collectionNew instanceof PersistentBag) && !(collectionNew instanceof PersistentCollection)) || isDelete == true) {
-                                if ((collectionNew == null && collectionOld != null) || (collectionNew != null && collectionOld == null) || (collectionNew.size() != collectionOld.size())) {
+                                //diferent size, then add to metadata
+                                if (collectionNew != null && collectionOld != null && collectionNew.size() != collectionOld.size()) {
                                     addMetadata = true;
                                 } else {
-                                    for (Object current : collectionNew) {
-                                        if (collectionOld != null && !collectionOld.contains(current)) {
-                                            for (Object currentOld : collectionOld) {
-                                                if (!currentOld.equals(current)) {
-                                                    addMetadata = true;
-                                                    break;
+                                    if (collectionNew != null) {
+                                        //verify if some item from list has changed
+                                        for (Object current : collectionNew) {
+                                            if (collectionOld != null && !collectionOld.contains(current)) {
+                                                for (Object currentOld : collectionOld) {
+                                                    if (!currentOld.equals(current)) {
+                                                        addMetadata = true;
+                                                        break;
+                                                    }
                                                 }
                                             }
                                         }
                                     }
                                 }
-                                for (Object old : collectionOld) {
-                                    oldValue.append(old).append("; ");
+                                if (collectionOld != null) {
+                                    for (Object old : collectionOld) {
+                                        oldValue.append(old).append("; ");
+                                    }
                                 }
-                                for (Object item : collectionNew) {
-                                    newValue.append(item.toString()).append("; ");
+                                if (collectionNew != null) {
+                                    for (Object item : collectionNew) {
+                                        newValue.append(item.toString()).append("; ");
+                                    }
                                 }
                                 metadata.setOldValue(oldValue.toString());
                             }
@@ -487,7 +588,7 @@ public class Audit {
         return methodGet;
     }
 
-    public String getMethodName(Method method) {
+    private String getMethodName(Method method) {
         if (method.getName().startsWith("is")) {
             return method.getName().substring(2, 3).toLowerCase() + method.getName().substring(3);
         } else if (method.getName().startsWith("get")) {
@@ -496,7 +597,7 @@ public class Audit {
         return null;
     }
 
-    public Field getDeclaredField(Class clazz, String fieldName) throws Exception {
+    private Field getDeclaredField(Class clazz, String fieldName) throws Exception {
         Field field = clazz.getDeclaredField(fieldName);
         if (field == null && clazz.getSuperclass() != null && !clazz.getSuperclass().equals(Object.class)) {
             return getDeclaredField(clazz.getSuperclass(), fieldName);

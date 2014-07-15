@@ -5,7 +5,8 @@ import java.util.List;
 import javax.persistence.*;
 
 /**
- *
+ * Abstract class to represent a audit event.
+ * 
  * @author Ayslan
  */
 @MappedSuperclass

@@ -67,7 +67,6 @@ public abstract class AbstractBusinessObject<T> {
      * @throws BusinessException
      */
     public void save(T object) throws BusinessException {
-
         validate(object);
         validateUniqueFields(object);
         if (!EntityUtils.isPersisted(object)) {

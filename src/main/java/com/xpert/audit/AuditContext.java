@@ -1,7 +1,6 @@
 package com.xpert.audit;
 
 import com.xpert.audit.model.AbstractAuditing;
-import com.xpert.audit.model.AbstractMetadata;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
