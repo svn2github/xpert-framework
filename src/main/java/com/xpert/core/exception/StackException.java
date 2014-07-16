@@ -20,8 +20,17 @@ public class StackException extends Exception {
         super(mensagem);
         this.parameters = parameters;
     }
+    
 
     public StackException() {
+    }
+
+    /**
+     * same as "getParameters"
+     * @return 
+     */
+    public Object[] getParametros() {
+        return parameters;
     }
 
     public Object[] getParameters() {
