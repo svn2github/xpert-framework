@@ -8,8 +8,7 @@ import javax.faces.convert.FacesConverter;
 
 /**
  *
- * Conversor para cpf e cnpj, na tela exibe com a mascara e ao submeter, remove
- * a mascara
+ * CPF/CNPJ converter. Show a CPF/CNPJ with mask and remove mask when submit.
  *
  * @author Ayslan
  */

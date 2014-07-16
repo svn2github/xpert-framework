@@ -23,6 +23,15 @@ public abstract class AbstractMetadata {
     public abstract AbstractAuditing getAuditing();
 
     public abstract void setAuditing(AbstractAuditing auditing);
+    
+    /**
+     * defines max size to fields "oldValue" and "newValue"
+     * 
+     * @return 
+     */
+    public Integer getMaxSizeValues(){
+        return null;
+    }
 
     /**
      * @param clazz auditing class

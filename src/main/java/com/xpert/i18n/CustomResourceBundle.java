@@ -4,10 +4,8 @@ import java.util.Enumeration;
 import java.util.ResourceBundle;
 
 /**
- * Classe para customizar as mensagens na tela. A função dela é exibir a
- * mensagem do Locale default da aplicação, caso não seja encontrado a mensagem
- * na tela. Por padrão , quando não encontrado o JSF coloca o padrão:
- * ???nomePropriedade??
+ * Customize messages in view.
+ * This bundle evicts a not found property that JSF shows something like "???propertyName??"
  *
  * @author Ayslan
  */

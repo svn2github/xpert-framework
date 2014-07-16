@@ -8,8 +8,7 @@ import javax.faces.convert.FacesConverter;
 
 /**
  *
- * Conversor para cpf, na tela exibe com a mascara e ao submeter, remove a
- * mascara
+ * CPF converter. Show a CPF with mask and remove mask when submit
  *
  * @author Ayslan
  */

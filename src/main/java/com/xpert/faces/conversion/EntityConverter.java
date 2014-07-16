@@ -13,11 +13,21 @@ import javax.faces.convert.FacesConverter;
 import javax.persistence.Id;
 import org.hibernate.proxy.HibernateProxy;
 
+/**
+ * Generic converter to Objects. This converter puts object in faces ViewMap.
+ * Classes with fields annotated with @Id (JPA) or @ConverterId
+ * (xpert-framework) can be converted. It's important to override "equals" from
+ * object and compare by id.
+ *
+ * @author ayslan
+ */
 @FacesConverter(value = "entityConverter")
 public class EntityConverter implements Converter {
 
     private static final Logger logger = Logger.getLogger(EntityConverter.class.getName());
     private static final String ID_PREFIX = "entityConverter_";
+    private static final Map<Class, Field> FIELDS_CACHE = new HashMap<Class, Field>();
+    private static final Map<Class, Method> METHOD_CACHE = new HashMap<Class, Method>();
 
     @Override
     public Object getAsObject(FacesContext context, UIComponent component,
@@ -69,8 +79,7 @@ public class EntityConverter implements Converter {
     /**
      * Get object ID
      *
-     * @param Object object
-     *
+     * @param object
      * @return String
      */
     public String getId(Object object) {
@@ -95,17 +104,32 @@ public class EntityConverter implements Converter {
     }
 
     public Object getAnnotadedWithId(Object object, Class clazz) {
-        Field[] fields = clazz.getDeclaredFields();
-        Method[] methods = clazz.getDeclaredMethods();
         try {
+
+            //try get field from cache
+            Field fieldFromCache = FIELDS_CACHE.get(clazz);
+            if (fieldFromCache != null) {
+                return fieldFromCache.get(object);
+            }
+
+            //try get method from cache
+            Method methodFromCache = METHOD_CACHE.get(clazz);
+            if (methodFromCache != null) {
+                return methodFromCache.invoke(object);
+            }
+
+            Field[] fields = clazz.getDeclaredFields();
+            Method[] methods = clazz.getDeclaredMethods();
             for (Field field : fields) {
                 if (field.isAnnotationPresent(Id.class) || field.isAnnotationPresent(ConverterId.class)) {
                     field.setAccessible(true);
+                    FIELDS_CACHE.put(clazz, field);
                     return field.get(object);
                 }
             }
             for (Method method : methods) {
                 if (method.isAnnotationPresent(Id.class) || method.isAnnotationPresent(ConverterId.class)) {
+                    METHOD_CACHE.put(clazz, method);
                     return method.invoke(object);
                 }
             }

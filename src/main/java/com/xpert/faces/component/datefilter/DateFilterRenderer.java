@@ -160,6 +160,17 @@ public class DateFilterRenderer extends Renderer {
 
     }
 
+    /**
+     * Hack to create PrimeFaces ajax behavior.
+     * <ul>
+     * <li>Primefaces 3 and 4:
+     * org.primefaces.component.behavior.ajax.AjaxBehavior</li>
+     * <li>Primefaces 5: org.primefaces.behavior.ajax.AjaxBehavior</li>
+     * </ul>
+     *
+     * @param scriptOnStart
+     * @return
+     */
     public ClientBehavior createClientBehavior(String scriptOnStart) {
         ClientBehavior clientBehavior = null;
 

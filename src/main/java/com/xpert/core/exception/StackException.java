@@ -9,22 +9,22 @@ import java.util.List;
  */
 public class StackException extends Exception {
 
-    private String[] parameters;
+    private Object[] parameters;
     private List<StackException> exceptions;
 
     public StackException(String mensagem) {
         super(mensagem);
     }
 
-    public StackException(String mensagem, String... parametros) {
+    public StackException(String mensagem, Object... parameters) {
         super(mensagem);
-        this.parameters = parametros;
+        this.parameters = parameters;
     }
 
     public StackException() {
     }
 
-    public String[] getParametros() {
+    public Object[] getParameters() {
         return parameters;
     }
 
@@ -47,7 +47,7 @@ public class StackException extends Exception {
         }
     }
 
-    public void add(String mensagem, String... parametros) {
+    public void add(String mensagem, Object... parametros) {
         if (exceptions == null) {
             exceptions = new ArrayList<StackException>();
         }
@@ -68,10 +68,7 @@ public class StackException extends Exception {
     }
 
     public boolean isNotEmpty() {
-        if (exceptions != null && !exceptions.isEmpty()) {
-            return true;
-        }
-        return false;
+        return exceptions != null && !exceptions.isEmpty();
     }
 
     public void clear() {

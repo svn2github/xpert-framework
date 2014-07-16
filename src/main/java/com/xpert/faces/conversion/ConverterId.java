@@ -6,7 +6,8 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- *
+ * Defines the field/method to be used in EntityConverter
+ * 
  * @author Ayslan
  */
 @Target(value = {ElementType.METHOD, ElementType.FIELD})

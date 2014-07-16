@@ -29,16 +29,16 @@ import org.hibernate.proxy.HibernateProxy;
  * @author Ayslan
  */
 public class Audit {
-
+    
     private static final Logger logger = Logger.getLogger(Audit.class.getName());
     private static final String[] EXCLUDED_FIELDS = {"notifyAll", "notify", "getClass", "wait", "hashCode", "toString", "equals"};
     private static final SimpleDateFormat AUDIT_DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-    private static final Map<Class, String> mappedName = new HashMap<Class, String>();
-    private static final Map<Class, List<Method>> mappedMethods = new HashMap<Class, List<Method>>();
-    private static final Map<Method, Boolean> mappedOneToOneCascadeAll = new HashMap<Method, Boolean>();
+    private static final Map<Class, String> MAPPED_NAME = new HashMap<Class, String>();
+    private static final Map<Class, List<Method>> MAPPED_METHODS = new HashMap<Class, List<Method>>();
+    private static final Map<Method, Boolean> MAPPED_ONE_TO_ONE_CASCADE_ALL = new HashMap<Method, Boolean>();
     private Session session;
     private final EntityManager entityManager;
-
+    
     public Audit(EntityManager entityManager) {
         this.entityManager = entityManager;
     }
@@ -59,7 +59,7 @@ public class Audit {
         }
         return getAnnotadedWithId(object, object.getClass());
     }
-
+    
     public Object getAnnotadedWithId(Object object, Class clazz) {
         Field[] fields = clazz.getDeclaredFields();
         Method[] methods = clazz.getDeclaredMethods();
@@ -100,14 +100,14 @@ public class Audit {
         }
         return null;
     }
-
+    
     public Object getPersistedById(Object id, Class clazz) {
         if (id != null) {
             return entityManager.find(clazz, id);
         }
         return null;
     }
-
+    
     public Session getSession() {
         if (session == null) {
             if (entityManager.getDelegate() instanceof EntityManagerImpl) {
@@ -120,7 +120,7 @@ public class Audit {
             return session;
         }
     }
-
+    
     public SessionFactory getSessionFactory() {
         return getSession().getSessionFactory();
     }
@@ -215,15 +215,15 @@ public class Audit {
         }
         audit(object, null, AuditingType.DELETE);
     }
-
+    
     public static String getEntityName(Class entity) {
-
-        if (mappedName.get(entity) != null) {
-            return mappedName.get(entity);
+        
+        if (MAPPED_NAME.get(entity) != null) {
+            return MAPPED_NAME.get(entity);
         }
-
+        
         String name = null;
-
+        
         Table table = (Table) entity.getAnnotation(Table.class);
         if (table != null && table.name() != null && !table.name().isEmpty()) {
             name = table.name();
@@ -235,15 +235,15 @@ public class Audit {
                 name = entity.getSimpleName();
             }
         }
-
-        mappedName.put(entity, name);
-
+        
+        MAPPED_NAME.put(entity, name);
+        
         return name;
     }
 
     /**
      * Method to verify if object must be audited
-     * 
+     *
      * @param object
      * @return true if object must be audited
      */
@@ -254,10 +254,9 @@ public class Audit {
         return isAudit(object.getClass());
     }
 
-    
     /**
      * Method to verify if class must be audited
-     * 
+     *
      * @param entity
      * @return true if class must be audited
      */
@@ -276,16 +275,16 @@ public class Audit {
      * @param auditingType
      */
     public void audit(Object object, Object persisted, AuditingType auditingType) {
-
+        
         try {
-
+            
             if (isEntity(object)) {
-
+                
                 Field[] fields = object.getClass().getDeclaredFields();
                 Method[] methods = object.getClass().getDeclaredMethods();
                 Method.setAccessible(methods, true);
                 Field.setAccessible(fields, true);
-
+                
                 AbstractAuditing auditing = Configuration.getAbstractAuditing();
                 auditing.setIdentifier(Long.valueOf(getId(object).toString()));
                 auditing.setEntity(getEntityName(object.getClass()));
@@ -299,7 +298,7 @@ public class Audit {
                 if (listener != null) {
                     listener.onSave(auditing);
                 }
-
+                
                 List<AbstractMetadata> metadatas = null;
                 boolean auditPersited = false;
                 if (auditingType.equals(AuditingType.INSERT) || auditingType.equals(AuditingType.DELETE)) {
@@ -313,7 +312,7 @@ public class Audit {
                         auditPersited = true;
                     }
                 }
-
+                
                 auditing.setMetadatas(metadatas);
                 //add to context
                 if (auditPersited == true) {
@@ -322,20 +321,20 @@ public class Audit {
                         context.setAuditing(object, auditing);
                     }
                 }
-
+                
                 if (metadatas != null && !metadatas.isEmpty()) {
                     for (AbstractMetadata metadata : metadatas) {
                         entityManager.persist(metadata);
                     }
                 }
-
+                
             }
         } catch (Throwable t) {
             logger.log(Level.SEVERE, t.getMessage(), t);
         }
-
+        
     }
-
+    
     public List<AbstractMetadata> getMetadata(Object object, Object persisted, AbstractAuditing auditing) throws Exception {
         List<Method> methodsGet = getMethods(object);
         List<AbstractMetadata> metadatas = new ArrayList<AbstractMetadata>();
@@ -358,6 +357,7 @@ public class Audit {
                         metadatas.addAll(embedableMetadata);
                     }
                 } else {
+                    //if "persisted object" is null then always add metadata
                     boolean addMetadata = persisted == null;
                     //for list types
                     if (method.getReturnType().equals(Collection.class) || method.getReturnType().equals(List.class) || method.getReturnType().equals(Set.class)) { //para as coleções
@@ -421,12 +421,12 @@ public class Audit {
                                 } else {
                                     embedableMetadata = getMetadata(fieldValue, getPersisted(fieldValue), auditing);
                                 }
-
+                                
                                 if (embedableMetadata != null && !embedableMetadata.isEmpty()) {
                                     metadatas.addAll(embedableMetadata);
                                 }
                             }
-
+                            
                             Object oldId = null;
                             if (fieldOld instanceof HibernateProxy) {
                                 oldId = ((HibernateProxy) fieldOld).getHibernateLazyInitializer().getIdentifier();
@@ -441,7 +441,7 @@ public class Audit {
                             metadata.setEntity(method.getDeclaringClass().getName());
                             metadata.setNewIdentifier(newId == null ? null : Long.valueOf(newId.toString()));
                             metadata.setNewValue(fieldValue == null ? "" : fieldValue.toString());
-
+                            
                         }
                     } else {
                         if (fieldOld != null) {
@@ -466,6 +466,8 @@ public class Audit {
                     metadata.setField(getMethodName(method));
                     metadata.setAuditing(auditing);
                     if (addMetadata) {
+                        //verify size of metadata
+                        normalizeValuesWithMaxSize(metadata);
                         metadatas.add(metadata);
                     }
                 }
@@ -475,7 +477,30 @@ public class Audit {
         }
         return metadatas;
     }
-
+    
+    /**
+     * Format "newValue" and "oldValue" of AbstractMetada based on size defined in "getMaxSizeValues"
+     * 
+     * @param metadata 
+     */
+    private void normalizeValuesWithMaxSize(AbstractMetadata metadata) {
+        if (metadata.getMaxSizeValues() != null) {
+            if (metadata.getNewValue() != null) {
+                metadata.setNewValue(getValueWithMaxSize(metadata.getNewValue(), metadata.getMaxSizeValues()));
+            }
+            if (metadata.getOldValue() != null) {
+                metadata.setOldValue(getValueWithMaxSize(metadata.getOldValue(), metadata.getMaxSizeValues()));
+            }
+        }
+    }
+    
+    private String getValueWithMaxSize(String value, Integer maxSize) {
+        if (maxSize == null || value == null || value.length() <= maxSize) {
+            return value;
+        }
+        return value.substring(0, maxSize);
+    }
+    
     public boolean isEquals(Object fieldOld, Object fieldValue) {
         //both null, return true
         if (fieldOld == null && fieldValue == null) {
@@ -503,9 +528,9 @@ public class Audit {
         }
         return false;
     }
-
+    
     public boolean isOneToOneCascadeAll(Method method) throws Exception {
-        Boolean isOneToOneAll = mappedOneToOneCascadeAll.get(method);
+        Boolean isOneToOneAll = MAPPED_ONE_TO_ONE_CASCADE_ALL.get(method);
         if (isOneToOneAll != null) {
             return isOneToOneAll;
         }
@@ -524,13 +549,13 @@ public class Audit {
             isOneToOneAll = true;
         } else {
             isOneToOneAll = false;
-
+            
         }
-        mappedOneToOneCascadeAll.put(method, isOneToOneAll);
+        MAPPED_ONE_TO_ONE_CASCADE_ALL.put(method, isOneToOneAll);
         return isOneToOneAll;
-
+        
     }
-
+    
     private String getToString(Object object) {
         if (object instanceof Date) {
             return AUDIT_DATE_FORMAT.format(object);
@@ -540,20 +565,20 @@ public class Audit {
             return object.toString();
         }
     }
-
+    
     public List<Method> getMethods(Object objeto) {
-
-        List<Method> methodGet = mappedMethods.get(objeto.getClass());
-
+        
+        List<Method> methodGet = MAPPED_METHODS.get(objeto.getClass());
+        
         if (methodGet != null) {
             return methodGet;
         }
-
+        
         methodGet = new ArrayList<Method>();
         Method methods[] = objeto.getClass().getMethods();
-
+        
         List exclude = Arrays.asList(EXCLUDED_FIELDS);
-
+        
         try {
             Field field;
             String fieldName;
@@ -584,10 +609,10 @@ public class Audit {
         } catch (Exception ex) {
             logger.log(Level.SEVERE, ex.getMessage(), ex);
         }
-        mappedMethods.put(objeto.getClass(), methodGet);
+        MAPPED_METHODS.put(objeto.getClass(), methodGet);
         return methodGet;
     }
-
+    
     private String getMethodName(Method method) {
         if (method.getName().startsWith("is")) {
             return method.getName().substring(2, 3).toLowerCase() + method.getName().substring(3);
@@ -596,7 +621,7 @@ public class Audit {
         }
         return null;
     }
-
+    
     private Field getDeclaredField(Class clazz, String fieldName) throws Exception {
         Field field = clazz.getDeclaredField(fieldName);
         if (field == null && clazz.getSuperclass() != null && !clazz.getSuperclass().equals(Object.class)) {

@@ -1,6 +1,7 @@
 package com.xpert.security.model;
 
 /**
+ * Define a security role
  *
  * @author ayslan
  */

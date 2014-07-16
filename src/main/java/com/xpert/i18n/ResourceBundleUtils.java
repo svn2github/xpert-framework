@@ -22,9 +22,9 @@ public class ResourceBundleUtils {
 
     /**
      *
-     * Método que pega a mensagem e formata através dos parametros informados.
-     * Os parametros devem está nas mensagens no formato: {0} {1}. Ex: Já existe
-     * o município {0} cadastrado para o estado {1}
+     * Get the message and format like passed parameters.
+     * Parameters must be in format "{0} {1}".
+     * Example: There is a {0} in object {1}
      *
      * @param key
      * @param bundle

@@ -18,7 +18,8 @@ import net.sf.jasperreports.engine.export.JExcelApiExporterParameter;
 import net.sf.jasperreports.engine.export.ooxml.JRXlsxExporter;
 
 /**
- *
+ * Generic class to create Jasper Reports
+ * 
  * @author Ayslan
  */
 public class FacesJasper {
