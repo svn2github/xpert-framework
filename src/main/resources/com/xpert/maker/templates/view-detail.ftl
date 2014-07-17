@@ -37,7 +37,7 @@
         </h:panelGrid>
         <p:separator/>
         <div style="text-align: center;">
-            <p:commandButton type="button" value="${sharp}{xmsg['close']}" onclick="widget${entity.name}Detail.hide()" />
+            <p:commandButton type="button" value="${sharp}{xmsg['close']}" onclick="${entity.widgetVarDetail}.hide()" />
             <x:securityArea rolesAllowed="${entity.nameLower}.audit">
                 <x:audit for="${sharp}{${entity.nameLower}${configuration.managedBeanSuffix}.entity}"/>
             </x:securityArea>

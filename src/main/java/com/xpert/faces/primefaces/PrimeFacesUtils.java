@@ -4,11 +4,26 @@ import java.lang.reflect.Field;
 import org.primefaces.context.RequestContext;
 
 /**
- *
+ * Util class to Primefaces
+ * 
  * @author Ayslan
  */
 public class PrimeFacesUtils {
-    
+
+    /**
+     * Primefaces 4 and 5 new widget var is like "PF('widgetVar')"
+     * 
+     * @param widgetVar
+     * @param primeFacesVersion
+     * @return 
+     */
+    public static String normalizeWidgetVar(String widgetVar, PrimeFacesVersion primeFacesVersion) {
+        if (primeFacesVersion.isUsePFWidgetVar()) {
+            return "PF('" + widgetVar + "')";
+        }
+        return widgetVar;
+    }
+
     public static String normalizeDialog(String dialog) {
         if (dialog != null && !PrimeFacesUtils.isVersion3()) {
             return "PF('" + dialog + "')";

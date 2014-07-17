@@ -11,13 +11,13 @@
         <h:form id="formList${entity.name}">
             <x:modalMessages/>
             <p:dataTable paginator="true" rows="10" rowsPerPageTemplate="10,20,30" paginatorPosition="bottom" emptyMessage="${sharp}{xmsg['noRecordFound']}"
-                         var="${entity.nameLower}" rowIndexVar="index" id="dataTable${entity.name}" widgetVar="dataTable${entity.name}Widget" styleClass="table-responsive"
+                         var="${entity.nameLower}" rowIndexVar="index" id="dataTable${entity.name}" widgetVar="${entity.widgetVarDataTableName}" styleClass="table-responsive"
                          currentPageReportTemplate="${sharp}{${entity.nameLower}${configuration.managedBeanSuffix}.dataModel.currentPageReportTemplate}"
                          paginatorTemplate="${sharp}{${entity.nameLower}${configuration.managedBeanSuffix}.dataModel.paginatorTemplate}"
                          value="${sharp}{${entity.nameLower}${configuration.managedBeanSuffix}.dataModel}" lazy="true" >
                 <p:column styleClass="uix-datatable-index">
                     <f:facet name="header">
-                        <p:commandButton onclick="PF('dataTable${entity.name}Widget').filter()" type="button" icon="ui-icon-refresh" />
+                        <p:commandButton onclick="${entity.widgetVarDataTable}.filter()" type="button" icon="ui-icon-refresh" />
                     </f:facet>
                     <h:outputText value="${sharp}{index+1}"/>
                 </p:column>
@@ -57,7 +57,7 @@
                     <f:facet name="header">
                         <x:legends detail="true" edit="true" delete="true"/>
                     </f:facet>
-                    <p:commandButton oncomplete="PF('widget${entity.name}Detail').show();"  icon="ui-icon-zoomin" 
+                    <p:commandButton oncomplete="${entity.widgetVarDetail}.show();"  icon="ui-icon-zoomin" 
                                      process="@form" update=":formDetail${entity.name}" title="${sharp}{xmsg['detail']}" >
                         <f:setPropertyActionListener value="${sharp}{${entity.nameLower}}" target="${sharp}{${entity.nameLower}${configuration.managedBeanSuffix}.entity}" />
                     </p:commandButton>
@@ -82,7 +82,7 @@
             </p:dataTable>
         </h:form>
 
-        <p:dialog widgetVar="widget${entity.name}Detail" header="${sharp}{msg['${entity.nameLower}.detail']}" appendTo="@(body)" modal="true" height="500" width="800">
+        <p:dialog widgetVar="${entity.widgetVarDetailName}" header="${sharp}{msg['${entity.nameLower}.detail']}" ${entity.appendTo} modal="true" height="500" width="800">
             <ui:include src="detail${entity.name}.xhtml" />
         </p:dialog>
     </ui:define>

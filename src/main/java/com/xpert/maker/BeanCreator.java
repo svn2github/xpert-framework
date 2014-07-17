@@ -68,14 +68,10 @@ public class BeanCreator {
 
     public static String createBean(Bean bean, BeanConfiguration configuration) throws IOException, TemplateException {
 
-        ViewEntity viewEntity = createViewEntity(bean.getEntity());
+        ViewEntity viewEntity = createViewEntity(bean.getEntity(), configuration);
         String templatePath = bean.getBeanType().getTemplate();
 
         if (bean.getBeanType().isView()) {
-            //differ primefaces versions
-            if (bean.getBeanType().isPrimefacesVersionDependend()) {
-                templatePath = configuration.getPrimeFacesVersion().getPackageName() + "/" + templatePath;
-            }
             return getViewTemplate(viewEntity, configuration.getResourceBundle(), templatePath, configuration.getTemplate(), configuration);
         }
 
@@ -109,9 +105,10 @@ public class BeanCreator {
         return writer.toString();
     }
 
-    public static ViewEntity createViewEntity(Class clazz) {
+    public static ViewEntity createViewEntity(Class clazz, BeanConfiguration configuration) {
         ViewEntity entity = new ViewEntity();
         entity.setName(clazz.getSimpleName());
+        entity.setPrimeFacesVersion(configuration.getPrimeFacesVersion());
         entity.setIdFieldName(EntityUtils.getIdFieldName(clazz));
         List<Field> fields = getFields(clazz);
         for (Field field : fields) {

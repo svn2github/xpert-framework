@@ -11,30 +11,37 @@ package com.xpert.faces.primefaces;
  */
 public enum PrimeFacesVersion {
     
-    VERSION_3("Version 3", "primefaces3"), 
-    VERSION_4("Version 4", "primefaces4"),
-    /*
-     version 5 is the same as version 4 in CRUD generation
-    */
-    VERSION_5("Version 5", "primefaces4");
+    VERSION_3("Version 3", false, false), 
+    VERSION_4("Version 4", true, true),
+    VERSION_5("Version 5", true, true);
     
     private final String description;
-    private final String packageName;
+    /**
+     * new version uses widget var is like "PF('widgetVar')"
+     */
+    private final boolean usePFWidgetVar;
+    /**
+     * version 3 use appendToBody, greater version use appenTo="@(body)"
+     */
+    private final boolean useAppendTo;
 
-    private PrimeFacesVersion(String description, String packageName) {
+    private PrimeFacesVersion(String description, boolean usePFWidgetVar, boolean useAppendTo) {
         this.description = description;
-        this.packageName = packageName;
+        this.usePFWidgetVar = usePFWidgetVar;
+        this.useAppendTo = useAppendTo;
     }
 
+    public boolean isUsePFWidgetVar() {
+        return usePFWidgetVar;
+    }
+
+    public boolean isUseAppendTo() {
+        return useAppendTo;
+    }
+    
     public String getDescription() {
         return description;
     }
 
- 
-    public String getPackageName() {
-        return packageName;
-    }
-
-    
     
 }
