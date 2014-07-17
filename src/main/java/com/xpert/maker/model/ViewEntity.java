@@ -11,6 +11,7 @@ import java.util.List;
 public class ViewEntity {
 
     private String name;
+    private String idFieldName;
     private List<ViewField> fields = new ArrayList<ViewField>();
     
     
@@ -21,6 +22,14 @@ public class ViewEntity {
         return name;
     }
 
+    public String getIdFieldName() {
+        return idFieldName;
+    }
+
+    public void setIdFieldName(String idFieldName) {
+        this.idFieldName = idFieldName;
+    }
+    
     public String getName() {
         return name;
     }

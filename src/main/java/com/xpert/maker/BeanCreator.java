@@ -3,6 +3,7 @@ package com.xpert.maker;
 import com.xpert.i18n.XpertResourceBundle;
 import com.xpert.maker.model.ViewEntity;
 import com.xpert.maker.model.ViewField;
+import com.xpert.persistence.utils.EntityUtils;
 import com.xpert.utils.HumaniseCamelCase;
 import com.xpert.utils.StringUtils;
 import freemarker.template.Configuration;
@@ -111,6 +112,7 @@ public class BeanCreator {
     public static ViewEntity createViewEntity(Class clazz) {
         ViewEntity entity = new ViewEntity();
         entity.setName(clazz.getSimpleName());
+        entity.setIdFieldName(EntityUtils.getIdFieldName(clazz));
         List<Field> fields = getFields(clazz);
         for (Field field : fields) {
             if (isAnnotationPresent(field, Transient.class)) {

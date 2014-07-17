@@ -63,13 +63,13 @@
                     </p:commandButton>
                     <x:securityArea rolesAllowed="${entity.nameLower}.create">
                         <p:button icon="ui-icon-pencil" outcome="create${entity.name}" title="${sharp}{xmsg['edit']}">
-                            <f:param name="id" value="${sharp}{${entity.nameLower}.id}" />
+                            <f:param name="id" value="${sharp}{${entity.nameLower}.${entity.idFieldName}}" />
                         </p:button>
                     </x:securityArea>
                     <x:securityArea rolesAllowed="${entity.nameLower}.delete">
                         <p:commandButton icon="ui-icon-trash" title="${sharp}{xmsg['delete']}" process="@form" update="@form" 
                                          action="${sharp}{${entity.nameLower}${configuration.managedBeanSuffix}.delete}" >
-                            <f:setPropertyActionListener value="${sharp}{${entity.nameLower}.id}" target="${sharp}{${entity.nameLower}${configuration.managedBeanSuffix}.id}" />
+                            <f:setPropertyActionListener value="${sharp}{${entity.nameLower}.${entity.idFieldName}}" target="${sharp}{${entity.nameLower}${configuration.managedBeanSuffix}.id}" />
                             <x:confirmation message="${sharp}{xmsg['confirmDelete']} - ${sharp}{${entity.nameLower}}" />
                         </p:commandButton>
                     </x:securityArea>
