@@ -24,9 +24,9 @@ public class Mask {
     public static String maskTelefone(String phone) {
         return mask(phone, "(##)####-####");
     }
-
+    
     public static String maskPlacaCarro(String placa) {
-        return mask(placa, "AAA-####");
+        return mask(placa, "###-####");
     }
 
     public static String maskCpf(String value) {
