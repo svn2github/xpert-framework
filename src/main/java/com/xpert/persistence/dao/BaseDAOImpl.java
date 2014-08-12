@@ -38,7 +38,7 @@ public abstract class BaseDAOImpl<T> implements BaseDAO<T> {
     private Class entityClass;
     private Session session;
     private static final Logger logger = Logger.getLogger(BaseDAOImpl.class.getName());
-    private static Map<ClassField, String> orderByMap = new HashMap<ClassField, String>();
+    private static final Map<ClassField, String> ORDER_BY_MAP = new HashMap<ClassField, String>();
 
     /**
      * Set here your getEntityManager()
@@ -597,8 +597,8 @@ public abstract class BaseDAOImpl<T> implements BaseDAO<T> {
 
         //try find in cache
         ClassField classField = new ClassField(entity, fieldName);
-        if (orderByMap.containsKey(classField)) {
-            return orderByMap.get(classField);
+        if (ORDER_BY_MAP.containsKey(classField)) {
+            return ORDER_BY_MAP.get(classField);
         }
 
         try {
@@ -619,7 +619,7 @@ public abstract class BaseDAOImpl<T> implements BaseDAO<T> {
             }
         }
 
-        orderByMap.put(new ClassField(entity, fieldName), orderBy);
+        ORDER_BY_MAP.put(new ClassField(entity, fieldName), orderBy);
 
         return orderBy;
     }
