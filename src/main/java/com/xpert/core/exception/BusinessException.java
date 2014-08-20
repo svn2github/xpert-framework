@@ -5,7 +5,7 @@ public class BusinessException extends StackException {
     public BusinessException() {
     }
 
-    public BusinessException(String mensagem, String... parametros) {
+    public BusinessException(String mensagem, Object... parametros) {
         super(mensagem, parametros);
     }
 
