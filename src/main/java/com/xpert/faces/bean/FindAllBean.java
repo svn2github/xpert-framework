@@ -11,6 +11,8 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
+import javax.el.ValueExpression;
+import javax.faces.component.UIComponent;
 import javax.faces.model.SelectItem;
 import org.apache.commons.beanutils.PropertyUtils;
 
@@ -35,7 +37,7 @@ public abstract class FindAllBean {
     public void init() {
         baseDAO = new DAO();
     }
-    
+
     public List get(Class clazz, String order) {
 
         List objects = values.get(clazz);
@@ -50,6 +52,12 @@ public abstract class FindAllBean {
         }
 
         return objects;
+    }
+
+    public List get(UIComponent component) {
+        ValueExpression valueExpression = component.getValueExpression("value");
+        Class type = valueExpression.getExpectedType();
+        return get(type);
     }
 
     public List get(Class clazz) {
@@ -84,7 +92,7 @@ public abstract class FindAllBean {
                     Object id = PropertyUtils.getProperty(bean, EntityUtils.getIdFieldName(clazz));
                     options[count] = new SelectItem(id, itemLabel);
                 } else {
-                    options[count] = new SelectItem(((Enum)bean).name(), itemLabel);
+                    options[count] = new SelectItem(((Enum) bean).name(), itemLabel);
                 }
 
                 count++;
@@ -96,7 +104,7 @@ public abstract class FindAllBean {
     }
 
     private String getItemLabel(ClassModel classModel, Object bean) throws Exception {
-        if(classModel == null){
+        if (classModel == null) {
             return bean.toString();
         }
         //ClassModel itemLabel null then use order
