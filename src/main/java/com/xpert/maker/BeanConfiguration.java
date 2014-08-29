@@ -4,6 +4,7 @@
  */
 package com.xpert.maker;
 
+import com.xpert.faces.bootstrap.BootstrapVersion;
 import com.xpert.faces.primefaces.PrimeFacesVersion;
 
 /**
@@ -33,12 +34,44 @@ public class BeanConfiguration {
     private String managedBeanSuffix;
     private String businessObjectSuffix;
     private PrimeFacesVersion primeFacesVersion;
+    private BootstrapVersion bootstrapVersion;
+    private boolean useCDIBeans;
+    private boolean generatesSecurityArea;
 
     public BeanConfiguration() {
         this.managedBeanSuffix = BeanCreator.SUFFIX_MANAGED_BEAN;
         this.businessObjectSuffix = BeanCreator.SUFFIX_BUSINESS_OBJECT;
         this.primeFacesVersion = PrimeFacesVersion.VERSION_3;
+        this.bootstrapVersion = null;
+        this.generatesSecurityArea = true;
     }
+
+    public boolean isGeneratesSecurityArea() {
+        return generatesSecurityArea;
+    }
+
+    public void setGeneratesSecurityArea(boolean generatesSecurityArea) {
+        this.generatesSecurityArea = generatesSecurityArea;
+    }
+    
+    public boolean isUseCDIBeans() {
+        return useCDIBeans;
+    }
+
+    public void setUseCDIBeans(boolean useCDIBeans) {
+        this.useCDIBeans = useCDIBeans;
+    }
+
+    
+    public BootstrapVersion getBootstrapVersion() {
+        return bootstrapVersion;
+    }
+
+    public void setBootstrapVersion(BootstrapVersion bootstrapVersion) {
+        this.bootstrapVersion = bootstrapVersion;
+    }
+    
+    
 
     public PrimeFacesVersion getPrimeFacesVersion() {
         return primeFacesVersion;
