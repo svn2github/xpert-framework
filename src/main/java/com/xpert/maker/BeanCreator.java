@@ -72,6 +72,9 @@ public class BeanCreator {
         String templatePath = bean.getBeanType().getTemplate();
 
         if (bean.getBeanType().isView()) {
+            if (bean.getBeanType().isBootstrapDependend() && configuration.getBootstrapVersion() != null) {
+                templatePath = "bootstrap/" + templatePath;
+            }
             return getViewTemplate(viewEntity, configuration.getResourceBundle(), templatePath, configuration.getTemplate(), configuration);
         }
 
@@ -173,8 +176,8 @@ public class BeanCreator {
 
         return entity;
     }
-    
-    public static String getClassBean( List<Class> classes, BeanConfiguration configuration) {
+
+    public static String getClassBean(List<Class> classes, BeanConfiguration configuration) {
         try {
             Template template = BeanCreator.getTemplate("class-bean.ftl");
             StringWriter writer = new StringWriter();

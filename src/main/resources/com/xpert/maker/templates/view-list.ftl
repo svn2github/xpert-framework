@@ -61,11 +61,19 @@
                                      process="@form" update=":formDetail${entity.name}" title="${sharp}{xmsg['detail']}" >
                         <f:setPropertyActionListener value="${sharp}{${entity.nameLower}}" target="${sharp}{${entity.nameLower}${configuration.managedBeanSuffix}.entity}" />
                     </p:commandButton>
+                    <#if configuration.generatesSecurityArea == true >
                     <x:securityArea rolesAllowed="${entity.nameLower}.create">
                         <p:button icon="ui-icon-pencil" outcome="create${entity.name}" title="${sharp}{xmsg['edit']}">
                             <f:param name="id" value="${sharp}{${entity.nameLower}.${entity.idFieldName}}" />
                         </p:button>
                     </x:securityArea>
+                    </#if>
+                    <#if configuration.generatesSecurityArea == false >
+                    <p:button icon="ui-icon-pencil" outcome="create${entity.name}" title="${sharp}{xmsg['edit']}">
+                         <f:param name="id" value="${sharp}{${entity.nameLower}.${entity.idFieldName}}" />
+                    </p:button>
+                    </#if>
+                    <#if configuration.generatesSecurityArea == true >
                     <x:securityArea rolesAllowed="${entity.nameLower}.delete">
                         <p:commandButton icon="ui-icon-trash" title="${sharp}{xmsg['delete']}" process="@form" update="@form" 
                                          action="${sharp}{${entity.nameLower}${configuration.managedBeanSuffix}.delete}" >
@@ -73,11 +81,24 @@
                             <x:confirmation message="${sharp}{xmsg['confirmDelete']} - ${sharp}{${entity.nameLower}}" />
                         </p:commandButton>
                     </x:securityArea>
+                    </#if>
+                    <#if configuration.generatesSecurityArea == false >
+                    <p:commandButton icon="ui-icon-trash" title="${sharp}{xmsg['delete']}" process="@form" update="@form" 
+                                        action="${sharp}{${entity.nameLower}${configuration.managedBeanSuffix}.delete}" >
+                        <f:setPropertyActionListener value="${sharp}{${entity.nameLower}.${entity.idFieldName}}" target="${sharp}{${entity.nameLower}${configuration.managedBeanSuffix}.id}" />
+                        <x:confirmation message="${sharp}{xmsg['confirmDelete']} - ${sharp}{${entity.nameLower}}" />
+                    </p:commandButton>
+                    </#if>
                 </p:column>
                 <f:facet name="footer">
+                    <#if configuration.generatesSecurityArea == true >
                     <x:securityArea rolesAllowed="${entity.nameLower}.audit">
                         <x:auditDelete for="${sharp}{${entity.nameLower}${configuration.managedBeanSuffix}.entityClass}"/>
                     </x:securityArea>
+                    </#if>
+                    <#if configuration.generatesSecurityArea == false >
+                    <x:auditDelete for="${sharp}{${entity.nameLower}${configuration.managedBeanSuffix}.entityClass}"/>
+                    </#if>
                 </f:facet>
             </p:dataTable>
         </h:form>

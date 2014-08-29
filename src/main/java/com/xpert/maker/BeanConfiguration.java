@@ -62,7 +62,6 @@ public class BeanConfiguration {
         this.useCDIBeans = useCDIBeans;
     }
 
-    
     public BootstrapVersion getBootstrapVersion() {
         return bootstrapVersion;
     }
@@ -70,7 +69,6 @@ public class BeanConfiguration {
     public void setBootstrapVersion(BootstrapVersion bootstrapVersion) {
         this.bootstrapVersion = bootstrapVersion;
     }
-    
     
 
     public PrimeFacesVersion getPrimeFacesVersion() {

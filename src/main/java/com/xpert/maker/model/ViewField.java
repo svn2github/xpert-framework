@@ -24,6 +24,10 @@ public class ViewField {
     private boolean enumeration;
     private boolean string;
     private String maxlength;
+    
+    public boolean isRenderFieldInFormCreate(){
+        return id == false && oneToOne == false && oneToMany == false;
+    }
 
     public String getTypeNameLower() {
         if (typeName != null) {

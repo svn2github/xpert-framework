@@ -20,6 +20,8 @@
         <cc:attribute name="viewPath"/>
         <cc:attribute name="managedBeanSuffix"/>
         <cc:attribute name="businessObjectSuffix"/>
+        <cc:attribute name="useCDIBeans" default="false" type="boolean"/>
+        <cc:attribute name="generatesSecurityArea" default="true" type="boolean"/>
     </cc:interface>
 
     <!-- IMPLEMENTATION -->
@@ -37,6 +39,8 @@
         <f:event type="preRenderComponent" listener="#{beanMaker.configuration.setViewPath(cc.attrs.viewPath)}" />
         <f:event type="preRenderComponent" listener="#{beanMaker.configuration.setBusinessObjectSuffix(cc.attrs.businessObjectSuffix)}" />
         <f:event type="preRenderComponent" listener="#{beanMaker.configuration.setManagedBeanSuffix(cc.attrs.managedBeanSuffix)}" />
+        <f:event type="preRenderComponent" listener="#{beanMaker.configuration.setUseCDIBeans(cc.attrs.useCDIBeans)}" />
+        <f:event type="preRenderComponent" listener="#{beanMaker.configuration.setGeneratesSecurityArea(cc.attrs.generatesSecurityArea)}" />
         <h:form prependId="false">
             <p:messages/>
             <p:tabView>
@@ -72,6 +76,14 @@
                                 </h:selectOneRadio>
                                 <h:panelGroup/>
                                 
+                                <h:outputLabel value="Bootstrap Version:"/>
+                                <h:selectOneRadio value="#{beanMaker.configuration.bootstrapVersion}">
+                                    <f:selectItem itemLabel="Don't use" />
+                                    <f:selectItems value="#{beanMaker.bootstrapVersions}" var="bootstrapVersion"
+                                                   itemLabel="#{bootstrapVersion.description}"/>
+                                </h:selectOneRadio>
+                                 <h:outputText value="Only if your project uses boostrap CSS"/>
+                                
                                 <h:outputLabel value="BaseDAOImpl Class:"/>
                                 <p:inputText value="#{beanMaker.configuration.baseDAO}" size="50"/>
                                 <h:panelGroup>
@@ -103,6 +115,20 @@
                                 <h:outputLabel value="Business Object Suffix:"/>
                                 <p:inputText value="#{beanMaker.configuration.businessObjectSuffix}" size="50"/>
                                 <h:outputText value="(Default is 'BO', example: 'PersonBO.java')"/>
+                                
+                                <h:outputLabel value="Use CDI Beans:"/>
+                                 <h:selectOneRadio value="#{beanMaker.configuration.useCDIBeans}">
+                                    <f:selectItem itemValue="true" itemLabel="Yes" />
+                                    <f:selectItem itemValue="false" itemLabel="No" />
+                                 </h:selectOneRadio>
+                                <h:outputText value="(@Named instead of @ManagedBean)"/>
+                                
+                                <h:outputLabel value="Generate securityArea:"/>
+                                 <h:selectOneRadio value="#{beanMaker.configuration.generatesSecurityArea}">
+                                    <f:selectItem itemValue="true" itemLabel="Yes" />
+                                    <f:selectItem itemValue="false" itemLabel="No" />
+                                 </h:selectOneRadio>
+                                <h:outputText value="(Generate securityArea use acess control in forms)"/>
 
                             </h:panelGrid>
                         </p:fieldset>

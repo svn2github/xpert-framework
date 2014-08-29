@@ -38,9 +38,14 @@
         <p:separator/>
         <div style="text-align: center;">
             <p:commandButton type="button" value="${sharp}{xmsg['close']}" onclick="${entity.widgetVarDetail}.hide()" />
+            <#if configuration.generatesSecurityArea == true >
             <x:securityArea rolesAllowed="${entity.nameLower}.audit">
                 <x:audit for="${sharp}{${entity.nameLower}${configuration.managedBeanSuffix}.entity}"/>
             </x:securityArea>
+            </#if>
+            <#if configuration.generatesSecurityArea == false >
+            <x:audit for="${sharp}{${entity.nameLower}${configuration.managedBeanSuffix}.entity}"/>
+            </#if>
         </div>
     </h:form>
 </ui:composition>

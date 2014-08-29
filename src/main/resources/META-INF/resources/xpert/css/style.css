@@ -1,4 +1,4 @@
-.modal-messages{min-width: 500px;}
+.modal-messages{}
 .conteiner-message{margin: 3px 0;}
 .conteiner-message .info{background: #FFFFE0; border-color: #EEE8AA; color: #4F4F4F; border: 1px solid #CDAD00}
 .inner-conteiner-message{padding: 10px; margin: 10px 0;}
@@ -25,7 +25,10 @@
 .uix-datatable-actions{text-align: center;width: 1%}
 .uix-legends{white-space: normal;margin: 0 auto;}
 .uix-legends-grid, .uix-legends-grid td{border: 0 !important;}
-
+.form-detail .form-group > label{font-weight: bold;}
+.bold{font-weight: bold;}
+.uix-calendar .ui-inputfield{width: 100%; height: 34px;}
+.uix-content-detail::after {content: "\00a0"}
 
 
 

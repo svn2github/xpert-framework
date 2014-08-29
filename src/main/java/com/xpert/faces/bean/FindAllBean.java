@@ -54,7 +54,7 @@ public abstract class FindAllBean {
         return objects;
     }
 
-    public List get(UIComponent component) {
+    public List getFromComponent(UIComponent component) {
         ValueExpression valueExpression = component.getValueExpression("value");
         Class type = valueExpression.getExpectedType();
         return get(type);
