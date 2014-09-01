@@ -29,6 +29,12 @@
 .bold{font-weight: bold;}
 .uix-calendar .ui-inputfield{width: 100%; height: 34px;}
 .uix-content-detail::after {content: "\00a0"}
+.ui-dialog .container-fluid .row{margin-left: 0; margin-right: 0;}
+.uix-form-detail .form-control-static::after {content: "\00a0"}
+.uix-form-detail .control-label {font-weight: bold;}
+.uix-dialog-fluid { width: 85% !important; height: 85% !important;left: 7.5% !important;}
+.uix-dialog-fluid .ui-resizable-handle{display: none !important;}
+.uix-dialog-fluid .ui-dialog-content { max-height: 80% !important;}
 
 
 

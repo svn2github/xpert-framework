@@ -4,14 +4,14 @@
                  xmlns:ui="http://java.sun.com/jsf/facelets"
                  xmlns:p="http://primefaces.org/ui"
                  xmlns:x="http://xpert.com/faces">
-    <h:form id="formDetail${entity.name}">
+    <h:form id="formDetail${entity.name}" styleClass="uix-form-detail">
         <div class="container-fluid">
             <div class="row">
             <#list entity.fields as field>
                 <#if field.collection == false && field.id == false>
                 <div class="${configuration.bootstrapVersion.defaultColumns}">
-                    <h:outputLabel value="${sharp}{${resourceBundle}['${entity.nameLower}.${field.name}']}:" styleClass="bold" /><br/>
-                    <span class="uix-content-detail">
+                    <h:outputLabel value="${sharp}{${resourceBundle}['${entity.nameLower}.${field.name}']}:" styleClass="control-label" />
+                    <p class="form-control-static">
                         <#if field.lazy == true>
                         <h:outputText value="${sharp}{${entity.nameLower}${configuration.managedBeanSuffix}.entity.${field.name}}">
                             <x:initializer/>
@@ -33,7 +33,7 @@
                         <#if field.lazy == false && field.decimal == false && field.date == false && field.yesNo == false>
                         <h:outputText value="${sharp}{${entity.nameLower}${configuration.managedBeanSuffix}.entity.${field.name}}"/>
                         </#if>
-                    </span>
+                    </p>
                 </div>
                 </#if>
             </#list>

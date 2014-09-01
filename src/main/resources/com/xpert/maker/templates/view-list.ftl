@@ -103,7 +103,8 @@
             </p:dataTable>
         </h:form>
 
-        <p:dialog widgetVar="${entity.widgetVarDetailName}" header="${sharp}{msg['${entity.nameLower}.detail']}" ${entity.appendTo} modal="true" height="500" width="800">
+        <p:dialog widgetVar="${entity.widgetVarDetailName}" header="${sharp}{msg['${entity.nameLower}.detail']}" ${entity.appendTo} 
+                  modal="true" <#if configuration.bootstrapVersion?? >styleClass="uix-dialog-fluid"<#else>height="500" width="800"</#if> >
             <ui:include src="detail${entity.name}.xhtml" />
         </p:dialog>
     </ui:define>
