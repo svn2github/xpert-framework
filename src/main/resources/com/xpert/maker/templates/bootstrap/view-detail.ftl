@@ -10,8 +10,8 @@
             <#list entity.fields as field>
                 <#if field.collection == false && field.id == false>
                 <div class="${configuration.bootstrapVersion.defaultColumns}">
-                    <h:outputLabel value="${sharp}{${resourceBundle}['${entity.nameLower}.${field.name}']}:" styleClass="control-label" />
-                    <p class="form-control-static">
+                    <h:outputLabel value="${sharp}{${resourceBundle}['${entity.nameLower}.${field.name}']}:" styleClass="control-label" /><br/>
+                    <span class="uix-content-detail">
                         <#if field.lazy == true>
                         <h:outputText value="${sharp}{${entity.nameLower}${configuration.managedBeanSuffix}.entity.${field.name}}">
                             <x:initializer/>
@@ -33,14 +33,14 @@
                         <#if field.lazy == false && field.decimal == false && field.date == false && field.yesNo == false>
                         <h:outputText value="${sharp}{${entity.nameLower}${configuration.managedBeanSuffix}.entity.${field.name}}"/>
                         </#if>
-                    </p>
+                    </span>
                 </div>
                 </#if>
             </#list>
            </div>
          </div>
         <p:separator/>
-        <div style="text-align: center;">
+        <div class="uix-center">
             <p:commandButton type="button" value="${sharp}{xmsg['close']}" onclick="${entity.widgetVarDetail}.hide()" />
             <#if configuration.generatesSecurityArea == true >
             <x:securityArea rolesAllowed="${entity.nameLower}.audit">
