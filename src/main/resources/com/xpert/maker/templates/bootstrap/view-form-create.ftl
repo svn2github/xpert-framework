@@ -46,7 +46,7 @@
                             <h:outputLabel for="${field.name}" value="<#if field.required == true>* </#if>${sharp}{${resourceBundle}['${entity.nameLower}.${field.name}']}:" />
                             <#if configuration.maskCalendar == true>
                             <p:calendar id="${field.name}" value="${sharp}{${entity.nameLower}${configuration.managedBeanSuffix}.entity.${field.name}}" styleClass="uix-calendar" showOn="button" pattern="${configuration.datePattern}" >
-                                <x:mask>
+                                <x:mask/>
                             </p:calendar>
                             <#else>
                             <p:calendar id="${field.name}" value="${sharp}{${entity.nameLower}${configuration.managedBeanSuffix}.entity.${field.name}}" styleClass="uix-calendar" showOn="button" pattern="${configuration.datePattern}" />

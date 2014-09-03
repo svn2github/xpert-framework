@@ -35,7 +35,7 @@
                 <#if field.date == true>
                 <#if configuration.maskCalendar == true>
                 <p:calendar id="${field.name}" value="${sharp}{${entity.nameLower}${configuration.managedBeanSuffix}.entity.${field.name}}" showOn="button" pattern="${configuration.datePattern}" >
-                    <x:mask>
+                    <x:mask/>
                 </p:calendar>
                 <#else>
                 <p:calendar id="${field.name}" value="${sharp}{${entity.nameLower}${configuration.managedBeanSuffix}.entity.${field.name}}" showOn="button" pattern="${configuration.datePattern}" />
