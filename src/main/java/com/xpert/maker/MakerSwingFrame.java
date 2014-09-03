@@ -60,6 +60,10 @@ public class MakerSwingFrame extends javax.swing.JFrame {
         return null;
     }
 
+    public String getDatePattern() {
+        return BeanCreator.DEFAULT_DATE_PATTERN;
+    }
+
     public String getBusinessObjectSuffix() {
         return null;
     }
@@ -77,6 +81,10 @@ public class MakerSwingFrame extends javax.swing.JFrame {
     }
 
     public boolean isGeneratesSecurityArea() {
+        return true;
+    }
+
+    public boolean isMaskCalendar() {
         return true;
     }
 
@@ -259,12 +267,13 @@ public class MakerSwingFrame extends javax.swing.JFrame {
         beanConfiguration.setBusinessObjectSuffix(textBusinessObjectSuffix.getText());
         beanConfiguration.setUseCDIBeans(checkUseCDIBeans.isSelected());
         beanConfiguration.setGeneratesSecurityArea(checkGeneratesSecurityArea.isSelected());
-        beanConfiguration.setMaskCalendar(checkGeneratesSecurityArea.isSelected());
+        beanConfiguration.setMaskCalendar(checkMaskCalendar.isSelected());
         try {
             PersistenceMappedBean persistenceMappedBean = new PersistenceMappedBean(null);
             List<MappedBean> mappedBeans = persistenceMappedBean.getMappedBeans(classesList, beanConfiguration);
             textAreaI18n.setText(BeanCreator.getI18N(mappedBeans));
             textAreaClassBean.setText(BeanCreator.getClassBean(classesList, beanConfiguration));
+            textAreaSecurityGeneration.setText(SecurityCRUDGenerator.create(classesList, getViewForSecurity(beanConfiguration)));
             StringBuilder logBuilder = new StringBuilder();
             BeanCreator.writeBean(mappedBeans, beanConfiguration, logBuilder);
             textAreaLog.setText(logBuilder.toString());
@@ -274,9 +283,22 @@ public class MakerSwingFrame extends javax.swing.JFrame {
         }
     }
 
+    public static String getViewForSecurity(BeanConfiguration beanConfiguration) {
+        String viewPath = "";
+        if (beanConfiguration.getViewLocation() != null && !beanConfiguration.getViewLocation().isEmpty()) {
+            if (beanConfiguration.getViewLocation().contains("webapp")) {
+                viewPath = beanConfiguration.getViewLocation().substring(beanConfiguration.getViewLocation().lastIndexOf("webapp") + 6, beanConfiguration.getViewLocation().length());
+                viewPath = viewPath.replace(File.separator, "/");
+            }
+        }
+        return viewPath;
+    }
+
     public void showFileChooser(JTextField textSelection, JTextField textPackage) {
         JFileChooser chooser = new JFileChooser();
-        if (lastFile != null) {
+        if (textPackage != null && textPackage.getText() != null && !textPackage.getText().isEmpty() && new File(textPackage.getText()).exists()) {
+            chooser.setCurrentDirectory(new File(textPackage.getText()));
+        } else if (lastFile != null) {
             chooser.setCurrentDirectory(lastFile);
         } else {
             chooser.setCurrentDirectory(new java.io.File("."));
@@ -331,8 +353,12 @@ public class MakerSwingFrame extends javax.swing.JFrame {
         } else {
             textBusinessObjectSuffix.setText(BeanCreator.SUFFIX_BUSINESS_OBJECT);
         }
+        if (getDatePattern() != null) {
+            textDatePattern.setText(getDatePattern());
+        }
         checkUseCDIBeans.setSelected(isUseCDIBeans());
         checkGeneratesSecurityArea.setSelected(isGeneratesSecurityArea());
+        checkMaskCalendar.setSelected(isMaskCalendar());
         textAuthor.setText(System.getProperty("user.name"));
         loadPrimefacesCombo();
         loadBootstrapCombo();
@@ -437,9 +463,9 @@ public class MakerSwingFrame extends javax.swing.JFrame {
         labelBOSuffix = new javax.swing.JLabel();
         checkGeneratesSecurityArea = new javax.swing.JCheckBox();
         checkUseCDIBeans = new javax.swing.JCheckBox();
-        checkGeneratesSecurityArea1 = new javax.swing.JCheckBox();
+        checkMaskCalendar = new javax.swing.JCheckBox();
         labelDatePattern = new javax.swing.JLabel();
-        textResourceBundle1 = new javax.swing.JTextField();
+        textDatePattern = new javax.swing.JTextField();
         panelJavaClassConfiguration = new javax.swing.JPanel();
         labelBOPackage = new javax.swing.JLabel();
         textPackageBO = new javax.swing.JTextField();
@@ -490,7 +516,7 @@ public class MakerSwingFrame extends javax.swing.JFrame {
         labelI18N = new javax.swing.JLabel();
         labelClassBean = new javax.swing.JLabel();
         scrollPaneI18N = new javax.swing.JScrollPane();
-        textAreaI18n = new javax.swing.JTextArea();
+        textAreaSecurityGeneration = new javax.swing.JTextArea();
         panelStep5 = new javax.swing.JPanel();
         labelStep5 = new javax.swing.JLabel();
         labelStep5Detail = new javax.swing.JLabel();
@@ -502,6 +528,11 @@ public class MakerSwingFrame extends javax.swing.JFrame {
         labelStep7Detail = new javax.swing.JLabel();
         buttonTab3Back = new javax.swing.JButton();
         buttonCreateClasses = new javax.swing.JButton();
+        panelStep8 = new javax.swing.JPanel();
+        labelStep8 = new javax.swing.JLabel();
+        labelStep8Detail = new javax.swing.JLabel();
+        scrollPaneI18N1 = new javax.swing.JScrollPane();
+        textAreaI18n = new javax.swing.JTextArea();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Xpert-framework. Version " + Constants.VERSION
@@ -836,12 +867,12 @@ public class MakerSwingFrame extends javax.swing.JFrame {
             }
         });
 
-        checkGeneratesSecurityArea1.setBackground(new java.awt.Color(255, 255, 255));
-        checkGeneratesSecurityArea1.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
-        checkGeneratesSecurityArea1.setLabel("Mask calendar (Primefaces < 5.x, don't put mask on p:calendar)");
-        checkGeneratesSecurityArea1.addActionListener(new java.awt.event.ActionListener() {
+        checkMaskCalendar.setBackground(new java.awt.Color(255, 255, 255));
+        checkMaskCalendar.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
+        checkMaskCalendar.setLabel("Mask calendar (Primefaces < 5.x, don't put mask on p:calendar)");
+        checkMaskCalendar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                checkGeneratesSecurityArea1ActionPerformed(evt);
+                checkMaskCalendarActionPerformed(evt);
             }
         });
 
@@ -850,7 +881,7 @@ public class MakerSwingFrame extends javax.swing.JFrame {
         labelDatePattern.setLabelFor(textAuthor);
         labelDatePattern.setText("Date pattern:");
 
-        textResourceBundle1.setToolTipText("I18N name of your resources in pages");
+        textDatePattern.setToolTipText("I18N name of your resources in pages");
 
         javax.swing.GroupLayout panelOthersLayout = new javax.swing.GroupLayout(panelOthers);
         panelOthers.setLayout(panelOthersLayout);
@@ -893,9 +924,9 @@ public class MakerSwingFrame extends javax.swing.JFrame {
                                 .addComponent(checkGeneratesSecurityArea, javax.swing.GroupLayout.PREFERRED_SIZE, 321, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addComponent(labelDatePattern, javax.swing.GroupLayout.PREFERRED_SIZE, 115, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGroup(panelOthersLayout.createSequentialGroup()
-                                .addComponent(textResourceBundle1, javax.swing.GroupLayout.PREFERRED_SIZE, 102, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(textDatePattern, javax.swing.GroupLayout.PREFERRED_SIZE, 102, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(checkGeneratesSecurityArea1, javax.swing.GroupLayout.PREFERRED_SIZE, 321, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                .addComponent(checkMaskCalendar, javax.swing.GroupLayout.PREFERRED_SIZE, 321, javax.swing.GroupLayout.PREFERRED_SIZE)))
                         .addGap(0, 0, Short.MAX_VALUE))))
         );
         panelOthersLayout.setVerticalGroup(
@@ -918,8 +949,8 @@ public class MakerSwingFrame extends javax.swing.JFrame {
                 .addComponent(labelDatePattern)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(panelOthersLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(textResourceBundle1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(checkGeneratesSecurityArea1))
+                    .addComponent(textDatePattern, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(checkMaskCalendar))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(panelOthersLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(checkUseCDIBeans)
@@ -1059,7 +1090,7 @@ public class MakerSwingFrame extends javax.swing.JFrame {
                             .addComponent(labelDAOPackage, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(labelBOPackage, javax.swing.GroupLayout.PREFERRED_SIZE, 53, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(textPackageBO, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addContainerGap(22, Short.MAX_VALUE))
+                        .addContainerGap(38, Short.MAX_VALUE))
                     .addGroup(panelJavaClassConfigurationLayout.createSequentialGroup()
                         .addGroup(panelJavaClassConfigurationLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(labelBOLocation, javax.swing.GroupLayout.PREFERRED_SIZE, 148, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -1347,8 +1378,8 @@ public class MakerSwingFrame extends javax.swing.JFrame {
             .addGroup(panelConfigurationLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(panelConfigurationLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(panelOthers, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 780, Short.MAX_VALUE)
-                    .addComponent(panelJavaClassConfiguration, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 780, Short.MAX_VALUE)
+                    .addComponent(panelOthers, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 796, Short.MAX_VALUE)
+                    .addComponent(panelJavaClassConfiguration, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 796, Short.MAX_VALUE)
                     .addComponent(panelViewConfiguration, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(panelStep4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(panelStep2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -1401,10 +1432,10 @@ public class MakerSwingFrame extends javax.swing.JFrame {
         labelClassBean.setFont(new java.awt.Font("Tahoma", 0, 9)); // NOI18N
         labelClassBean.setText("Class Bean:");
 
-        textAreaI18n.setColumns(20);
-        textAreaI18n.setFont(new java.awt.Font("Monospaced", 0, 12)); // NOI18N
-        textAreaI18n.setRows(5);
-        scrollPaneI18N.setViewportView(textAreaI18n);
+        textAreaSecurityGeneration.setColumns(20);
+        textAreaSecurityGeneration.setFont(new java.awt.Font("Monospaced", 0, 12)); // NOI18N
+        textAreaSecurityGeneration.setRows(5);
+        scrollPaneI18N.setViewportView(textAreaSecurityGeneration);
 
         panelStep5.setBackground(new java.awt.Color(153, 204, 255));
         panelStep5.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(51, 153, 255), 1, true));
@@ -1426,7 +1457,7 @@ public class MakerSwingFrame extends javax.swing.JFrame {
                 .addComponent(labelStep5, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(labelStep5Detail)
-                .addGap(0, 519, Short.MAX_VALUE))
+                .addGap(0, 0, Short.MAX_VALUE))
         );
         panelStep5Layout.setVerticalGroup(
             panelStep5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1455,7 +1486,7 @@ public class MakerSwingFrame extends javax.swing.JFrame {
                 .addComponent(labelStep6, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(labelStep6Detail)
-                .addGap(0, 499, Short.MAX_VALUE))
+                .addGap(0, 97, Short.MAX_VALUE))
         );
         panelStep6Layout.setVerticalGroup(
             panelStep6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1474,7 +1505,7 @@ public class MakerSwingFrame extends javax.swing.JFrame {
         labelStep7.setOpaque(true);
 
         labelStep7Detail.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
-        labelStep7Detail.setText("Copy the methods to your Class Bean (Managed Bean with classes of the project)");
+        labelStep7Detail.setText("Copy the methods to your Class Managed Bean");
 
         javax.swing.GroupLayout panelStep7Layout = new javax.swing.GroupLayout(panelStep7);
         panelStep7.setLayout(panelStep7Layout);
@@ -1482,9 +1513,9 @@ public class MakerSwingFrame extends javax.swing.JFrame {
             panelStep7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panelStep7Layout.createSequentialGroup()
                 .addComponent(labelStep7, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(labelStep7Detail)
-                .addGap(0, 0, Short.MAX_VALUE))
+                .addContainerGap(154, Short.MAX_VALUE))
         );
         panelStep7Layout.setVerticalGroup(
             panelStep7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1514,27 +1545,66 @@ public class MakerSwingFrame extends javax.swing.JFrame {
             }
         });
 
+        panelStep8.setBackground(new java.awt.Color(153, 204, 255));
+        panelStep8.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(51, 153, 255), 1, true));
+
+        labelStep8.setBackground(new java.awt.Color(51, 0, 204));
+        labelStep8.setForeground(new java.awt.Color(255, 255, 255));
+        labelStep8.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        labelStep8.setText("8");
+        labelStep8.setOpaque(true);
+
+        labelStep8Detail.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
+        labelStep8Detail.setText("Copy this security acess generation (if you use xpert-framework base project)");
+
+        javax.swing.GroupLayout panelStep8Layout = new javax.swing.GroupLayout(panelStep8);
+        panelStep8.setLayout(panelStep8Layout);
+        panelStep8Layout.setHorizontalGroup(
+            panelStep8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(panelStep8Layout.createSequentialGroup()
+                .addComponent(labelStep8, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(labelStep8Detail)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+        panelStep8Layout.setVerticalGroup(
+            panelStep8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(panelStep8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addComponent(labelStep8, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(labelStep8Detail))
+        );
+
+        textAreaI18n.setColumns(20);
+        textAreaI18n.setFont(new java.awt.Font("Monospaced", 0, 12)); // NOI18N
+        textAreaI18n.setRows(5);
+        scrollPaneI18N1.setViewportView(textAreaI18n);
+
         javax.swing.GroupLayout panelCreateClassesLayout = new javax.swing.GroupLayout(panelCreateClasses);
         panelCreateClasses.setLayout(panelCreateClassesLayout);
         panelCreateClassesLayout.setHorizontalGroup(
             panelCreateClassesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panelCreateClassesLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(panelCreateClassesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(scrollPaneLog)
-                    .addComponent(scrollPaneClassBean, javax.swing.GroupLayout.DEFAULT_SIZE, 780, Short.MAX_VALUE)
-                    .addComponent(scrollPaneI18N, javax.swing.GroupLayout.DEFAULT_SIZE, 780, Short.MAX_VALUE)
-                    .addComponent(panelStep5, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(panelStep6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(panelStep7, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(panelCreateClassesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(panelStep5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(panelCreateClassesLayout.createSequentialGroup()
                         .addGroup(panelCreateClassesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(panelStep6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(labelI18N)
-                            .addComponent(labelClassBean)
                             .addComponent(buttonTab3Back, javax.swing.GroupLayout.PREFERRED_SIZE, 87, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(buttonCreateClasses))
-                        .addGap(0, 0, Short.MAX_VALUE)))
-                .addContainerGap())
+                            .addComponent(buttonCreateClasses)
+                            .addComponent(scrollPaneI18N1))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(panelCreateClassesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(panelStep7, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addGroup(panelCreateClassesLayout.createSequentialGroup()
+                                .addGap(10, 10, 10)
+                                .addComponent(labelClassBean))
+                            .addComponent(scrollPaneClassBean, javax.swing.GroupLayout.Alignment.TRAILING)))
+                    .addComponent(scrollPaneLog)
+                    .addComponent(panelStep8, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(scrollPaneI18N))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         panelCreateClassesLayout.setVerticalGroup(
             panelCreateClassesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1546,20 +1616,24 @@ public class MakerSwingFrame extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(scrollPaneLog, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(panelStep6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(panelCreateClassesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(panelStep6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(panelStep7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(labelI18N)
+                .addGroup(panelCreateClassesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(labelI18N)
+                    .addComponent(labelClassBean))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(scrollPaneI18N, javax.swing.GroupLayout.PREFERRED_SIZE, 133, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(panelStep7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(labelClassBean)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(scrollPaneClassBean, javax.swing.GroupLayout.PREFERRED_SIZE, 135, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(panelCreateClassesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(scrollPaneClassBean, javax.swing.GroupLayout.PREFERRED_SIZE, 135, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(scrollPaneI18N1, javax.swing.GroupLayout.PREFERRED_SIZE, 133, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(panelStep8, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(20, 20, 20)
+                .addComponent(scrollPaneI18N, javax.swing.GroupLayout.PREFERRED_SIZE, 153, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(buttonTab3Back)
-                .addContainerGap(61, Short.MAX_VALUE))
+                .addContainerGap(39, Short.MAX_VALUE))
         );
 
         tabbedPanelMain.addTab("Create Classes", panelCreateClasses);
@@ -1602,7 +1676,7 @@ public class MakerSwingFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_buttonSelectNoneActionPerformed
 
     private void buttonSelectViewActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonSelectViewActionPerformed
-        showFileChooser(textView, null);
+        showFileChooser(textView, textView);
     }//GEN-LAST:event_buttonSelectViewActionPerformed
 
     private void buttonSelectDAOImplActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonSelectDAOImplActionPerformed
@@ -1657,9 +1731,9 @@ public class MakerSwingFrame extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_checkUseCDIBeansActionPerformed
 
-    private void checkGeneratesSecurityArea1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_checkGeneratesSecurityArea1ActionPerformed
+    private void checkMaskCalendarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_checkMaskCalendarActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_checkGeneratesSecurityArea1ActionPerformed
+    }//GEN-LAST:event_checkMaskCalendarActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton buttonCreateClasses;
@@ -1676,7 +1750,7 @@ public class MakerSwingFrame extends javax.swing.JFrame {
     private javax.swing.JButton buttonTab2Next;
     private javax.swing.JButton buttonTab3Back;
     private javax.swing.JCheckBox checkGeneratesSecurityArea;
-    private javax.swing.JCheckBox checkGeneratesSecurityArea1;
+    private javax.swing.JCheckBox checkMaskCalendar;
     private javax.swing.JCheckBox checkUseCDIBeans;
     private javax.swing.JComboBox comboBootstrapVersion;
     private javax.swing.JComboBox comboPrimeFacesVersion;
@@ -1725,6 +1799,8 @@ public class MakerSwingFrame extends javax.swing.JFrame {
     private javax.swing.JLabel labelStep6Detail;
     private javax.swing.JLabel labelStep7;
     private javax.swing.JLabel labelStep7Detail;
+    private javax.swing.JLabel labelStep8;
+    private javax.swing.JLabel labelStep8Detail;
     private javax.swing.JLabel labelWatermakerXpertSistemas;
     private javax.swing.JLabel labelXHTMLLocation;
     private javax.swing.JLabel labelXpertMaker;
@@ -1743,21 +1819,25 @@ public class MakerSwingFrame extends javax.swing.JFrame {
     private javax.swing.JPanel panelStep5;
     private javax.swing.JPanel panelStep6;
     private javax.swing.JPanel panelStep7;
+    private javax.swing.JPanel panelStep8;
     private javax.swing.JPanel panelViewConfiguration;
     private javax.swing.JScrollPane scrollPaneClassBean;
     private javax.swing.JScrollPane scrollPaneI18N;
+    private javax.swing.JScrollPane scrollPaneI18N1;
     private javax.swing.JScrollPane scrollPaneLog;
     private javax.swing.JScrollPane scrollPaneSelectClasses;
     private javax.swing.JTabbedPane tabbedPanelMain;
     private javax.swing.JTextArea textAreaClassBean;
     private javax.swing.JTextArea textAreaI18n;
     private javax.swing.JTextArea textAreaLog;
+    private javax.swing.JTextArea textAreaSecurityGeneration;
     private javax.swing.JTextField textAuthor;
     private javax.swing.JTextField textBaseDAOImpl;
     private javax.swing.JTextField textBusinessObject;
     private javax.swing.JTextField textBusinessObjectSuffix;
     private javax.swing.JTextField textDAO;
     private javax.swing.JTextField textDAOImpl;
+    private javax.swing.JTextField textDatePattern;
     private javax.swing.JTextField textManagedBean;
     private javax.swing.JTextField textManagedBeanSuffix;
     private javax.swing.JTextField textPackageBO;
@@ -1766,7 +1846,6 @@ public class MakerSwingFrame extends javax.swing.JFrame {
     private javax.swing.JTextField textPackageMB;
     private javax.swing.JTextField textPackageName;
     private javax.swing.JTextField textResourceBundle;
-    private javax.swing.JTextField textResourceBundle1;
     private javax.swing.JTextField textTemplatePath;
     private javax.swing.JTextField textView;
     // End of variables declaration//GEN-END:variables

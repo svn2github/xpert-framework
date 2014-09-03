@@ -44,7 +44,7 @@
                             <#-- Date p:calendar wont work with form-control, he has a span over the input and class goes for span -->
                             <#if field.date == true>
                             <h:outputLabel for="${field.name}" value="<#if field.required == true>* </#if>${sharp}{${resourceBundle}['${entity.nameLower}.${field.name}']}:" />
-                            <#if field.maskCalendar == true>
+                            <#if configuration.maskCalendar == true>
                             <p:calendar id="${field.name}" value="${sharp}{${entity.nameLower}${configuration.managedBeanSuffix}.entity.${field.name}}" styleClass="uix-calendar" showOn="button" pattern="${configuration.datePattern}" >
                                 <x:mask>
                             </p:calendar>

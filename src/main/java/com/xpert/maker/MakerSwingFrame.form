@@ -588,8 +588,8 @@
                       <Group type="102" attributes="0">
                           <EmptySpace max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="0" attributes="0">
-                              <Component id="panelOthers" alignment="1" pref="780" max="32767" attributes="0"/>
-                              <Component id="panelJavaClassConfiguration" alignment="1" pref="780" max="32767" attributes="0"/>
+                              <Component id="panelOthers" alignment="1" pref="796" max="32767" attributes="0"/>
+                              <Component id="panelJavaClassConfiguration" alignment="1" pref="796" max="32767" attributes="0"/>
                               <Component id="panelViewConfiguration" alignment="0" max="32767" attributes="0"/>
                               <Component id="panelStep4" alignment="0" max="32767" attributes="0"/>
                               <Component id="panelStep2" alignment="0" max="32767" attributes="0"/>
@@ -696,9 +696,9 @@
                                           </Group>
                                           <Component id="labelDatePattern" alignment="0" min="-2" pref="115" max="-2" attributes="0"/>
                                           <Group type="102" alignment="0" attributes="0">
-                                              <Component id="textResourceBundle1" min="-2" pref="102" max="-2" attributes="0"/>
+                                              <Component id="textDatePattern" min="-2" pref="102" max="-2" attributes="0"/>
                                               <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                                              <Component id="checkGeneratesSecurityArea1" min="-2" pref="321" max="-2" attributes="0"/>
+                                              <Component id="checkMaskCalendar" min="-2" pref="321" max="-2" attributes="0"/>
                                           </Group>
                                       </Group>
                                       <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
@@ -729,8 +729,8 @@
                               <Component id="labelDatePattern" min="-2" max="-2" attributes="0"/>
                               <EmptySpace max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="3" attributes="0">
-                                  <Component id="textResourceBundle1" alignment="3" min="-2" max="-2" attributes="0"/>
-                                  <Component id="checkGeneratesSecurityArea1" alignment="3" min="-2" max="-2" attributes="0"/>
+                                  <Component id="textDatePattern" alignment="3" min="-2" max="-2" attributes="0"/>
+                                  <Component id="checkMaskCalendar" alignment="3" min="-2" max="-2" attributes="0"/>
                               </Group>
                               <EmptySpace type="unrelated" max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="3" attributes="0">
@@ -853,7 +853,7 @@
                         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="checkUseCDIBeansActionPerformed"/>
                       </Events>
                     </Component>
-                    <Component class="javax.swing.JCheckBox" name="checkGeneratesSecurityArea1">
+                    <Component class="javax.swing.JCheckBox" name="checkMaskCalendar">
                       <Properties>
                         <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
                           <Color blue="ff" green="ff" red="ff" type="rgb"/>
@@ -864,7 +864,7 @@
                         <Property name="label" type="java.lang.String" value="Mask calendar (Primefaces &lt; 5.x, don&apos;t put mask on p:calendar)"/>
                       </Properties>
                       <Events>
-                        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="checkGeneratesSecurityArea1ActionPerformed"/>
+                        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="checkMaskCalendarActionPerformed"/>
                       </Events>
                     </Component>
                     <Component class="javax.swing.JLabel" name="labelDatePattern">
@@ -879,7 +879,7 @@
                         <Property name="text" type="java.lang.String" value="Date pattern:"/>
                       </Properties>
                     </Component>
-                    <Component class="javax.swing.JTextField" name="textResourceBundle1">
+                    <Component class="javax.swing.JTextField" name="textDatePattern">
                       <Properties>
                         <Property name="toolTipText" type="java.lang.String" value="I18N name of your resources in pages"/>
                       </Properties>
@@ -920,7 +920,7 @@
                                           <Component id="labelBOPackage" min="-2" pref="53" max="-2" attributes="0"/>
                                           <Component id="textPackageBO" min="-2" pref="180" max="-2" attributes="0"/>
                                       </Group>
-                                      <EmptySpace pref="22" max="32767" attributes="0"/>
+                                      <EmptySpace pref="38" max="32767" attributes="0"/>
                                   </Group>
                                   <Group type="102" attributes="0">
                                       <Group type="103" groupAlignment="0" attributes="0">
@@ -1651,24 +1651,31 @@
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Group type="102" attributes="0">
                           <EmptySpace max="-2" attributes="0"/>
-                          <Group type="103" groupAlignment="0" attributes="0">
-                              <Component id="scrollPaneLog" alignment="0" max="32767" attributes="0"/>
-                              <Component id="scrollPaneClassBean" alignment="0" pref="780" max="32767" attributes="0"/>
-                              <Component id="scrollPaneI18N" alignment="0" pref="780" max="32767" attributes="0"/>
-                              <Component id="panelStep5" alignment="1" max="32767" attributes="0"/>
-                              <Component id="panelStep6" alignment="0" max="32767" attributes="0"/>
-                              <Component id="panelStep7" alignment="0" max="32767" attributes="0"/>
+                          <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                              <Component id="panelStep5" max="32767" attributes="0"/>
                               <Group type="102" attributes="0">
                                   <Group type="103" groupAlignment="0" attributes="0">
+                                      <Component id="panelStep6" alignment="0" min="-2" max="-2" attributes="0"/>
                                       <Component id="labelI18N" alignment="0" min="-2" max="-2" attributes="0"/>
-                                      <Component id="labelClassBean" alignment="0" min="-2" max="-2" attributes="0"/>
                                       <Component id="buttonTab3Back" alignment="0" min="-2" pref="87" max="-2" attributes="0"/>
                                       <Component id="buttonCreateClasses" alignment="0" min="-2" max="-2" attributes="0"/>
+                                      <Component id="scrollPaneI18N1" alignment="0" max="32767" attributes="0"/>
                                   </Group>
-                                  <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
+                                  <EmptySpace max="-2" attributes="0"/>
+                                  <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                                      <Component id="panelStep7" alignment="1" max="32767" attributes="0"/>
+                                      <Group type="102" attributes="0">
+                                          <EmptySpace min="10" pref="10" max="-2" attributes="0"/>
+                                          <Component id="labelClassBean" min="-2" max="-2" attributes="0"/>
+                                      </Group>
+                                      <Component id="scrollPaneClassBean" alignment="1" max="32767" attributes="0"/>
+                                  </Group>
                               </Group>
+                              <Component id="scrollPaneLog" alignment="0" max="32767" attributes="0"/>
+                              <Component id="panelStep8" alignment="0" max="32767" attributes="0"/>
+                              <Component id="scrollPaneI18N" max="32767" attributes="0"/>
                           </Group>
-                          <EmptySpace max="-2" attributes="0"/>
+                          <EmptySpace max="32767" attributes="0"/>
                       </Group>
                   </Group>
                 </DimensionLayout>
@@ -1682,20 +1689,27 @@
                           <EmptySpace max="-2" attributes="0"/>
                           <Component id="scrollPaneLog" min="-2" max="-2" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
-                          <Component id="panelStep6" min="-2" max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="1" attributes="0">
+                              <Component id="panelStep6" min="-2" max="-2" attributes="0"/>
+                              <Component id="panelStep7" min="-2" max="-2" attributes="0"/>
+                          </Group>
                           <EmptySpace max="-2" attributes="0"/>
-                          <Component id="labelI18N" min="-2" max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="3" attributes="0">
+                              <Component id="labelI18N" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="labelClassBean" alignment="3" min="-2" max="-2" attributes="0"/>
+                          </Group>
                           <EmptySpace max="-2" attributes="0"/>
-                          <Component id="scrollPaneI18N" min="-2" pref="133" max="-2" attributes="0"/>
-                          <EmptySpace max="-2" attributes="0"/>
-                          <Component id="panelStep7" min="-2" max="-2" attributes="0"/>
-                          <EmptySpace max="-2" attributes="0"/>
-                          <Component id="labelClassBean" min="-2" max="-2" attributes="0"/>
-                          <EmptySpace max="-2" attributes="0"/>
-                          <Component id="scrollPaneClassBean" min="-2" pref="135" max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="0" attributes="0">
+                              <Component id="scrollPaneClassBean" min="-2" pref="135" max="-2" attributes="0"/>
+                              <Component id="scrollPaneI18N1" min="-2" pref="133" max="-2" attributes="0"/>
+                          </Group>
+                          <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                          <Component id="panelStep8" min="-2" max="-2" attributes="0"/>
+                          <EmptySpace min="-2" pref="20" max="-2" attributes="0"/>
+                          <Component id="scrollPaneI18N" min="-2" pref="153" max="-2" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
                           <Component id="buttonTab3Back" min="-2" max="-2" attributes="0"/>
-                          <EmptySpace pref="61" max="32767" attributes="0"/>
+                          <EmptySpace pref="39" max="32767" attributes="0"/>
                       </Group>
                   </Group>
                 </DimensionLayout>
@@ -1760,7 +1774,7 @@
 
                   <Layout class="org.netbeans.modules.form.compat2.layouts.support.JScrollPaneSupportLayout"/>
                   <SubComponents>
-                    <Component class="javax.swing.JTextArea" name="textAreaI18n">
+                    <Component class="javax.swing.JTextArea" name="textAreaSecurityGeneration">
                       <Properties>
                         <Property name="columns" type="int" value="20"/>
                         <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
@@ -1792,7 +1806,7 @@
                               <Component id="labelStep5" min="-2" pref="24" max="-2" attributes="0"/>
                               <EmptySpace type="unrelated" max="-2" attributes="0"/>
                               <Component id="labelStep5Detail" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace min="0" pref="519" max="32767" attributes="0"/>
+                              <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
                           </Group>
                       </Group>
                     </DimensionLayout>
@@ -1850,7 +1864,7 @@
                               <Component id="labelStep6" min="-2" pref="24" max="-2" attributes="0"/>
                               <EmptySpace type="unrelated" max="-2" attributes="0"/>
                               <Component id="labelStep6Detail" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace min="0" pref="499" max="32767" attributes="0"/>
+                              <EmptySpace min="0" pref="97" max="32767" attributes="0"/>
                           </Group>
                       </Group>
                     </DimensionLayout>
@@ -1906,9 +1920,9 @@
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Group type="102" alignment="0" attributes="0">
                               <Component id="labelStep7" min="-2" pref="24" max="-2" attributes="0"/>
-                              <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                              <EmptySpace max="-2" attributes="0"/>
                               <Component id="labelStep7Detail" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
+                              <EmptySpace pref="154" max="32767" attributes="0"/>
                           </Group>
                       </Group>
                     </DimensionLayout>
@@ -1940,7 +1954,7 @@
                         <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                           <Font name="Tahoma" size="10" style="0"/>
                         </Property>
-                        <Property name="text" type="java.lang.String" value="Copy the methods to your Class Bean (Managed Bean with classes of the project)"/>
+                        <Property name="text" type="java.lang.String" value="Copy the methods to your Class Managed Bean"/>
                       </Properties>
                     </Component>
                   </SubComponents>
@@ -1980,6 +1994,82 @@
                     <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="buttonCreateClassesActionPerformed"/>
                   </Events>
                 </Component>
+                <Container class="javax.swing.JPanel" name="panelStep8">
+                  <Properties>
+                    <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
+                      <Color blue="ff" green="cc" red="99" type="rgb"/>
+                    </Property>
+                    <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
+                      <Border info="org.netbeans.modules.form.compat2.border.LineBorderInfo">
+                        <LineBorder roundedCorners="true">
+                          <Color PropertyName="color" blue="ff" green="99" red="33" type="rgb"/>
+                        </LineBorder>
+                      </Border>
+                    </Property>
+                  </Properties>
+
+                  <Layout>
+                    <DimensionLayout dim="0">
+                      <Group type="103" groupAlignment="0" attributes="0">
+                          <Group type="102" alignment="0" attributes="0">
+                              <Component id="labelStep8" min="-2" pref="24" max="-2" attributes="0"/>
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Component id="labelStep8Detail" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace max="32767" attributes="0"/>
+                          </Group>
+                      </Group>
+                    </DimensionLayout>
+                    <DimensionLayout dim="1">
+                      <Group type="103" groupAlignment="0" attributes="0">
+                          <Group type="103" alignment="0" groupAlignment="3" attributes="0">
+                              <Component id="labelStep8" alignment="3" min="-2" pref="25" max="-2" attributes="0"/>
+                              <Component id="labelStep8Detail" alignment="3" min="-2" max="-2" attributes="0"/>
+                          </Group>
+                      </Group>
+                    </DimensionLayout>
+                  </Layout>
+                  <SubComponents>
+                    <Component class="javax.swing.JLabel" name="labelStep8">
+                      <Properties>
+                        <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
+                          <Color blue="cc" green="0" red="33" type="rgb"/>
+                        </Property>
+                        <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
+                          <Color blue="ff" green="ff" red="ff" type="rgb"/>
+                        </Property>
+                        <Property name="horizontalAlignment" type="int" value="0"/>
+                        <Property name="text" type="java.lang.String" value="8"/>
+                        <Property name="opaque" type="boolean" value="true"/>
+                      </Properties>
+                    </Component>
+                    <Component class="javax.swing.JLabel" name="labelStep8Detail">
+                      <Properties>
+                        <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+                          <Font name="Tahoma" size="10" style="0"/>
+                        </Property>
+                        <Property name="text" type="java.lang.String" value="Copy this security acess generation (if you use xpert-framework base project)"/>
+                      </Properties>
+                    </Component>
+                  </SubComponents>
+                </Container>
+                <Container class="javax.swing.JScrollPane" name="scrollPaneI18N1">
+                  <AuxValues>
+                    <AuxValue name="autoScrollPane" type="java.lang.Boolean" value="true"/>
+                  </AuxValues>
+
+                  <Layout class="org.netbeans.modules.form.compat2.layouts.support.JScrollPaneSupportLayout"/>
+                  <SubComponents>
+                    <Component class="javax.swing.JTextArea" name="textAreaI18n">
+                      <Properties>
+                        <Property name="columns" type="int" value="20"/>
+                        <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+                          <Font name="Monospaced" size="12" style="0"/>
+                        </Property>
+                        <Property name="rows" type="int" value="5"/>
+                      </Properties>
+                    </Component>
+                  </SubComponents>
+                </Container>
               </SubComponents>
             </Container>
           </SubComponents>
