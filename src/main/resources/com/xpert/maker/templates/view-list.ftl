@@ -53,7 +53,7 @@
                 </p:column>
                 </#if>
                 </#list>
-                <p:column styleClass="uix-datatable-actions" exportable="false">
+                <p:column styleClass="uix-datatable-actions" exportable="false" headerText="${sharp}{xmsg['actions']}">
                     <f:facet name="header">
                         <x:legends detail="true" edit="true" delete="true"/>
                     </f:facet>
