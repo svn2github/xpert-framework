@@ -123,7 +123,7 @@
                           </Group>
                           <EmptySpace max="-2" attributes="0"/>
                           <Component id="buttonTab1Next" min="-2" max="-2" attributes="0"/>
-                          <EmptySpace pref="96" max="32767" attributes="0"/>
+                          <EmptySpace pref="140" max="32767" attributes="0"/>
                       </Group>
                   </Group>
                 </DimensionLayout>
@@ -588,17 +588,17 @@
                       <Group type="102" attributes="0">
                           <EmptySpace max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="0" attributes="0">
-                              <Component id="panelJavaClassConfiguration" alignment="1" pref="786" max="32767" attributes="0"/>
-                              <Component id="panelOthers" alignment="0" pref="786" max="32767" attributes="0"/>
+                              <Component id="panelOthers" alignment="1" pref="780" max="32767" attributes="0"/>
+                              <Component id="panelJavaClassConfiguration" alignment="1" pref="780" max="32767" attributes="0"/>
                               <Component id="panelViewConfiguration" alignment="0" max="32767" attributes="0"/>
                               <Component id="panelStep4" alignment="0" max="32767" attributes="0"/>
                               <Component id="panelStep2" alignment="0" max="32767" attributes="0"/>
+                              <Component id="panelStep3" alignment="0" max="32767" attributes="0"/>
                               <Group type="102" alignment="0" attributes="0">
                                   <Component id="buttonTab2Back" min="-2" pref="87" max="-2" attributes="0"/>
                                   <EmptySpace max="32767" attributes="0"/>
                                   <Component id="buttonTab2Next" min="-2" pref="87" max="-2" attributes="0"/>
                               </Group>
-                              <Component id="panelStep3" alignment="0" max="32767" attributes="0"/>
                           </Group>
                           <EmptySpace max="-2" attributes="0"/>
                       </Group>
@@ -618,13 +618,13 @@
                           <EmptySpace max="-2" attributes="0"/>
                           <Component id="panelStep4" min="-2" max="-2" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
-                          <Component id="panelOthers" min="-2" pref="114" max="-2" attributes="0"/>
+                          <Component id="panelOthers" min="-2" pref="143" max="-2" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="3" attributes="0">
                               <Component id="buttonTab2Back" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="buttonTab2Next" alignment="3" min="-2" max="-2" attributes="0"/>
                           </Group>
-                          <EmptySpace max="32767" attributes="0"/>
+                          <EmptySpace pref="40" max="32767" attributes="0"/>
                       </Group>
                   </Group>
                 </DimensionLayout>
@@ -651,44 +651,59 @@
                   <Layout>
                     <DimensionLayout dim="0">
                       <Group type="103" groupAlignment="0" attributes="0">
-                          <Group type="102" attributes="0">
+                          <Group type="102" alignment="0" attributes="0">
                               <EmptySpace max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="0" attributes="0">
-                                  <Component id="checkUseCDIBeans" alignment="0" min="-2" pref="321" max="-2" attributes="0"/>
-                                  <Group type="102" alignment="0" attributes="0">
-                                      <Group type="103" groupAlignment="0" attributes="0">
-                                          <Component id="labelBaseDAOImpl" min="-2" pref="115" max="-2" attributes="0"/>
-                                          <Component id="textBaseDAOImpl" min="-2" pref="285" max="-2" attributes="0"/>
-                                      </Group>
-                                      <EmptySpace max="-2" attributes="0"/>
-                                      <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                                          <Component id="labelResourceBundle" pref="82" max="32767" attributes="0"/>
-                                          <Component id="textResourceBundle" max="32767" attributes="0"/>
-                                      </Group>
-                                      <EmptySpace max="-2" attributes="0"/>
-                                      <Group type="103" groupAlignment="0" attributes="0">
-                                          <Component id="labelAuthor" min="-2" pref="47" max="-2" attributes="0"/>
-                                          <Component id="textAuthor" min="-2" pref="91" max="-2" attributes="0"/>
-                                      </Group>
+                                  <Group type="102" attributes="0">
                                       <Group type="103" groupAlignment="0" attributes="0">
                                           <Group type="102" attributes="0">
-                                              <EmptySpace min="-2" pref="13" max="-2" attributes="0"/>
-                                              <Component id="labelMBSuffix" min="-2" pref="110" max="-2" attributes="0"/>
+                                              <Component id="labelBaseDAOImpl" min="-2" pref="115" max="-2" attributes="0"/>
+                                              <EmptySpace min="-2" pref="183" max="-2" attributes="0"/>
+                                              <Component id="labelResourceBundle" min="-2" pref="82" max="-2" attributes="0"/>
+                                              <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                                              <Component id="labelAuthor" min="-2" pref="47" max="-2" attributes="0"/>
+                                          </Group>
+                                          <Group type="102" attributes="0">
+                                              <Component id="textBaseDAOImpl" min="-2" pref="285" max="-2" attributes="0"/>
+                                              <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                                              <Component id="textResourceBundle" min="-2" pref="82" max="-2" attributes="0"/>
+                                              <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                                              <Component id="textAuthor" min="-2" pref="91" max="-2" attributes="0"/>
+                                          </Group>
+                                      </Group>
+                                      <Group type="103" groupAlignment="0" attributes="0">
+                                          <Group type="102" alignment="0" attributes="0">
+                                              <EmptySpace min="-2" pref="18" max="-2" attributes="0"/>
+                                              <Component id="textManagedBeanSuffix" min="-2" pref="110" max="-2" attributes="0"/>
+                                              <EmptySpace max="-2" attributes="0"/>
+                                              <Component id="textBusinessObjectSuffix" min="-2" pref="109" max="-2" attributes="0"/>
                                           </Group>
                                           <Group type="102" alignment="0" attributes="0">
+                                              <EmptySpace min="-2" pref="14" max="-2" attributes="0"/>
+                                              <Component id="labelMBSuffix" min="-2" pref="110" max="-2" attributes="0"/>
                                               <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                                              <Component id="textManagedBeanSuffix" min="-2" pref="110" max="-2" attributes="0"/>
+                                              <Component id="labelBOSuffix" min="-2" pref="105" max="-2" attributes="0"/>
                                           </Group>
                                       </Group>
-                                      <EmptySpace max="-2" attributes="0"/>
-                                      <Group type="103" groupAlignment="0" attributes="0">
-                                          <Component id="textBusinessObjectSuffix" min="-2" pref="109" max="-2" attributes="0"/>
-                                          <Component id="labelBOSuffix" alignment="0" min="-2" pref="105" max="-2" attributes="0"/>
-                                      </Group>
+                                      <EmptySpace max="32767" attributes="0"/>
                                   </Group>
-                                  <Component id="checkGeneratesSecurityArea" alignment="0" min="-2" pref="321" max="-2" attributes="0"/>
+                                  <Group type="102" attributes="0">
+                                      <Group type="103" groupAlignment="0" attributes="0">
+                                          <Group type="102" attributes="0">
+                                              <Component id="checkUseCDIBeans" min="-2" pref="284" max="-2" attributes="0"/>
+                                              <EmptySpace max="-2" attributes="0"/>
+                                              <Component id="checkGeneratesSecurityArea" min="-2" pref="321" max="-2" attributes="0"/>
+                                          </Group>
+                                          <Component id="labelDatePattern" alignment="0" min="-2" pref="115" max="-2" attributes="0"/>
+                                          <Group type="102" alignment="0" attributes="0">
+                                              <Component id="textResourceBundle1" min="-2" pref="102" max="-2" attributes="0"/>
+                                              <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                                              <Component id="checkGeneratesSecurityArea1" min="-2" pref="321" max="-2" attributes="0"/>
+                                          </Group>
+                                      </Group>
+                                      <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
+                                  </Group>
                               </Group>
-                              <EmptySpace max="32767" attributes="0"/>
                           </Group>
                       </Group>
                     </DimensionLayout>
@@ -710,10 +725,19 @@
                                   <Component id="textManagedBeanSuffix" alignment="3" min="-2" max="-2" attributes="0"/>
                                   <Component id="textBusinessObjectSuffix" alignment="3" min="-2" max="-2" attributes="0"/>
                               </Group>
-                              <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                              <Component id="checkGeneratesSecurityArea" min="-2" max="-2" attributes="0"/>
                               <EmptySpace max="-2" attributes="0"/>
-                              <Component id="checkUseCDIBeans" min="-2" max="-2" attributes="0"/>
+                              <Component id="labelDatePattern" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Group type="103" groupAlignment="3" attributes="0">
+                                  <Component id="textResourceBundle1" alignment="3" min="-2" max="-2" attributes="0"/>
+                                  <Component id="checkGeneratesSecurityArea1" alignment="3" min="-2" max="-2" attributes="0"/>
+                              </Group>
+                              <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                              <Group type="103" groupAlignment="3" attributes="0">
+                                  <Component id="checkUseCDIBeans" alignment="3" min="-2" max="-2" attributes="0"/>
+                                  <Component id="checkGeneratesSecurityArea" alignment="3" min="-2" max="-2" attributes="0"/>
+                              </Group>
+                              <EmptySpace max="32767" attributes="0"/>
                           </Group>
                       </Group>
                     </DimensionLayout>
@@ -829,6 +853,37 @@
                         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="checkUseCDIBeansActionPerformed"/>
                       </Events>
                     </Component>
+                    <Component class="javax.swing.JCheckBox" name="checkGeneratesSecurityArea1">
+                      <Properties>
+                        <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
+                          <Color blue="ff" green="ff" red="ff" type="rgb"/>
+                        </Property>
+                        <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+                          <Font name="Tahoma" size="10" style="0"/>
+                        </Property>
+                        <Property name="label" type="java.lang.String" value="Mask calendar (Primefaces &lt; 5.x, don&apos;t put mask on p:calendar)"/>
+                      </Properties>
+                      <Events>
+                        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="checkGeneratesSecurityArea1ActionPerformed"/>
+                      </Events>
+                    </Component>
+                    <Component class="javax.swing.JLabel" name="labelDatePattern">
+                      <Properties>
+                        <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+                          <Font name="Tahoma" size="9" style="0"/>
+                        </Property>
+                        <Property name="horizontalAlignment" type="int" value="2"/>
+                        <Property name="labelFor" type="java.awt.Component" editor="org.netbeans.modules.form.ComponentChooserEditor">
+                          <ComponentRef name="textAuthor"/>
+                        </Property>
+                        <Property name="text" type="java.lang.String" value="Date pattern:"/>
+                      </Properties>
+                    </Component>
+                    <Component class="javax.swing.JTextField" name="textResourceBundle1">
+                      <Properties>
+                        <Property name="toolTipText" type="java.lang.String" value="I18N name of your resources in pages"/>
+                      </Properties>
+                    </Component>
                   </SubComponents>
                 </Container>
                 <Container class="javax.swing.JPanel" name="panelJavaClassConfiguration">
@@ -865,7 +920,7 @@
                                           <Component id="labelBOPackage" min="-2" pref="53" max="-2" attributes="0"/>
                                           <Component id="textPackageBO" min="-2" pref="180" max="-2" attributes="0"/>
                                       </Group>
-                                      <EmptySpace pref="28" max="32767" attributes="0"/>
+                                      <EmptySpace pref="22" max="32767" attributes="0"/>
                                   </Group>
                                   <Group type="102" attributes="0">
                                       <Group type="103" groupAlignment="0" attributes="0">
@@ -1598,8 +1653,8 @@
                           <EmptySpace max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="0" attributes="0">
                               <Component id="scrollPaneLog" alignment="0" max="32767" attributes="0"/>
-                              <Component id="scrollPaneClassBean" alignment="0" pref="786" max="32767" attributes="0"/>
-                              <Component id="scrollPaneI18N" alignment="0" pref="786" max="32767" attributes="0"/>
+                              <Component id="scrollPaneClassBean" alignment="0" pref="780" max="32767" attributes="0"/>
+                              <Component id="scrollPaneI18N" alignment="0" pref="780" max="32767" attributes="0"/>
                               <Component id="panelStep5" alignment="1" max="32767" attributes="0"/>
                               <Component id="panelStep6" alignment="0" max="32767" attributes="0"/>
                               <Component id="panelStep7" alignment="0" max="32767" attributes="0"/>
@@ -1640,7 +1695,7 @@
                           <Component id="scrollPaneClassBean" min="-2" pref="135" max="-2" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
                           <Component id="buttonTab3Back" min="-2" max="-2" attributes="0"/>
-                          <EmptySpace pref="17" max="32767" attributes="0"/>
+                          <EmptySpace pref="61" max="32767" attributes="0"/>
                       </Group>
                   </Group>
                 </DimensionLayout>
@@ -1737,7 +1792,7 @@
                               <Component id="labelStep5" min="-2" pref="24" max="-2" attributes="0"/>
                               <EmptySpace type="unrelated" max="-2" attributes="0"/>
                               <Component id="labelStep5Detail" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace min="0" pref="525" max="32767" attributes="0"/>
+                              <EmptySpace min="0" pref="519" max="32767" attributes="0"/>
                           </Group>
                       </Group>
                     </DimensionLayout>
@@ -1795,7 +1850,7 @@
                               <Component id="labelStep6" min="-2" pref="24" max="-2" attributes="0"/>
                               <EmptySpace type="unrelated" max="-2" attributes="0"/>
                               <Component id="labelStep6Detail" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace min="0" pref="505" max="32767" attributes="0"/>
+                              <EmptySpace min="0" pref="499" max="32767" attributes="0"/>
                           </Group>
                       </Group>
                     </DimensionLayout>

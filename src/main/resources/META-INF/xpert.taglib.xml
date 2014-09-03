@@ -154,4 +154,11 @@
             <type>java.lang.String</type>
         </attribute>
     </tag>
+    <tag>
+        <tag-name>mask</tag-name>
+        <component>
+            <component-type>com.xpert.faces.component.Mask</component-type>
+            <renderer-type>com.xpert.faces.component.MaskRenderer</renderer-type>
+        </component>
+    </tag>
 </facelet-taglib>

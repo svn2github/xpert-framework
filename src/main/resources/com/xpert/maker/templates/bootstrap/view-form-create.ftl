@@ -26,25 +26,35 @@
                             </#if>
                             <#-- Others -->
                             <#if field.yesNo == false>
-                            <h:outputLabel for="${field.name}" value="<#if field.required == true>* </#if>${sharp}{${resourceBundle}['${entity.nameLower}.${field.name}']}:" />
                             <#-- String -->
                             <#if field.string == true>
+                            <h:outputLabel for="${field.name}" value="<#if field.required == true>* </#if>${sharp}{${resourceBundle}['${entity.nameLower}.${field.name}']}:" />
                             <p:inputText id="${field.name}" value="${sharp}{${entity.nameLower}${configuration.managedBeanSuffix}.entity.${field.name}}" maxlength="${field.maxlength?string}"  styleClass="form-control"  />
                             </#if>
                             <#-- Integer/Long -->
                             <#if field.integer == true>
+                            <h:outputLabel for="${field.name}" value="<#if field.required == true>* </#if>${sharp}{${resourceBundle}['${entity.nameLower}.${field.name}']}:" />
                             <p:inputMask id="${field.name}" mask="9?999999999" placeHolder="" value="${sharp}{${entity.nameLower}${configuration.managedBeanSuffix}.entity.${field.name}}" styleClass="form-control" />
                             </#if>
                             <#-- Decimal (BigDecimal, Double) -->
                             <#if field.decimal == true>
+                            <h:outputLabel for="${field.name}:input" value="<#if field.required == true>* </#if>${sharp}{${resourceBundle}['${entity.nameLower}.${field.name}']}:" />
                             <x:inputNumber id="${field.name}" value="${sharp}{${entity.nameLower}${configuration.managedBeanSuffix}.entity.${field.name}}" styleClass="form-control"/>
                             </#if>
                             <#-- Date p:calendar wont work with form-control, he has a span over the input and class goes for span -->
                             <#if field.date == true>
-                            <p:calendar id="${field.name}" value="${sharp}{${entity.nameLower}${configuration.managedBeanSuffix}.entity.${field.name}}" styleClass="uix-calendar" />
+                            <h:outputLabel for="${field.name}" value="<#if field.required == true>* </#if>${sharp}{${resourceBundle}['${entity.nameLower}.${field.name}']}:" />
+                            <#if field.maskCalendar == true>
+                            <p:calendar id="${field.name}" value="${sharp}{${entity.nameLower}${configuration.managedBeanSuffix}.entity.${field.name}}" styleClass="uix-calendar" showOn="button" pattern="${configuration.datePattern}" >
+                                <x:mask>
+                            </p:calendar>
+                            <#else>
+                            <p:calendar id="${field.name}" value="${sharp}{${entity.nameLower}${configuration.managedBeanSuffix}.entity.${field.name}}" styleClass="uix-calendar" showOn="button" pattern="${configuration.datePattern}" />
+                            </#if>
                             </#if>
                             <#-- Enuns/ManyToOne (render a combobox) -->
                             <#if field.enumeration == true || field.manyToOne == true>
+                            <h:outputLabel for="${field.name}" value="<#if field.required == true>* </#if>${sharp}{${resourceBundle}['${entity.nameLower}.${field.name}']}:" />
                             <h:selectOneMenu id="${field.name}" value="${sharp}{${entity.nameLower}${configuration.managedBeanSuffix}.entity.${field.name}}" <#if field.enumeration == false>converter="entityConverter"</#if> styleClass="form-control" >
                                 <#if field.lazy == true>
                                 <x:initializer/>
@@ -57,6 +67,7 @@
                             </#if>
                             <#-- Collections (render a checkbox list) -->
                             <#if field.manyToMany == true >
+                            <h:outputLabel value="<#if field.required == true>* </#if>${sharp}{${resourceBundle}['${entity.nameLower}.${field.name}']}:" />
                             <h:selectManyCheckbox id="${field.name}" value="${sharp}{${entity.nameLower}${configuration.managedBeanSuffix}.entity.${field.name}}" converter="entityConverter" >
                                 <#if field.lazy == true>
                                 <x:initializer/>

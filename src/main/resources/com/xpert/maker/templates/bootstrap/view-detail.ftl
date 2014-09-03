@@ -11,29 +11,27 @@
                 <#if field.collection == false && field.id == false>
                 <div class="${configuration.bootstrapVersion.defaultColumns}">
                     <h:outputLabel value="${sharp}{${resourceBundle}['${entity.nameLower}.${field.name}']}:" styleClass="control-label" /><br/>
-                    <span class="uix-content-detail">
-                        <#if field.lazy == true>
-                        <h:outputText value="${sharp}{${entity.nameLower}${configuration.managedBeanSuffix}.entity.${field.name}}">
-                            <x:initializer/>
-                        </h:outputText>
-                        </#if>
-                        <#if field.decimal == true>
-                        <h:outputText value="${sharp}{${entity.nameLower}${configuration.managedBeanSuffix}.entity.${field.name}}">
-                            <f:convertNumber minFractionDigits="2" maxFractionDigits="2" />
-                        </h:outputText>
-                        </#if>
-                        <#if field.date == true>
-                        <h:outputText value="${sharp}{${entity.nameLower}${configuration.managedBeanSuffix}.entity.${field.name}}">
-                            <f:convertDateTime />
-                        </h:outputText>
-                        </#if>
-                        <#if field.yesNo == true>
-                        <h:outputText value="${sharp}{${entity.nameLower}${configuration.managedBeanSuffix}.entity.${field.name}}" converter ="yesNoConverter" />
-                        </#if>
-                        <#if field.lazy == false && field.decimal == false && field.date == false && field.yesNo == false>
-                        <h:outputText value="${sharp}{${entity.nameLower}${configuration.managedBeanSuffix}.entity.${field.name}}"/>
-                        </#if>
-                    </span>
+                    <#if field.lazy == true>
+                    <h:outputText value="${sharp}{${entity.nameLower}${configuration.managedBeanSuffix}.entity.${field.name}}" styleClass="uix-content-detail">
+                        <x:initializer/>
+                    </h:outputText>
+                    </#if>
+                    <#if field.decimal == true>
+                    <h:outputText value="${sharp}{${entity.nameLower}${configuration.managedBeanSuffix}.entity.${field.name}}" styleClass="uix-content-detail">
+                        <f:convertNumber minFractionDigits="2" maxFractionDigits="2" />
+                    </h:outputText>
+                    </#if>
+                    <#if field.date == true>
+                    <h:outputText value="${sharp}{${entity.nameLower}${configuration.managedBeanSuffix}.entity.${field.name}}" styleClass="uix-content-detail">
+                        <f:convertDateTime />
+                    </h:outputText>
+                    </#if>
+                    <#if field.yesNo == true>
+                    <h:outputText value="${sharp}{${entity.nameLower}${configuration.managedBeanSuffix}.entity.${field.name}}" converter ="yesNoConverter"  styleClass="uix-content-detail"/>
+                    </#if>
+                    <#if field.lazy == false && field.decimal == false && field.date == false && field.yesNo == false>
+                    <h:outputText value="${sharp}{${entity.nameLower}${configuration.managedBeanSuffix}.entity.${field.name}}" styleClass="uix-content-detail"/>
+                    </#if>
                 </div>
                 </#if>
             </#list>

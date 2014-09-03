@@ -33,7 +33,13 @@
                 </#if>
                 <#-- Date -->
                 <#if field.date == true>
-                <p:calendar id="${field.name}" value="${sharp}{${entity.nameLower}${configuration.managedBeanSuffix}.entity.${field.name}}" />
+                <#if field.maskCalendar == true>
+                <p:calendar id="${field.name}" value="${sharp}{${entity.nameLower}${configuration.managedBeanSuffix}.entity.${field.name}}" showOn="button" pattern="${configuration.datePattern}" >
+                    <x:mask>
+                </p:calendar>
+                <#else>
+                <p:calendar id="${field.name}" value="${sharp}{${entity.nameLower}${configuration.managedBeanSuffix}.entity.${field.name}}" showOn="button" pattern="${configuration.datePattern}" />
+                </#if>
                 </#if>
                 <#-- Enuns/ManyToOne (render a combobox) -->
                 <#if field.enumeration == true || field.manyToOne == true>

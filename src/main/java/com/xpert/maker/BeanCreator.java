@@ -48,6 +48,7 @@ public class BeanCreator {
     private static final int SIZE_ANNOTATION_MAX_DEFAULT = 2147483647;
     private static final String[] LOCALES_MAKER = {"pt_BR", "en", "es"};
     public static final String SUFFIX_MANAGED_BEAN = "MB";
+    public static final String DEFAULT_DATE_PATTERN = "dd/MM/yyyy";
     public static final String SUFFIX_BUSINESS_OBJECT = "BO";
     public static final String SUFFIX_DAO = "DAO";
     public static final String SUFFIX_DAO_IMPL = "DAOImpl";

@@ -37,13 +37,35 @@ public class BeanConfiguration {
     private BootstrapVersion bootstrapVersion;
     private boolean useCDIBeans;
     private boolean generatesSecurityArea;
+    private boolean maskCalendar;
+    
+    //date pattern to calendar
+    private String datePattern;
 
     public BeanConfiguration() {
+        this.datePattern = BeanCreator.DEFAULT_DATE_PATTERN;
         this.managedBeanSuffix = BeanCreator.SUFFIX_MANAGED_BEAN;
         this.businessObjectSuffix = BeanCreator.SUFFIX_BUSINESS_OBJECT;
         this.primeFacesVersion = PrimeFacesVersion.VERSION_3;
         this.bootstrapVersion = null;
         this.generatesSecurityArea = true;
+        this.maskCalendar = true;
+    }
+
+    public boolean isMaskCalendar() {
+        return maskCalendar;
+    }
+
+    public void setMaskCalendar(boolean maskCalendar) {
+        this.maskCalendar = maskCalendar;
+    }
+
+    public String getDatePattern() {
+        return datePattern;
+    }
+
+    public void setDatePattern(String datePattern) {
+        this.datePattern = datePattern;
     }
 
     public boolean isGeneratesSecurityArea() {
