@@ -31,6 +31,9 @@
 .bold{font-weight: bold;}
 .uix-calendar{white-space: nowrap}
 .uix-calendar .ui-inputfield{width: 100%; height: 34px;}
+.uix-calendar{white-space: nowrap}
+.uix-calendar .ui-inputfield.hasDatepicker {padding-right: 35px;}
+.uix-calendar .ui-datepicker-trigger.ui-button.ui-widget.ui-state-default.ui-corner-all.ui-button-icon-only { left: -31px;}
 .uix-content-detail::after {content: "\00a0"}
 .ui-dialog .container-fluid .row{margin-left: 0; margin-right: 0;}
 .uix-form-detail .form-control-static::after {content: "\00a0"}
