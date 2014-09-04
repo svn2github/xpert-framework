@@ -45,6 +45,12 @@ public class PersistenceMappedBean {
             if (beanConfiguration.getBusinessObjectSuffix() == null || beanConfiguration.getBusinessObjectSuffix().isEmpty()) {
                 beanConfiguration.setBusinessObjectSuffix(BeanCreator.SUFFIX_BUSINESS_OBJECT);
             }
+            if (beanConfiguration.getDatePattern()== null || beanConfiguration.getDatePattern().isEmpty()) {
+                beanConfiguration.setDatePattern(BeanCreator.DEFAULT_DATE_PATTERN);
+            }
+            if (beanConfiguration.getTimePattern()== null || beanConfiguration.getTimePattern().isEmpty()) {
+                beanConfiguration.setTimePattern(BeanCreator.DEFAULT_TIME_PATTERN);
+            }
         }
         for (Class clazz : classes) {
             try {

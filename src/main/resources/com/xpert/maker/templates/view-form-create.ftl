@@ -42,6 +42,7 @@
                 <p:calendar id="${field.name}" value="${sharp}{${entity.nameLower}${configuration.managedBeanSuffix}.entity.${field.name}}" 
                             showOn="button" pattern="${configuration.datePattern}" />
                 </#if>
+                </#if>
                 <#-- Time -->
                 <#if field.time == true>
                 <#if configuration.maskCalendar == true>

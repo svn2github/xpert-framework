@@ -69,9 +69,9 @@ public class BeanCreator {
     }
 
     public static String createBean(Bean bean, BeanConfiguration configuration) throws IOException, TemplateException {
-
         ViewEntity viewEntity = createViewEntity(bean.getEntity(), configuration);
         String templatePath = bean.getBeanType().getTemplate();
+        logger.log(Level.INFO, "Creating template {0}", new Object[]{templatePath});
 
         if (bean.getBeanType().isView()) {
             if (bean.getBeanType().isBootstrapDependend() && configuration.getBootstrapVersion() != null) {
@@ -229,8 +229,10 @@ public class BeanCreator {
             Map attributes = new HashMap();
             //set to evict duplicates
             Set<Class> allClasses = new HashSet<Class>();
-            allClasses.addAll(classes);
-            allClasses.addAll(getReferencedClasses(classes));
+            if (classes != null) {
+                allClasses.addAll(classes);
+                allClasses.addAll(getReferencedClasses(classes));
+            }
             attributes.put("classes", allClasses);
             attributes.put("configuration", configuration);
             attributes.put("package", configuration.getManagedBean() == null ? "" : configuration.getManagedBean());

@@ -34,6 +34,7 @@ public class BeanMaker implements Serializable {
     private static final Logger logger = Logger.getLogger(BeanMaker.class.getName());
     private EntityManager entityManager;
     private List<MappedBean> mappedBeans;
+    private List<Class> selectedClasses;
     private List<Class> classes;
     private List<String> nameSelectedClasses = new ArrayList<String>();
     private PersistenceMappedBean persistenceMappedBean;
@@ -53,7 +54,7 @@ public class BeanMaker implements Serializable {
     }
 
     public void make() {
-        List<Class> selectedClasses = new ArrayList<Class>();
+        selectedClasses = new ArrayList<Class>();
         for (String className : nameSelectedClasses) {
             try {
                 selectedClasses.add(Class.forName(className, true, Thread.currentThread().getContextClassLoader()));
@@ -74,7 +75,7 @@ public class BeanMaker implements Serializable {
     }
 
     private void load() {
-        classBean = persistenceMappedBean.getClassBean(configuration);
+        classBean = BeanCreator.getClassBean(selectedClasses, configuration);
         if (mappedBeans != null) {
             menubar = BeanCreator.getMenubar(mappedBeans, configuration.getResourceBundle(), configuration);
             i18n = BeanCreator.getI18N(mappedBeans);
