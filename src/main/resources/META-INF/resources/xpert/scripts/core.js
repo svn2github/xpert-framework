@@ -186,22 +186,21 @@ Xpert.behavior = {
                                     +'<button id="xpertCofirmationButton" type="submit" onclick="'+confirmClick+'" class="dialog-confirm-button ui-state-default ui-button ui-widget ui-corner-all ui-button-text-only" role="button" aria-disabled="false">'
                                         +'<span class="ui-button-text">'+confirmLabel+'</span>'
                                     +'</button>'
-                                    +'<button type="button" onclick='+widgetVar+'.hide()" class="dialog-cancel-button ui-state-default ui-button ui-widget ui-corner-all ui-button-text-only" role="button" aria-disabled="false">'
+                                    +'<button type="button" onclick="'+widgetVar+'.hide()" class="dialog-cancel-button ui-state-default ui-button ui-widget ui-corner-all ui-button-text-only" role="button" aria-disabled="false">'
                                         +'<span class="ui-button-text">'+cancelLabel+'</span>'
                                     +'</button>'
                                     +'<script type="text/javascript">Xpert.skinButton("#'+id+' button");</script>'
                                 +'</form>'
                             +'</div>'
                         +'</div>';
-            if (primefaces3 == false){
-                html = html+'<script type="text/javascript">PrimeFaces.cw("Dialog","widgetConfirmationDialog",{id:"'+id+'",modal:true,resizable:false,width:300,visible:true});</script>';
-            }else{
-                html = html+'<script type="text/javascript">PrimeFaces.cw("Dialog","widgetConfirmationDialog",{id:"'+id+'",modal:true,resizable:false,width:300,visible:true,widgetVar:"widgetConfirmationDialog"});</script>';
-            }
+            html = html+'<script type="text/javascript">PrimeFaces.cw("Dialog","widgetConfirmationDialog",{id:"'+id+'",modal:true,resizable:false,width:300,visible:true});</script>';
             $(html).appendTo("body");
         }  
-
-        widgetConfirmationDialog.show();
+        if (primefaces3 == true){
+            widgetConfirmationDialog.show();
+        }else{
+            PF('widgetConfirmationDialog').show();
+        }
         $("#"+id).find(".dialog-confirm-button").focus();
      },
 

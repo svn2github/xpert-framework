@@ -1,5 +1,7 @@
 package com.xpert.faces.component.confirmation;
 
+import com.xpert.faces.primefaces.PrimeFacesUtils;
+import com.xpert.faces.primefaces.PrimeFacesVersion;
 import com.xpert.i18n.XpertResourceBundle;
 import com.xpert.utils.StringEscapeUtils;
 import java.io.IOException;
@@ -44,6 +46,7 @@ public class ConfirmationRenderer extends Renderer {
         script.append(",'").append(StringEscapeUtils.escapeJavaScript(confirmation.getConfirmLabel())).append("'");
         script.append(",'").append(StringEscapeUtils.escapeJavaScript(confirmation.getCancelLabel())).append("'");
         script.append(",'").append(StringEscapeUtils.escapeJavaScript(confirmation.getMessage())).append("'");
+        script.append(",").append(PrimeFacesUtils.isVersion3());
         script.append(");});");
 
 
