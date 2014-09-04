@@ -41,8 +41,11 @@ public class BeanConfiguration {
     
     //date pattern to calendar
     private String datePattern;
+    //time pattern to calendar
+    private String timePattern;
 
     public BeanConfiguration() {
+        this.timePattern = BeanCreator.DEFAULT_TIME_PATTERN;
         this.datePattern = BeanCreator.DEFAULT_DATE_PATTERN;
         this.managedBeanSuffix = BeanCreator.SUFFIX_MANAGED_BEAN;
         this.businessObjectSuffix = BeanCreator.SUFFIX_BUSINESS_OBJECT;
@@ -51,6 +54,15 @@ public class BeanConfiguration {
         this.generatesSecurityArea = true;
         this.maskCalendar = true;
     }
+
+    public String getTimePattern() {
+        return timePattern;
+    }
+
+    public void setTimePattern(String timePattern) {
+        this.timePattern = timePattern;
+    }
+    
 
     public boolean isMaskCalendar() {
         return maskCalendar;

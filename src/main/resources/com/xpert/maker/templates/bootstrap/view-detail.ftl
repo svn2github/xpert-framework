@@ -26,10 +26,15 @@
                         <f:convertDateTime />
                     </h:outputText>
                     </#if>
+                    <#if field.time == true>
+                    <h:outputText value="${sharp}{${entity.nameLower}.${field.name}}" styleClass="uix-content-detail">
+                        <f:convertDateTime pattern="${configuration.timePattern}"/>
+                    </h:outputText>
+                    </#if>
                     <#if field.yesNo == true>
                     <h:outputText value="${sharp}{${entity.nameLower}${configuration.managedBeanSuffix}.entity.${field.name}}" converter ="yesNoConverter"  styleClass="uix-content-detail"/>
                     </#if>
-                    <#if field.lazy == false && field.decimal == false && field.date == false && field.yesNo == false>
+                    <#if field.lazy == false && field.decimal == false && field.date == false && field.time == false && field.yesNo == false>
                     <h:outputText value="${sharp}{${entity.nameLower}${configuration.managedBeanSuffix}.entity.${field.name}}" styleClass="uix-content-detail"/>
                     </#if>
                 </div>

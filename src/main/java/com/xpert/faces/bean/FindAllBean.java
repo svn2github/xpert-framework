@@ -1,9 +1,12 @@
 package com.xpert.faces.bean;
 
 import com.xpert.DAO;
+import com.xpert.faces.utils.ValueExpressionAnalyzer;
 import com.xpert.persistence.dao.BaseDAO;
+import com.xpert.utils.ReflectionUtils;
 import com.xpert.persistence.query.Restriction;
 import com.xpert.persistence.utils.EntityUtils;
+import java.lang.reflect.Field;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -12,11 +15,17 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
 import javax.el.ValueExpression;
+import javax.el.ValueReference;
 import javax.faces.component.UIComponent;
+import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
 import org.apache.commons.beanutils.PropertyUtils;
+import org.primefaces.component.column.Column;
 
 /**
+ * Generic bean to get objects, if is enum get valus from enum, if is a entity
+ * try to select from data base. This bean works better on ViewScope to evict
+ * duplicates query.
  *
  * @author Ayslan
  */
@@ -38,6 +47,20 @@ public abstract class FindAllBean {
         baseDAO = new DAO();
     }
 
+    /**
+     *
+     * @param object
+     * @return
+     */
+    public List get(Object object) {
+        if (object instanceof Class) {
+            return getFromClass((Class) object);
+        } else if (object instanceof UIComponent) {
+            return getFromComponent((UIComponent) object);
+        }
+        return null;
+    }
+
     public List get(Class clazz, String order) {
 
         List objects = values.get(clazz);
@@ -54,13 +77,49 @@ public abstract class FindAllBean {
         return objects;
     }
 
-    public List getFromComponent(UIComponent component) {
+    /**
+     * Get a type from UIComponent.
+     * If component is a primefaces Column, try to get "filterBy", other components get "value"
+     * 
+     * @param component
+     * @return 
+     */
+    public Class getType(UIComponent component) {
+        Class type = null;
         ValueExpression valueExpression = component.getValueExpression("value");
-        Class type = valueExpression.getExpectedType();
-        return get(type);
+        ValueExpressionAnalyzer expressionAnalyzer = new ValueExpressionAnalyzer(valueExpression);
+        ValueReference valueReference = expressionAnalyzer.getReference(FacesContext.getCurrentInstance().getELContext());
+        String property = valueReference.getProperty().toString();
+        Class clazz = valueReference.getBase().getClass();
+        try {
+            Field field = ReflectionUtils.getDeclaredField(clazz, property);
+            if (field != null) {
+                type = field.getType();
+            }
+        } catch (Exception ex) {
+            logger.log(Level.SEVERE, null, ex);
+        }
+        return type;
     }
 
-    public List get(Class clazz) {
+    public List getFromComponent(UIComponent component) {
+        long begin = System.currentTimeMillis();
+        Class type = getType(component);
+        if (type == null) {
+            logger.log(Level.SEVERE, "Type no found in findAllBean.getFromComponent for component {0}", component.getClientId());
+            return null;
+        }
+
+        logger.log(Level.INFO, "Type found: {0}", type);
+
+        List list = get(type);
+        long end = System.currentTimeMillis();
+        logger.log(Level.INFO, "Time in miliseconds: {0}", (end - begin));
+
+        return list;
+    }
+
+    public List getFromClass(Class clazz) {
         if (clazz.isEnum()) {
             return Arrays.asList(clazz.getEnumConstants());
         }

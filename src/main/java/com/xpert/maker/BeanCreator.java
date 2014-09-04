@@ -49,6 +49,7 @@ public class BeanCreator {
     private static final String[] LOCALES_MAKER = {"pt_BR", "en", "es"};
     public static final String SUFFIX_MANAGED_BEAN = "MB";
     public static final String DEFAULT_DATE_PATTERN = "dd/MM/yyyy";
+    public static final String DEFAULT_TIME_PATTERN = "HH:mm";
     public static final String SUFFIX_BUSINESS_OBJECT = "BO";
     public static final String SUFFIX_DAO = "DAO";
     public static final String SUFFIX_DAO_IMPL = "DAOImpl";
@@ -141,7 +142,12 @@ public class BeanCreator {
                 viewField.setEnumeration(true);
                 //Date
             } else if (field.getType().equals(Date.class) || field.getType().equals(Calendar.class)) {
-                viewField.setDate(true);
+                Temporal temporal = field.getAnnotation(Temporal.class);
+                if (temporal != null && temporal.value() != null && temporal.value().equals(TemporalType.TIME)) {
+                    viewField.setTime(true);
+                } else {
+                    viewField.setDate(true);
+                }
                 //Boolean
             } else if (field.getType().equals(Boolean.class) || field.getType().equals(boolean.class)) {
                 viewField.setYesNo(true);
@@ -178,12 +184,54 @@ public class BeanCreator {
         return entity;
     }
 
+    public static List<Field> getDeclaredFields(Class clazz) {
+        List<Field> fields = new ArrayList<Field>();
+        for (Field field : clazz.getDeclaredFields()) {
+            fields.add(field);
+        }
+        if (clazz.getSuperclass() != null && !clazz.getSuperclass().equals(Object.class)) {
+            List<Field> superFields = getDeclaredFields(clazz.getSuperclass());
+            if (superFields != null && !superFields.isEmpty()) {
+                fields.addAll(superFields);
+            }
+        }
+        return fields;
+    }
+
+    public static Collection<Class> getReferencedClasses(List<Class> classes) {
+        Set<Class> references = new HashSet<Class>();
+
+        for (Class clazz : classes) {
+            for (Field field : getDeclaredFields(clazz)) {
+
+                if (!field.isAnnotationPresent(Transient.class)) {
+
+                    if (field.getType().equals(Collection.class) || field.getType().equals(List.class) || field.getType().equals(Set.class)) {
+                        ParameterizedType parameterizedType = (ParameterizedType) field.getGenericType();
+                        if (parameterizedType.getActualTypeArguments() != null && parameterizedType.getActualTypeArguments().length > 0) {
+                            Class<?> listType = (Class<?>) parameterizedType.getActualTypeArguments()[0];
+                            references.add(listType);
+                        }
+                    } else if (field.getType().isEnum() || field.getType().isAnnotationPresent(Entity.class) || field.getType().isAnnotationPresent(Embeddable.class)) {
+                        references.add(field.getType());
+                    }
+                }
+            }
+        }
+
+        return references;
+    }
+
     public static String getClassBean(List<Class> classes, BeanConfiguration configuration) {
         try {
             Template template = BeanCreator.getTemplate("class-bean.ftl");
             StringWriter writer = new StringWriter();
             Map attributes = new HashMap();
-            attributes.put("classes", classes);
+            //set to evict duplicates
+            Set<Class> allClasses = new HashSet<Class>();
+            allClasses.addAll(classes);
+            allClasses.addAll(getReferencedClasses(classes));
+            attributes.put("classes", allClasses);
             attributes.put("configuration", configuration);
             attributes.put("package", configuration.getManagedBean() == null ? "" : configuration.getManagedBean());
             template.process(attributes, writer);

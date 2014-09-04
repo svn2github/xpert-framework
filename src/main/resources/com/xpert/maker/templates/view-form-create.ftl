@@ -34,11 +34,24 @@
                 <#-- Date -->
                 <#if field.date == true>
                 <#if configuration.maskCalendar == true>
-                <p:calendar id="${field.name}" value="${sharp}{${entity.nameLower}${configuration.managedBeanSuffix}.entity.${field.name}}" showOn="button" pattern="${configuration.datePattern}" >
+                <p:calendar id="${field.name}" value="${sharp}{${entity.nameLower}${configuration.managedBeanSuffix}.entity.${field.name}}" 
+                            showOn="button" pattern="${configuration.datePattern}" >
                     <x:mask/>
                 </p:calendar>
                 <#else>
-                <p:calendar id="${field.name}" value="${sharp}{${entity.nameLower}${configuration.managedBeanSuffix}.entity.${field.name}}" showOn="button" pattern="${configuration.datePattern}" />
+                <p:calendar id="${field.name}" value="${sharp}{${entity.nameLower}${configuration.managedBeanSuffix}.entity.${field.name}}" 
+                            showOn="button" pattern="${configuration.datePattern}" />
+                </#if>
+                <#-- Time -->
+                <#if field.time == true>
+                <#if configuration.maskCalendar == true>
+                <p:calendar id="${field.name}" value="${sharp}{${entity.nameLower}${configuration.managedBeanSuffix}.entity.${field.name}}" 
+                            showOn="button" pattern="${configuration.timePattern}" timeOnly="true">
+                    <x:mask/>
+                </p:calendar>
+                <#else>
+                <p:calendar id="${field.name}" value="${sharp}{${entity.nameLower}${configuration.managedBeanSuffix}.entity.${field.name}}" 
+                            showOn="button" pattern="${configuration.timePattern}" timeOnly="true"/>
                 </#if>
                 </#if>
                 <#-- Enuns/ManyToOne (render a combobox) -->

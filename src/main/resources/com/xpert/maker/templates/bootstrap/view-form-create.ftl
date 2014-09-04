@@ -45,11 +45,26 @@
                             <#if field.date == true>
                             <h:outputLabel for="${field.name}" value="<#if field.required == true>* </#if>${sharp}{${resourceBundle}['${entity.nameLower}.${field.name}']}:" />
                             <#if configuration.maskCalendar == true>
-                            <p:calendar id="${field.name}" value="${sharp}{${entity.nameLower}${configuration.managedBeanSuffix}.entity.${field.name}}" styleClass="uix-calendar" showOn="button" pattern="${configuration.datePattern}" >
+                            <p:calendar id="${field.name}" value="${sharp}{${entity.nameLower}${configuration.managedBeanSuffix}.entity.${field.name}}" 
+                                        showOn="button" pattern="${configuration.datePattern}" styleClass="uix-calendar"  >
                                 <x:mask/>
                             </p:calendar>
                             <#else>
-                            <p:calendar id="${field.name}" value="${sharp}{${entity.nameLower}${configuration.managedBeanSuffix}.entity.${field.name}}" styleClass="uix-calendar" showOn="button" pattern="${configuration.datePattern}" />
+                            <p:calendar id="${field.name}" value="${sharp}{${entity.nameLower}${configuration.managedBeanSuffix}.entity.${field.name}}" 
+                                        showOn="button" pattern="${configuration.datePattern}" styleClass="uix-calendar" />
+                            </#if>
+                            </#if>
+                             <#-- Time -->
+                            <#if field.time == true>
+                            <h:outputLabel for="${field.name}" value="<#if field.required == true>* </#if>${sharp}{${resourceBundle}['${entity.nameLower}.${field.name}']}:" />
+                            <#if configuration.maskCalendar == true>
+                            <p:calendar id="${field.name}" value="${sharp}{${entity.nameLower}${configuration.managedBeanSuffix}.entity.${field.name}}" 
+                                        showOn="button" pattern="${configuration.timePattern}" timeOnly="true" styleClass="uix-calendar">
+                                <x:mask/>
+                            </p:calendar>
+                            <#else>
+                            <p:calendar id="${field.name}" value="${sharp}{${entity.nameLower}${configuration.managedBeanSuffix}.entity.${field.name}}" 
+                                        showOn="button" pattern="${configuration.timePattern}" timeOnly="true" styleClass="uix-calendar"/>
                             </#if>
                             </#if>
                             <#-- Enuns/ManyToOne (render a combobox) -->

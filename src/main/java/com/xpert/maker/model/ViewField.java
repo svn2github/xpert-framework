@@ -20,6 +20,7 @@ public class ViewField {
     private boolean decimal;
     private boolean integer;
     private boolean date;
+    private boolean time;
     private boolean yesNo;
     private boolean enumeration;
     private boolean string;
@@ -36,6 +37,14 @@ public class ViewField {
         return typeName;
     }
 
+    public boolean isTime() {
+        return time;
+    }
+
+    public void setTime(boolean time) {
+        this.time = time;
+    }
+    
     public boolean isString() {
         return string;
     }

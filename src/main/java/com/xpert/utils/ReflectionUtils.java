@@ -1,9 +1,6 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-package com.xpert.persistence.query;
+package com.xpert.utils;
 
+import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -13,7 +10,7 @@ import java.util.logging.Logger;
  * @author Ayslan
  */
 public class ReflectionUtils {
-    
+
     private static final Logger logger = Logger.getLogger(ReflectionUtils.class.getName());
     /**
      * the possible prefixes for read method
@@ -69,8 +66,7 @@ public class ReflectionUtils {
     /**
      * Gets the read method for a property in a class.
      *
-     * for example:
-     * <code>
+     * for example:      <code>
      * class Foo {
      *      public String getBar() { return "bar"; }
      *      public Boolean isBaz() { return false; }
@@ -111,5 +107,26 @@ public class ReflectionUtils {
         }
 
         return method;
+    }
+
+    /**
+     * get a declared field from class or super classes
+     *
+     * @param clazz
+     * @param fieldName
+     * @return
+     */
+    public static Field getDeclaredField(Class clazz, String fieldName) {
+        Field field = null;
+
+        try {
+            field = clazz.getDeclaredField(fieldName);
+        } catch (NoSuchFieldException ex) {
+            if (clazz.getSuperclass() != null && !clazz.getSuperclass().equals(Object.class)) {
+                return getDeclaredField(clazz.getSuperclass(), fieldName);
+            }
+        }
+
+        return field;
     }
 }

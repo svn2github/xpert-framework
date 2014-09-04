@@ -160,5 +160,10 @@
             <component-type>com.xpert.faces.component.Mask</component-type>
             <renderer-type>com.xpert.faces.component.MaskRenderer</renderer-type>
         </component>
+        <attribute>
+            <name>placeHolder</name>
+            <required>false</required>
+            <type>java.lang.String</type>
+        </attribute>
     </tag>
 </facelet-taglib>

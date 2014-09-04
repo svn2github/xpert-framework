@@ -32,7 +32,11 @@ public class MaskRenderer extends Renderer {
             writer.write(clientId + "_input");
             writer.write("')).mask('");
             writer.write(maskPattern);
-            writer.write("',{placeholder:''});});");
+            writer.write("'");
+            if (mask.getPlaceHolder() != null) {
+                writer.write(",{placeholder:''}");
+            }
+            writer.write(");});");
             writer.endElement("script");
         }
     }

@@ -22,6 +22,9 @@
         <cc:attribute name="businessObjectSuffix"/>
         <cc:attribute name="useCDIBeans" default="false" type="boolean"/>
         <cc:attribute name="generatesSecurityArea" default="true" type="boolean"/>
+        <cc:attribute name="maskCalendar" default="true" type="boolean"/>
+        <cc:attribute name="datePattern" />
+        <cc:attribute name="timePattern" />
     </cc:interface>
 
     <!-- IMPLEMENTATION -->
@@ -41,6 +44,9 @@
         <f:event type="preRenderComponent" listener="#{beanMaker.configuration.setManagedBeanSuffix(cc.attrs.managedBeanSuffix)}" />
         <f:event type="preRenderComponent" listener="#{beanMaker.configuration.setUseCDIBeans(cc.attrs.useCDIBeans)}" />
         <f:event type="preRenderComponent" listener="#{beanMaker.configuration.setGeneratesSecurityArea(cc.attrs.generatesSecurityArea)}" />
+        <f:event type="preRenderComponent" listener="#{beanMaker.configuration.setMaskCalendar(cc.attrs.maskCalendar)}" />
+        <f:event type="preRenderComponent" listener="#{beanMaker.configuration.setDatePattern(cc.attrs.datePattern)}" />
+        <f:event type="preRenderComponent" listener="#{beanMaker.configuration.setTimePattern(cc.attrs.timePattern)}" />
         <h:form prependId="false">
             <p:messages/>
             <p:tabView>
@@ -115,6 +121,21 @@
                                 <h:outputLabel value="Business Object Suffix:"/>
                                 <p:inputText value="#{beanMaker.configuration.businessObjectSuffix}" size="50"/>
                                 <h:outputText value="(Default is 'BO', example: 'PersonBO.java')"/>
+                                
+                                <h:outputLabel value="Date Pattern:"/>
+                                <p:inputText value="#{beanMaker.configuration.datePattern}" size="50"/>
+                                <h:outputText value="(Date pattern to be used in p:calendar)"/>
+                                
+                                <h:outputLabel value="Time Pattern:"/>
+                                <p:inputText value="#{beanMaker.configuration.timePattern}" size="50"/>
+                                <h:outputText value="(Time pattern to be used in p:calendar)"/>
+                                
+                                <h:outputLabel value="Mask Calendar:"/>
+                                 <h:selectOneRadio value="#{beanMaker.configuration.maskCalendar}">
+                                    <f:selectItem itemValue="true" itemLabel="Yes" />
+                                    <f:selectItem itemValue="false" itemLabel="No" />
+                                 </h:selectOneRadio>
+                                <h:outputText value="(Primefaces &lt; 5.x, don't put mask on p:calendar)"/>
                                 
                                 <h:outputLabel value="Use CDI Beans:"/>
                                  <h:selectOneRadio value="#{beanMaker.configuration.useCDIBeans}">

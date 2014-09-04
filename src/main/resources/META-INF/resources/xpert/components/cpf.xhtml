@@ -1,0 +1,30 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:cc="http://java.sun.com/jsf/composite"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core">
+
+    <!-- INTERFACE -->
+    <cc:interface>
+        <cc:attribute name="value"/>
+        <cc:attribute name="readonly" type="boolean" default="false"/>
+        <cc:attribute name="disabled" type="boolean" default="false"/>
+        <cc:attribute name="size" default="20"/>
+        <cc:attribute name="required" default="false" type="boolean"/>
+        <cc:attribute name="requiredMessage"/>
+        <cc:attribute name="style"/>
+        <cc:attribute name="styleClass"/>
+        <cc:attribute name="placeHolder" default=""/>
+    </cc:interface>
+
+    <!-- IMPLEMENTATION -->
+    <cc:implementation>
+        <p:inputMask mask="#{formatMB.format.cpf}" validator="cpfValidator" placeHolder="#{cc.attrs.placeHolder}"
+                     style="#{cc.attrs.style}" styleClass="#{cc.attrs.styleClass}"
+                     value="#{cc.attrs.value}" converter="cpfConverter" size="#{cc.attrs.size}" 
+                     required="#{cc.attrs.required}" requiredMessage="#{cc.attrs.requiredMessage}"
+                     readonly="#{cc.attrs.readonly}" disabled="#{cc.attrs.disabled}"/>
+    </cc:implementation>
+</html>
