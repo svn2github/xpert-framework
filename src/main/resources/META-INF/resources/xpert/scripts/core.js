@@ -145,7 +145,7 @@ Xpert = {
 };
 Xpert.behavior = {
     
-     verifyConfirmation: function (element, confirmLabel, cancelLabel, message){
+     verifyConfirmation: function (element, confirmLabel, cancelLabel, message, primefaces3){
         var $element = $(element); 
         var onclick = $element.attr("onclick");
         
@@ -154,17 +154,21 @@ Xpert.behavior = {
 
             $element.removeAttr("onclick");
             $element.click(function () {
-                Xpert.behavior.confirmation(confirmLabel,cancelLabel, message, onclick);
+                Xpert.behavior.confirmation(confirmLabel,cancelLabel, message, onclick, primefaces3);
                 return false;
             });
         }
 
      },
     
-     confirmation: function(confirmLabel, cancelLabel, message, onclick) {
+     confirmation: function(confirmLabel, cancelLabel, message, onclick, primefaces3) {
         //create dialog
         var id = "idWidgetConfirmationDialog";
-        var confirmClick = "widgetConfirmationDialog.hide();"+onclick+";return false;";
+        var widgetVar = "widgetConfirmationDialog";
+        if (primefaces3 == false){
+            widgetVar = "PF('"+widgetVar+"')";
+        }
+        var confirmClick = widgetVar+".hide();"+onclick+";return false;";;
         //create only one time
         var $createdDialog = $("#"+id);
         if($createdDialog != null && $createdDialog.length > 0){
@@ -182,14 +186,18 @@ Xpert.behavior = {
                                     +'<button id="xpertCofirmationButton" type="submit" onclick="'+confirmClick+'" class="dialog-confirm-button ui-state-default ui-button ui-widget ui-corner-all ui-button-text-only" role="button" aria-disabled="false">'
                                         +'<span class="ui-button-text">'+confirmLabel+'</span>'
                                     +'</button>'
-                                    +'<button type="button" onclick="widgetConfirmationDialog.hide()" class="dialog-cancel-button ui-state-default ui-button ui-widget ui-corner-all ui-button-text-only" role="button" aria-disabled="false">'
+                                    +'<button type="button" onclick='+widgetVar+'.hide()" class="dialog-cancel-button ui-state-default ui-button ui-widget ui-corner-all ui-button-text-only" role="button" aria-disabled="false">'
                                         +'<span class="ui-button-text">'+cancelLabel+'</span>'
                                     +'</button>'
                                     +'<script type="text/javascript">Xpert.skinButton("#'+id+' button");</script>'
                                 +'</form>'
                             +'</div>'
-                        +'</div>'
-                        +'<script type="text/javascript">PrimeFaces.cw("Dialog","widgetConfirmationDialog",{id:"'+id+'",modal:true,resizable:false,width:300,visible:true});</script>';
+                        +'</div>';
+            if (primefaces3 == false){
+                html = html+'<script type="text/javascript">PrimeFaces.cw("Dialog","widgetConfirmationDialog",{id:"'+id+'",modal:true,resizable:false,width:300,visible:true});</script>';
+            }else{
+                html = html+'<script type="text/javascript">PrimeFaces.cw("Dialog","widgetConfirmationDialog",{id:"'+id+'",modal:true,resizable:false,width:300,visible:true,widgetVar:"widgetConfirmationDialog"});</script>';
+            }
             $(html).appendTo("body");
         }  
 

@@ -60,7 +60,7 @@
                 </#list>
                 <p:column styleClass="uix-datatable-actions" exportable="false" headerText="${sharp}{xmsg['actions']}">
                     <f:facet name="header">
-                        <x:legends detail="true" edit="true" delete="true"/>
+                         <h:outputText value="${sharp}{xmsg['actions']}"/>
                     </f:facet>
                     <p:commandButton oncomplete="${entity.widgetVarDetail}.show();"  icon="ui-icon-zoomin" 
                                      process="@form" update=":formDetail${entity.name}" title="${sharp}{xmsg['detail']}" >

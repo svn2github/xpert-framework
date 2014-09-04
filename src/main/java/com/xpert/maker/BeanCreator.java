@@ -71,7 +71,7 @@ public class BeanCreator {
     public static String createBean(Bean bean, BeanConfiguration configuration) throws IOException, TemplateException {
         ViewEntity viewEntity = createViewEntity(bean.getEntity(), configuration);
         String templatePath = bean.getBeanType().getTemplate();
-        logger.log(Level.INFO, "Creating template {0}", new Object[]{templatePath});
+        //logger.log(Level.INFO, "Creating template {0}", new Object[]{templatePath});
 
         if (bean.getBeanType().isView()) {
             if (bean.getBeanType().isBootstrapDependend() && configuration.getBootstrapVersion() != null) {
@@ -140,9 +140,10 @@ public class BeanCreator {
                 //Enum
             } else if (field.getType().isEnum()) {
                 viewField.setEnumeration(true);
-                //Date
+                //Date/time
             } else if (field.getType().equals(Date.class) || field.getType().equals(Calendar.class)) {
                 Temporal temporal = field.getAnnotation(Temporal.class);
+                //time
                 if (temporal != null && temporal.value() != null && temporal.value().equals(TemporalType.TIME)) {
                     viewField.setTime(true);
                 } else {
