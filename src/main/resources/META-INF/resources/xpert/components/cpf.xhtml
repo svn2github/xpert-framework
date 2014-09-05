@@ -21,10 +21,12 @@
 
     <!-- IMPLEMENTATION -->
     <cc:implementation>
-        <p:inputMask mask="#{formatMB.format.cpf}" validator="cpfValidator" placeHolder="#{cc.attrs.placeHolder}"
-                     style="#{cc.attrs.style}" styleClass="#{cc.attrs.styleClass}"
-                     value="#{cc.attrs.value}" converter="cpfConverter" size="#{cc.attrs.size}" 
-                     required="#{cc.attrs.required}" requiredMessage="#{cc.attrs.requiredMessage}"
-                     readonly="#{cc.attrs.readonly}" disabled="#{cc.attrs.disabled}"/>
+        <span id="#{cc.attrs.clientId}">
+            <p:inputMask mask="#{formatMB.format.cpf}" validator="cpfValidator" placeHolder="#{cc.attrs.placeHolder}"
+                         style="#{cc.attrs.style}" styleClass="#{cc.attrs.styleClass}"
+                         value="#{cc.attrs.value}" converter="cpfConverter" size="#{cc.attrs.size}" 
+                         required="#{cc.attrs.required}" requiredMessage="#{cc.attrs.requiredMessage}"
+                         readonly="#{cc.attrs.readonly}" disabled="#{cc.attrs.disabled}"/>
+        </span>
     </cc:implementation>
 </html>

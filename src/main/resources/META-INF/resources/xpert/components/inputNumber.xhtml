@@ -45,9 +45,7 @@
             </p:inputText>
             <h:outputScript library="xpert" name="scripts/jquery.price_format.js" target="head" />
             <h:panelGroup rendered="#{not cc.attrs.readonly and not cc.attrs.disabled}">
-                <script type="text/javascript">$(function() {
-                    $('#' + '#{cc.attrs.clientId}'.replace(/:/g, '\\:') + '\\:input').priceFormat({limit: #{cc.attrs.limit}, prefix: '', centsSeparator: '#{cc.attrs.centsSeparator == null ? localeBean.decimalSeparator : cc.attrs.centsSeparator}', thousandsSeparator: '#{cc.attrs.thousandsSeparator == null ? localeBean.groupingSeparator : cc.attrs.thousandsSeparator}', allowNegative:#{cc.attrs.allowNegative}, centsLimit: #{cc.attrs.centsLimit}});
-                });</script>
+                <script type="text/javascript">$(function() {$(PrimeFaces.escapeClientId('#{cc.attrs.clientId}:input')).priceFormat({limit: #{cc.attrs.limit}, prefix: '', centsSeparator: '#{cc.attrs.centsSeparator == null ? localeBean.decimalSeparator : cc.attrs.centsSeparator}', thousandsSeparator: '#{cc.attrs.thousandsSeparator == null ? localeBean.groupingSeparator : cc.attrs.thousandsSeparator}', allowNegative:#{cc.attrs.allowNegative}, centsLimit: #{cc.attrs.centsLimit}});});</script>
             </h:panelGroup>
         </span>
     </cc:implementation>
