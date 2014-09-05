@@ -17,12 +17,20 @@
         <cc:attribute name="style"/>
         <cc:attribute name="styleClass"/>
         <cc:attribute name="placeHolder" default=""/>
+        <cc:editableValueHolder name="input" targets="input" />
+        <cc:clientBehavior name="valueChange" event="valueChange" default="true"  targets="input"/>
+        <cc:clientBehavior name="keyup" event="keyup" targets="input"/>
+        <cc:clientBehavior name="keydown" event="keydown" targets="input"/>
+        <cc:clientBehavior name="blur" event="blur" targets="input"/>
+        <cc:clientBehavior name="change" event="change" targets="input"/>
+        <cc:clientBehavior name="click" event="click" targets="input"/>
+        <cc:clientBehavior name="focus" event="focus" targets="input"/>
     </cc:interface>
 
     <!-- IMPLEMENTATION -->
     <cc:implementation>
         <span id="#{cc.attrs.clientId}">
-            <p:inputMask mask="#{formatMB.format.cnpj}" validator="cnpjValidator"  placeHolder="#{cc.attrs.placeHolder}"
+            <p:inputMask id="input" mask="#{formatMB.format.cnpj}" validator="cnpjValidator"  placeHolder="#{cc.attrs.placeHolder}"
                          style="#{cc.attrs.style}" styleClass="#{cc.attrs.styleClass}"
                          value="#{cc.attrs.value}" converter="cnpjConverter" size="#{cc.attrs.size}" 
                          required="#{cc.attrs.required}" requiredMessage="#{cc.attrs.requiredMessage}"
