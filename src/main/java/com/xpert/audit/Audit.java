@@ -498,7 +498,7 @@ public class Audit {
         if (maxSize == null || value == null || value.length() <= maxSize) {
             return value;
         }
-        return value.substring(0, maxSize);
+        return value.substring(0, maxSize-3)+"...";
     }
     
     public boolean isEquals(Object fieldOld, Object fieldValue) {
