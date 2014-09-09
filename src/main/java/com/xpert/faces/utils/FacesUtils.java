@@ -157,11 +157,12 @@ public class FacesUtils {
     /**
      * Add Cookie no HttpServletResponse
      *
-     * @param nomeCookie
+     * @param name
+     * @param value
      * @return
      */
-    public static void addCookie(String nome, String valor) {
-        Cookie cookie = new Cookie(nome, valor);
+    public static void addCookie(String name, String value) {
+        Cookie cookie = new Cookie(name, value);
         cookie.setPath("/");
         cookie.setMaxAge(2592000);
         // NOTE: If cookie version is set to 1, cookie values will be quoted.
