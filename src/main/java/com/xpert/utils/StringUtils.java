@@ -25,11 +25,12 @@ public class StringUtils {
 
     /**
      * Search url in text and replace by anchor
-     * 
-     * Example: http://www.test.com returns <a href="http://www.test.com" target="_blank">http://www.test.com</a>
-     * 
+     *
+     * Example: http://www.test.com returns <a href="http://www.test.com"
+     * target="_blank">http://www.test.com</a>
+     *
      * @param message
-     * @return 
+     * @return
      */
     public static String replaceUrlByAnchor(String message) {
         String strRegex = "((((https?|ftp|telnet|file):((//)|(\\\\))+)|(www.))+[\\w\\d:#@%/;$()~_?\\+-=\\\\.&]*)";
@@ -200,5 +201,15 @@ public class StringUtils {
             return string.substring(0, 1).toUpperCase() + "" + string.substring(1, string.length());
         }
         return "";
+    }
+
+    public static boolean isOnlyLetter(String string) {
+        char[] chars = string.toCharArray();
+        for (char c : chars) {
+            if (!Character.isLetter(c)) {
+                return false;
+            }
+        }
+        return true;
     }
 }
