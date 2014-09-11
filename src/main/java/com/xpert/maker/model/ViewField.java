@@ -27,7 +27,7 @@ public class ViewField {
     private String maxlength;
     
     public boolean isRenderFieldInFormCreate(){
-        return id == false && oneToOne == false && oneToMany == false;
+        return yesNo || string || integer || decimal || date || time || enumeration || manyToMany || manyToOne;
     }
 
     public String getTypeNameLower() {
