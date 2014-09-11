@@ -1,5 +1,6 @@
 package com.xpert.faces.primefaces;
 
+import com.xpert.faces.utils.FacesUtils;
 import com.xpert.i18n.XpertResourceBundle;
 import com.xpert.persistence.dao.BaseDAO;
 import com.xpert.persistence.query.JoinBuilder;
@@ -12,6 +13,15 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.el.ELContext;
+import javax.el.ExpressionFactory;
+import javax.el.ValueExpression;
+import javax.faces.component.UIComponent;
+import javax.faces.component.UINamingContainer;
+import javax.faces.context.FacesContext;
+import org.primefaces.component.api.UIColumn;
+import org.primefaces.component.column.Column;
+import org.primefaces.component.datatable.DataTable;
 import org.primefaces.model.LazyDataModel;
 import org.primefaces.model.SortOrder;
 
@@ -43,6 +53,7 @@ public class LazyDataModelImpl<T> extends LazyDataModel {
     private Restriction restriction;
     private JoinBuilder joinBuilder;
     private boolean loadData = true;
+    private boolean storeFiltersInSession = true;
 
     /**
      * @param attributes Attributes of object thet will be loaded
@@ -154,9 +165,9 @@ public class LazyDataModelImpl<T> extends LazyDataModel {
             OrderByHandler orderByHandler = getOrderByHandler();
             if (orderByHandler != null) {
                 orderBy = orderByHandler.getOrderBy(orderBy);
-            }else{
-                if(joinBuilder != null && joinBuilder.getRootAlias() != null){
-                    orderBy = joinBuilder.getRootAlias()+"."+orderBy;
+            } else {
+                if (joinBuilder != null && joinBuilder.getRootAlias() != null) {
+                    orderBy = joinBuilder.getRootAlias() + "." + orderBy;
                 }
             }
             if (order.equals(SortOrder.DESCENDING)) {
@@ -191,12 +202,12 @@ public class LazyDataModelImpl<T> extends LazyDataModel {
                         }
                         //primefaces 5 can add custom types in filter not only String
                         String property = e.getKey().toString();
-                        if(joinBuilder != null && joinBuilder.getRootAlias() != null){
-                            property = joinBuilder.getRootAlias()+"."+property;
+                        if (joinBuilder != null && joinBuilder.getRootAlias() != null) {
+                            property = joinBuilder.getRootAlias() + "." + property;
                         }
                         if (e.getValue() instanceof String) {
                             filterRestrictions.add(new Restriction(property, RestrictionType.DATA_TABLE_FILTER, e.getValue()));
-                        }else{
+                        } else {
                             filterRestrictions.add(new Restriction(property, RestrictionType.EQUALS, e.getValue()));
                         }
                     }
@@ -206,14 +217,55 @@ public class LazyDataModelImpl<T> extends LazyDataModel {
         return filterRestrictions;
     }
 
+    public void storeFilterInSession(Map filters) {
+        DataTable dataTable = (DataTable) UIComponent.getCurrentComponent(FacesContext.getCurrentInstance());
+        FacesUtils.addToSession(dataTable.getClientId(), filters);
+    }
+
+    public Map restoreFilterFromSession() {
+        FacesContext context = FacesContext.getCurrentInstance();
+        DataTable dataTable = (DataTable) UIComponent.getCurrentComponent(context);
+        Map filters = (Map) FacesUtils.getFromSession(dataTable.getClientId());
+
+        if (filters != null && !filters.isEmpty()) {
+            dataTable.setFilters(filters);
+            for (UIColumn uicolumn : dataTable.getColumns()) {
+                Column column = (Column) uicolumn;
+                ValueExpression valueExpressionFilterBy = column.getValueExpression("filterBy");
+                if (valueExpressionFilterBy != null) {
+                    String expressionString = valueExpressionFilterBy.getExpressionString();
+                    expressionString = expressionString.substring(2, expressionString.length() - 1);      //Remove #{}
+                    expressionString = expressionString.substring(expressionString.indexOf(".") + 1, expressionString.length());      //Remove .
+                    ValueExpression valueExpression = column.getValueExpression("filterValue");
+                    if (valueExpression != null) {
+                        valueExpression.setValue(context.getELContext(), filters.get(expressionString));
+                    } else {
+                        ELContext elContext = context.getELContext();
+                        ExpressionFactory expFactory = context.getApplication().getExpressionFactory();
+                        ValueExpression ret = expFactory.createValueExpression(elContext, "filterValue", Object.class);
+                        column.setValueExpression("filterValue", ret);
+                    }
+                }
+            }
+        }
+
+        return filters;
+    }
+
     @Override
     public List load(int first, int pageSize, String orderBy, SortOrder order, Map filters) {
 
-        if(isLoadData() == false){
+        if (isLoadData() == false) {
             setRowCount(0);
             return null;
         }
-        
+
+        if (isStoreFiltersInSession()) {
+            if (filters == null || filters.isEmpty()) {
+                filters = restoreFilterFromSession();
+            }
+        }
+
         long begin = System.currentTimeMillis();
 
         LazyCountType lazyCountType = getLazyCountType();
@@ -265,10 +317,10 @@ public class LazyDataModelImpl<T> extends LazyDataModel {
         //If ALWAYS or (ONLY_ONCE and not set currentRowCount or restrictions has changed)
         if (lazyCountType.equals(LazyCountType.ALWAYS)
                 || (lazyCountType.equals(LazyCountType.ONLY_ONCE) && (currentRowCount == null || !currentQueryRestrictions.equals(queryRestrictions)))) {
-            
+
             currentRowCount = dao.getQueryBuilder().from(dao.getEntityClass(), (joinBuilder != null ? joinBuilder.getRootAlias() : null))
-                                                   .join(joinBuilder)
-                                                   .add(currentQueryRestrictions).count().intValue();
+                    .join(joinBuilder)
+                    .add(currentQueryRestrictions).count().intValue();
             if (DEBUG) {
                 logger.log(Level.INFO, "Count on entity {0}, records found: {1} ", new Object[]{dao.getEntityClass().getName(), currentRowCount});
             }
@@ -287,6 +339,10 @@ public class LazyDataModelImpl<T> extends LazyDataModel {
             long end = System.currentTimeMillis();
             logger.log(Level.INFO, "Load method executed in {0} milliseconds", (end - begin));
         }
+        if (isStoreFiltersInSession()) {
+            storeFilterInSession(filters);
+        }
+
         return dados;
     }
 
@@ -357,8 +413,8 @@ public class LazyDataModelImpl<T> extends LazyDataModel {
 
     /**
      * Indicates if data will be loaded
-     * 
-     * @return 
+     *
+     * @return
      */
     public boolean isLoadData() {
         return loadData;
@@ -367,7 +423,7 @@ public class LazyDataModelImpl<T> extends LazyDataModel {
     public void setLoadData(boolean loadData) {
         this.loadData = loadData;
     }
-    
+
     /**
      * Default order by of query
      *
@@ -461,6 +517,14 @@ public class LazyDataModelImpl<T> extends LazyDataModel {
 
     public void setFilterByHandler(FilterByHandler filterByHandler) {
         this.filterByHandler = filterByHandler;
+    }
+
+    public boolean isStoreFiltersInSession() {
+        return storeFiltersInSession;
+    }
+
+    public void setStoreFiltersInSession(boolean storeFiltersInSession) {
+        this.storeFiltersInSession = storeFiltersInSession;
     }
 
 }
