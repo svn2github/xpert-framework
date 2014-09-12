@@ -59,6 +59,10 @@ public class RestorableFilter extends UIComponentBase {
     public static void restoreFilterFromSession(Map currentFilters) {
         FacesContext context = FacesContext.getCurrentInstance();
         DataTable dataTable = (DataTable) UIComponent.getCurrentComponent(context);
+//        if (dataTable.getAttributes().get("restorableFilter") == null) {
+//            return;
+//        }
+
         Map viewMap = context.getViewRoot().getViewMap();
 
         //only first time

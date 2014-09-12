@@ -153,6 +153,11 @@ public class DateFilterRenderer extends Renderer {
         writer.endElement("td");
         writer.endElement("tr");
         writer.endElement("table");
+        writer.startElement("a", component);
+        writer.writeAttribute("href", "javascript:void(0)", null);
+        writer.writeAttribute("onclick", "$(this).closest('th').find('input').val('');"+ widgetVar + ".filter();", null);
+        writer.write(XpertResourceBundle.get("clear"));
+        writer.endElement("a");
         writer.endElement("div");
         //clear parent and prevent to add to tree
         calendarStart.setParent(null);

@@ -41,7 +41,7 @@
 .uix-dialog-fluid .ui-resizable-handle{display: none !important;}
 .uix-dialog-fluid .ui-dialog-content { max-height: 80% !important;}
 .uix-datatable-actions{white-space: nowrap !important;}
-
+.panel-calendar-filter a{font-weight: normal; font-size: 10px;}
 
 
 

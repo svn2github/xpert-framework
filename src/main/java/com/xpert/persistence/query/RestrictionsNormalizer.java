@@ -20,7 +20,7 @@ import javax.persistence.TemporalType;
  */
 public class RestrictionsNormalizer {
 
-    private static final String DATE_FILTER_INTERVAL_SEPARATOR = " ## ";
+    public static final String DATE_FILTER_INTERVAL_SEPARATOR = " ## ";
     private static final Logger logger = Logger.getLogger(QueryBuilder.class.getName());
 
     public static List<Restriction> getNormalizedRestrictions(Class from, List<Restriction> restrictions, String alias) {

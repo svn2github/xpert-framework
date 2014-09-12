@@ -44,7 +44,6 @@ public class LazyDataModelImpl<T> extends LazyDataModel {
     private Restriction restriction;
     private JoinBuilder joinBuilder;
     private boolean loadData = true;
-    private boolean storeFiltersInSession = true;
 
     /**
      * @param attributes Attributes of object thet will be loaded
@@ -208,16 +207,6 @@ public class LazyDataModelImpl<T> extends LazyDataModel {
         return filterRestrictions;
     }
 
-    private String scriptRestorableFilters;
-
-    public String getScriptRestorableFilters() {
-        return scriptRestorableFilters;
-    }
-
-    public void setScriptRestorableFilters(String scriptRestorableFilters) {
-        this.scriptRestorableFilters = scriptRestorableFilters;
-    }
-
   
 
     @Override
@@ -228,9 +217,7 @@ public class LazyDataModelImpl<T> extends LazyDataModel {
             return null;
         }
 
-        if (isStoreFiltersInSession()) {
-            RestorableFilter.restoreFilterFromSession(filters);
-        }
+        //    RestorableFilter.restoreFilterFromSession(filters);
 
         long begin = System.currentTimeMillis();
 
@@ -305,9 +292,7 @@ public class LazyDataModelImpl<T> extends LazyDataModel {
             long end = System.currentTimeMillis();
             logger.log(Level.INFO, "Load method executed in {0} milliseconds", (end - begin));
         }
-        if (isStoreFiltersInSession()) {
-            RestorableFilter.storeFilterInSession(filters);
-        }
+         //   RestorableFilter.storeFilterInSession(filters);
 
         return dados;
     }
@@ -485,12 +470,5 @@ public class LazyDataModelImpl<T> extends LazyDataModel {
         this.filterByHandler = filterByHandler;
     }
 
-    public boolean isStoreFiltersInSession() {
-        return storeFiltersInSession;
-    }
-
-    public void setStoreFiltersInSession(boolean storeFiltersInSession) {
-        this.storeFiltersInSession = storeFiltersInSession;
-    }
 
 }
