@@ -51,6 +51,10 @@
         <component-type>com.xpert.faces.component.Mask</component-type>
         <component-class>com.xpert.faces.component.mask.Mask</component-class>
     </component>
+    <component>
+        <component-type>com.xpert.faces.component.RestorableFilter</component-type>
+        <component-class>com.xpert.faces.component.restorablefilter.RestorableFilter</component-class>
+    </component>
     
     <render-kit>
         <renderer>
@@ -82,6 +86,11 @@
             <component-family>com.xpert.component</component-family>
             <renderer-type>com.xpert.faces.component.MaskRenderer</renderer-type>
             <renderer-class>com.xpert.faces.component.mask.MaskRenderer</renderer-class>
+        </renderer>
+        <renderer>
+            <component-family>com.xpert.component</component-family>
+            <renderer-type>com.xpert.faces.component.RestorableFilterRenderer</renderer-type>
+            <renderer-class>com.xpert.faces.component.restorablefilter.RestorableFilterRenderer</renderer-class>
         </renderer>
     </render-kit>
 </faces-config>

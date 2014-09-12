@@ -1,6 +1,6 @@
 package com.xpert.faces.primefaces;
 
-import com.xpert.faces.utils.FacesUtils;
+import com.xpert.faces.component.restorablefilter.RestorableFilter;
 import com.xpert.i18n.XpertResourceBundle;
 import com.xpert.persistence.dao.BaseDAO;
 import com.xpert.persistence.query.JoinBuilder;
@@ -13,15 +13,6 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.el.ELContext;
-import javax.el.ExpressionFactory;
-import javax.el.ValueExpression;
-import javax.faces.component.UIComponent;
-import javax.faces.component.UINamingContainer;
-import javax.faces.context.FacesContext;
-import org.primefaces.component.api.UIColumn;
-import org.primefaces.component.column.Column;
-import org.primefaces.component.datatable.DataTable;
 import org.primefaces.model.LazyDataModel;
 import org.primefaces.model.SortOrder;
 
@@ -217,40 +208,17 @@ public class LazyDataModelImpl<T> extends LazyDataModel {
         return filterRestrictions;
     }
 
-    public void storeFilterInSession(Map filters) {
-        DataTable dataTable = (DataTable) UIComponent.getCurrentComponent(FacesContext.getCurrentInstance());
-        FacesUtils.addToSession(dataTable.getClientId(), filters);
+    private String scriptRestorableFilters;
+
+    public String getScriptRestorableFilters() {
+        return scriptRestorableFilters;
     }
 
-    public Map restoreFilterFromSession() {
-        FacesContext context = FacesContext.getCurrentInstance();
-        DataTable dataTable = (DataTable) UIComponent.getCurrentComponent(context);
-        Map filters = (Map) FacesUtils.getFromSession(dataTable.getClientId());
-
-        if (filters != null && !filters.isEmpty()) {
-            dataTable.setFilters(filters);
-            for (UIColumn uicolumn : dataTable.getColumns()) {
-                Column column = (Column) uicolumn;
-                ValueExpression valueExpressionFilterBy = column.getValueExpression("filterBy");
-                if (valueExpressionFilterBy != null) {
-                    String expressionString = valueExpressionFilterBy.getExpressionString();
-                    expressionString = expressionString.substring(2, expressionString.length() - 1);      //Remove #{}
-                    expressionString = expressionString.substring(expressionString.indexOf(".") + 1, expressionString.length());      //Remove .
-                    ValueExpression valueExpression = column.getValueExpression("filterValue");
-                    if (valueExpression != null) {
-                        valueExpression.setValue(context.getELContext(), filters.get(expressionString));
-                    } else {
-                        ELContext elContext = context.getELContext();
-                        ExpressionFactory expFactory = context.getApplication().getExpressionFactory();
-                        ValueExpression ret = expFactory.createValueExpression(elContext, "filterValue", Object.class);
-                        column.setValueExpression("filterValue", ret);
-                    }
-                }
-            }
-        }
-
-        return filters;
+    public void setScriptRestorableFilters(String scriptRestorableFilters) {
+        this.scriptRestorableFilters = scriptRestorableFilters;
     }
+
+  
 
     @Override
     public List load(int first, int pageSize, String orderBy, SortOrder order, Map filters) {
@@ -261,9 +229,7 @@ public class LazyDataModelImpl<T> extends LazyDataModel {
         }
 
         if (isStoreFiltersInSession()) {
-            if (filters == null || filters.isEmpty()) {
-                filters = restoreFilterFromSession();
-            }
+            RestorableFilter.restoreFilterFromSession(filters);
         }
 
         long begin = System.currentTimeMillis();
@@ -340,7 +306,7 @@ public class LazyDataModelImpl<T> extends LazyDataModel {
             logger.log(Level.INFO, "Load method executed in {0} milliseconds", (end - begin));
         }
         if (isStoreFiltersInSession()) {
-            storeFilterInSession(filters);
+            RestorableFilter.storeFilterInSession(filters);
         }
 
         return dados;
