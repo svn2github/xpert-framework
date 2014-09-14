@@ -25,36 +25,36 @@
                 <#if field.collection == false && field.id == false>
                 <p:column headerText="${sharp}{${resourceBundle}['${entity.nameLower}.${field.name}']}" sortBy="${sharp}{${entity.nameLower}.${field.name}}"
                           <#if field.string == true || field.integer == true || field.enumeration == true || field.yesNo == true || field.date == true>filterBy="${sharp}{${entity.nameLower}.${field.name}}"</#if> <#if field.yesNo == true>filterOptions="${sharp}{booleanSelectItensEmptyOption}"</#if> <#if field.enumeration == true>filterOptions="${sharp}{findAllBean.getSelect(class${configuration.managedBeanSuffix}.${field.typeNameLower})}"</#if> <#if field.date == true || field.time == true || field.yesNo == true>style="text-align: center;"</#if><#if field.decimal == true>style="text-align: right;"</#if>>
-                        <#if field.lazy == true>
-                        <h:outputText value="${sharp}{${entity.nameLower}.${field.name}}">
-                            <x:initializer/>
-                        </h:outputText>
-                        </#if>
-                        <#if field.decimal == true>
-                        <h:outputText value="${sharp}{${entity.nameLower}.${field.name}}">
-                            <f:convertNumber minFractionDigits="2" maxFractionDigits="2" />
-                        </h:outputText>
-                        </#if>
-                        <#if field.date == true>
-                        <f:facet name="header">
-                            ${sharp}{${resourceBundle}['${entity.nameLower}.${field.name}']}
-                            <x:dateFilter/>
-                        </f:facet>
-                        <h:outputText value="${sharp}{${entity.nameLower}.${field.name}}">
-                            <f:convertDateTime />
-                        </h:outputText>
-                        </#if>
-                        <#if field.time == true>
-                        <h:outputText value="${sharp}{${entity.nameLower}.${field.name}}">
-                            <f:convertDateTime pattern="${configuration.timePattern}"/>
-                        </h:outputText>
-                        </#if>
-                        <#if field.yesNo == true>
-                        <h:outputText value="${sharp}{${entity.nameLower}.${field.name}}" converter ="yesNoConverter" />
-                        </#if>
-                        <#if field.lazy == false && field.decimal == false && field.date == false && field.time == false && field.yesNo == false>
-                        <h:outputText value="${sharp}{${entity.nameLower}.${field.name}}"/>
-                        </#if>
+                    <#if field.lazy == true>
+                    <h:outputText value="${sharp}{${entity.nameLower}.${field.name}}">
+                        <x:initializer/>
+                    </h:outputText>
+                    </#if>
+                    <#if field.decimal == true>
+                    <h:outputText value="${sharp}{${entity.nameLower}.${field.name}}">
+                        <f:convertNumber minFractionDigits="2" maxFractionDigits="2" />
+                    </h:outputText>
+                    </#if>
+                    <#if field.date == true>
+                    <f:facet name="header">
+                        ${sharp}{${resourceBundle}['${entity.nameLower}.${field.name}']}
+                        <x:dateFilter/>
+                    </f:facet>
+                    <h:outputText value="${sharp}{${entity.nameLower}.${field.name}}">
+                        <f:convertDateTime />
+                    </h:outputText>
+                    </#if>
+                    <#if field.time == true>
+                    <h:outputText value="${sharp}{${entity.nameLower}.${field.name}}">
+                        <f:convertDateTime pattern="${configuration.timePattern}"/>
+                    </h:outputText>
+                    </#if>
+                    <#if field.yesNo == true>
+                    <h:outputText value="${sharp}{${entity.nameLower}.${field.name}}" converter ="yesNoConverter" />
+                    </#if>
+                    <#if field.lazy == false && field.decimal == false && field.date == false && field.time == false && field.yesNo == false>
+                    <h:outputText value="${sharp}{${entity.nameLower}.${field.name}}"/>
+                    </#if>
                 </p:column>
                 </#if>
                 </#list>

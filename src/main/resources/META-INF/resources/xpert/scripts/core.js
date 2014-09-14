@@ -68,9 +68,12 @@ Xpert = {
         
         var dateStart = $column.find('.calendar-filter-start input').val();
         var dateEnd = $column.find('.calendar-filter-end input').val();
-        var cancatDate = dateStart+" ## "+dateEnd;
-        $inputFilter.val(cancatDate);
+        var concatDate = dateStart+" ## "+dateEnd;
+        $inputFilter.val(concatDate);
 
+    },
+    clearDateFilter : function(element) {
+        $(element).closest('th').find('input').val('');
     },
     refreshDateFilter : function(column, dateStart, dateEnd) {
         var $column  = $(PrimeFaces.escapeClientId(column));

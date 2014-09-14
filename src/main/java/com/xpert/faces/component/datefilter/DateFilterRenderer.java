@@ -155,7 +155,7 @@ public class DateFilterRenderer extends Renderer {
         writer.endElement("table");
         writer.startElement("a", component);
         writer.writeAttribute("href", "javascript:void(0)", null);
-        writer.writeAttribute("onclick", "$(this).closest('th').find('input').val('');"+ widgetVar + ".filter();", null);
+        writer.writeAttribute("onclick", "Xpert.clearDateFilter(this);"+ widgetVar + ".filter();", null);
         writer.write(XpertResourceBundle.get("clear"));
         writer.endElement("a");
         writer.endElement("div");
