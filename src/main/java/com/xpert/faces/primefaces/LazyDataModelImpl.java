@@ -44,6 +44,7 @@ public class LazyDataModelImpl<T> extends LazyDataModel {
     private Restriction restriction;
     private JoinBuilder joinBuilder;
     private boolean loadData = true;
+    private boolean restorableFilter = false;
 
     /**
      * @param attributes Attributes of object thet will be loaded
@@ -207,17 +208,15 @@ public class LazyDataModelImpl<T> extends LazyDataModel {
         return filterRestrictions;
     }
 
-  
-
     @Override
     public List load(int first, int pageSize, String orderBy, SortOrder order, Map filters) {
-
         if (isLoadData() == false) {
             setRowCount(0);
             return null;
         }
-
-        //    RestorableFilter.restoreFilterFromSession(filters);
+        if (isRestorableFilter()) {
+            RestorableFilter.restoreFilterFromSession(filters);
+        }
 
         long begin = System.currentTimeMillis();
 
@@ -292,7 +291,9 @@ public class LazyDataModelImpl<T> extends LazyDataModel {
             long end = System.currentTimeMillis();
             logger.log(Level.INFO, "Load method executed in {0} milliseconds", (end - begin));
         }
-         //   RestorableFilter.storeFilterInSession(filters);
+        if (isRestorableFilter()) {
+            RestorableFilter.storeFilterInSession(filters);
+        }
 
         return dados;
     }
@@ -470,5 +471,12 @@ public class LazyDataModelImpl<T> extends LazyDataModel {
         this.filterByHandler = filterByHandler;
     }
 
+    public boolean isRestorableFilter() {
+        return restorableFilter;
+    }
+
+    public void setRestorableFilter(boolean restorableFilter) {
+        this.restorableFilter = restorableFilter;
+    }
 
 }

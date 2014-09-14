@@ -1,6 +1,7 @@
 package com.xpert.faces.component.restorablefilter;
 
 import com.xpert.faces.utils.FacesUtils;
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 import javax.el.ValueExpression;
@@ -49,6 +50,7 @@ public class RestorableFilter extends UIComponentBase {
         return COMPONENT_FAMILY;
     }
 
+
     public static void storeFilterInSession(Map filters) {
         FacesContext context = FacesContext.getCurrentInstance();
         DataTable dataTable = (DataTable) UIComponent.getCurrentComponent(FacesContext.getCurrentInstance());
@@ -59,10 +61,6 @@ public class RestorableFilter extends UIComponentBase {
     public static void restoreFilterFromSession(Map currentFilters) {
         FacesContext context = FacesContext.getCurrentInstance();
         DataTable dataTable = (DataTable) UIComponent.getCurrentComponent(context);
-//        if (dataTable.getAttributes().get("restorableFilter") == null) {
-//            return;
-//        }
-
         Map viewMap = context.getViewRoot().getViewMap();
 
         //only first time
