@@ -39,7 +39,7 @@ public class DetailAuditBean {
     private List<Restriction> getRestrictions() {
 
         List<Restriction> restrictions = new ArrayList<Restriction>();
-        //for Long doesnt need conversion
+        //Long doesnt need conversion
         if (beanModel.getId() instanceof Long) {
             restrictions.add(new Restriction("identifier", beanModel.getId()));
         } else if (beanModel.getId() instanceof Number) {

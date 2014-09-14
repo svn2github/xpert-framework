@@ -16,6 +16,7 @@ import com.xpert.persistence.query.JoinBuilder;
 import com.xpert.persistence.query.Restriction;
 import com.xpert.persistence.utils.EntityUtils;
 import java.lang.reflect.ParameterizedType;
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
@@ -129,6 +130,8 @@ public abstract class AbstractBaseBean<T> {
                 return Long.parseLong(StringUtils.getOnlyIntegerNumbers(parameter));
             } else if (idType.equals(Integer.class)) {
                 return Integer.parseInt(StringUtils.getOnlyIntegerNumbers(parameter));
+            }else if (idType.equals(BigDecimal.class)) {
+                return new BigDecimal(StringUtils.getOnlyIntegerNumbers(parameter));
             } else {
                 logger.log(Level.SEVERE, "Type {0} from entity {1} is not mapped in generic base bean", new Object[]{idType.getName(), entityClass.getName()});
                 return null;
