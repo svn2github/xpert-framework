@@ -6,7 +6,7 @@
                  xmlns:x="http://xpert.com/faces">
     
   
-    <h:form id="formCreate${entity.name}" styleClass="form-detail">
+    <h:form id="formCreate${entity.name}" >
         <p:fieldset legend="${sharp}{xmsg['generalData']}">
             <x:modalMessages/>
 
