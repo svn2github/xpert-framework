@@ -672,12 +672,16 @@ public class BeanCreator {
     }
 
     public static boolean isDecimal(Field field) {
-        return field.getType().equals(BigDecimal.class) || field.getType().equals(Double.class) || field.getType().equals(double.class);
+        return field.getType().equals(BigDecimal.class) 
+                || field.getType().equals(Double.class) || field.getType().equals(double.class)
+                || field.getType().equals(Float.class) || field.getType().equals(float.class);
     }
 
     public static boolean isInteger(Field field) {
         return field.getType().equals(Integer.class) || field.getType().equals(int.class)
-                || field.getType().equals(Long.class) || field.getType().equals(long.class);
+                || field.getType().equals(Long.class) || field.getType().equals(long.class)
+                || field.getType().equals(Short.class) || field.getType().equals(short.class)
+                || field.getType().equals(Byte.class) || field.getType().equals(byte.class);
     }
 
     public static boolean isRequired(Field field) {

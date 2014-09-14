@@ -29,13 +29,14 @@ import javax.faces.context.FacesContext;
  * @param <T> type of entity
  */
 public abstract class AbstractBaseBean<T> {
-    
+
     private static final Logger logger = Logger.getLogger(AbstractBaseBean.class.getName());
     private static final String ID = "id";
-    private Long id;
+    private Object id;
     private String dialog;
     private LazyDataModelImpl<T> dataModel;
     private T entity;
+    private Class entityClass;
     private boolean loadEntityOnPostConstruct = true;
     private static final String ENTITY_CLASS_TO_LOAD = "xpert.entityClassToLoad";
 
@@ -48,15 +49,15 @@ public abstract class AbstractBaseBean<T> {
      * @return Default order od LazyDatamodel
      */
     public abstract String getDataModelOrder();
-    
+
     public OrderByHandler getOrderByHandler() {
         return null;
     }
-    
+
     public JoinBuilder getDataModelJoinBuilder() {
         return null;
     }
-    
+
     public FilterByHandler getFilterByHandler() {
         return null;
     }
@@ -66,8 +67,16 @@ public abstract class AbstractBaseBean<T> {
      */
     public void init() {
     }
-    
+
     public AbstractBaseBean() {
+        if (getClass().getGenericSuperclass() != null && !getClass().getGenericSuperclass().equals(Object.class)) {
+            if (getClass().getGenericSuperclass() instanceof ParameterizedType) {
+                ParameterizedType parameterizedType = (ParameterizedType) getClass().getGenericSuperclass();
+                if (parameterizedType != null && parameterizedType.getActualTypeArguments() != null && parameterizedType.getActualTypeArguments().length > 0) {
+                    entityClass = (Class<T>) parameterizedType.getActualTypeArguments()[0];
+                }
+            }
+        }
         if (isLoadEntityOnPostConstruct()) {
             Map<String, Object> requestMap = FacesContext.getCurrentInstance().getExternalContext().getRequestMap();
             if (!requestMap.containsKey(ENTITY_CLASS_TO_LOAD)) {
@@ -93,7 +102,7 @@ public abstract class AbstractBaseBean<T> {
      * Load the entity from parameter "id"
      */
     public void loadEntityFromParameter() {
-        Long entityId = null;
+        Object entityId = null;
         if (isLoadEntityOnPostConstruct()) {
             entityId = getIdFromParameter();
         }
@@ -103,19 +112,27 @@ public abstract class AbstractBaseBean<T> {
             if (entityClassToLoad != null && entityClassToLoad.equals(this.getClass())) {
                 entity = findById(entityId);
             }
-        }        
+        }
     }
 
     /**
-     * @return A Long instance of id passed in parameter
+     * @return A Number instance of id passed in parameter
      */
-    private Long getIdFromParameter() {
+    private Object getIdFromParameter() {
         String parameter = FacesUtils.getParameter(ID);
         if (parameter == null || parameter.isEmpty()) {
             return null;
         }
         try {
-            return Long.parseLong(StringUtils.getOnlyIntegerNumbers(parameter));
+            Class idType = EntityUtils.getIdType(entityClass);
+            if (idType.equals(Long.class)) {
+                return Long.parseLong(StringUtils.getOnlyIntegerNumbers(parameter));
+            } else if (idType.equals(Integer.class)) {
+                return Integer.parseInt(StringUtils.getOnlyIntegerNumbers(parameter));
+            } else {
+                logger.log(Level.SEVERE, "Type {0} from entity {1} is not mapped in generic base bean", new Object[]{idType.getName(), entityClass.getName()});
+                return null;
+            }
         } catch (NumberFormatException ex) {
             return null;
         }
@@ -181,15 +198,7 @@ public abstract class AbstractBaseBean<T> {
      * @return The class in generic Type
      */
     public Class getEntityClass() {
-        if (getClass().getGenericSuperclass() != null && !getClass().getGenericSuperclass().equals(Object.class)) {
-            if (getClass().getGenericSuperclass() instanceof ParameterizedType) {
-                ParameterizedType parameterizedType = (ParameterizedType) getClass().getGenericSuperclass();
-                if (parameterizedType != null && parameterizedType.getActualTypeArguments() != null && parameterizedType.getActualTypeArguments().length > 0) {
-                    return (Class<T>) parameterizedType.getActualTypeArguments()[0];
-                }
-            }
-        }
-        return null;
+        return entityClass;
     }
 
     /**
@@ -264,7 +273,7 @@ public abstract class AbstractBaseBean<T> {
             FacesMessageUtils.error(XpertResourceBundle.get("objectCannotBeDeleted"));
         }
     }
-    
+
     /**
      * Reload a entity calling "dao.find(id)"
      */
@@ -276,7 +285,7 @@ public abstract class AbstractBaseBean<T> {
             }
         }
     }
-    
+
     public T findById(Object id) {
         if (id != null) {
             Object object = (T) getDAO().find(id);
@@ -302,7 +311,7 @@ public abstract class AbstractBaseBean<T> {
     public LazyCountType getDataModelLazyCountType() {
         return LazyCountType.ALWAYS;
     }
-    
+
     public String getEntitySimpleName() {
         if (entity != null) {
             return entity.getClass().getSimpleName();
@@ -323,35 +332,35 @@ public abstract class AbstractBaseBean<T> {
      */
     public void postDelete() {
     }
-    
+
     public String getDialog() {
         return dialog;
     }
-    
+
     public void setDialog(String dialog) {
         this.dialog = dialog;
     }
-    
-    public Long getId() {
+
+    public Object getId() {
         return id;
     }
-    
-    public void setId(Long id) {
+
+    public void setId(Object id) {
         this.id = id;
     }
-    
+
     public LazyDataModelImpl<T> getDataModel() {
         return dataModel;
     }
-    
+
     public void setDataModel(LazyDataModelImpl<T> dataModel) {
         this.dataModel = dataModel;
     }
-    
+
     public T getEntity() {
         return entity;
     }
-    
+
     public void setEntity(T entity) {
         this.entity = entity;
     }
@@ -363,7 +372,7 @@ public abstract class AbstractBaseBean<T> {
     public boolean isLoadEntityOnPostConstruct() {
         return loadEntityOnPostConstruct;
     }
-    
+
     public void setLoadEntityOnPostConstruct(boolean loadEntityOnPostConstruct) {
         this.loadEntityOnPostConstruct = loadEntityOnPostConstruct;
     }

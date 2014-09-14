@@ -225,7 +225,7 @@ public interface BaseDAO<T> {
      * @param id id from object
      * @return 
      */
-    public Object findAttribute(String attributeName, Long id);
+    public Object findAttribute(String attributeName, Number id);
 
     /**
      * 
@@ -235,7 +235,7 @@ public interface BaseDAO<T> {
      */
     public Object findAttribute(String attributeName, Object object);
 
-    public Object findList(String attributeName, Long id);
+    public Object findList(String attributeName, Number id);
 
     public Object findList(String attributeName, Object object);
 

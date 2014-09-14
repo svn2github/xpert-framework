@@ -82,7 +82,7 @@ public abstract class AbstractBusinessObject<T> {
      * @param id entity id
      * @throws DeleteException
      */
-    public void delete(Long id) throws DeleteException {
+    public void delete(Object id) throws DeleteException {
         getDAO().delete(id);
     }
 
@@ -92,7 +92,7 @@ public abstract class AbstractBusinessObject<T> {
      * @param id Entity id
      * @throws DeleteException
      */
-    public void remove(Long id) throws DeleteException {
+    public void remove(Number id) throws DeleteException {
         Object object = getDAO().find(id);
         getDAO().remove(object);
     }

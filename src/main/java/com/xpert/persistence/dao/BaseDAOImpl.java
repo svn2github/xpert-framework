@@ -263,7 +263,7 @@ public abstract class BaseDAOImpl<T> implements BaseDAO<T> {
     }
 
     @Override
-    public Object findAttribute(String attributeName, Long id) {
+    public Object findAttribute(String attributeName, Number id) {
 
         QueryBuilder builder = new QueryBuilder(getEntityManager());
 
@@ -276,11 +276,11 @@ public abstract class BaseDAOImpl<T> implements BaseDAO<T> {
 
     @Override
     public Object findAttribute(String attributeName, Object object) {
-        return findAttribute(attributeName, (Long) EntityUtils.getId(object));
+        return findAttribute(attributeName, (Number) EntityUtils.getId(object));
     }
 
     @Override
-    public Object findList(String attributeName, Long id) {
+    public Object findList(String attributeName, Number id) {
 
         QueryBuilder builder = new QueryBuilder(getEntityManager());
 
@@ -293,7 +293,7 @@ public abstract class BaseDAOImpl<T> implements BaseDAO<T> {
 
     @Override
     public Object findList(String attributeName, Object object) {
-        return findAttribute(attributeName, (Long) EntityUtils.getId(object));
+        return findAttribute(attributeName, (Number)EntityUtils.getId(object));
     }
 
     @Override

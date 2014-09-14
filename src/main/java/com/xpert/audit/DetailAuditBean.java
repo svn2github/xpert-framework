@@ -39,8 +39,15 @@ public class DetailAuditBean {
     private List<Restriction> getRestrictions() {
 
         List<Restriction> restrictions = new ArrayList<Restriction>();
-
-        restrictions.add(new Restriction("identifier", beanModel.getId()));
+        //for Long doesnt need conversion
+        if (beanModel.getId() instanceof Long) {
+            restrictions.add(new Restriction("identifier", beanModel.getId()));
+        } else if (beanModel.getId() instanceof Number) {
+            //if is a number try to convert to long
+            restrictions.add(new Restriction("identifier", ((Number) beanModel.getId()).longValue()));
+        } else {
+            throw new IllegalArgumentException("Type of id " + beanModel.getId().getClass().getName() + " from from class " + beanModel.getEntity() + " is not supported in audit");
+        }
         restrictions.add(new Restriction("entity", beanModel.getEntity()));
 
         return restrictions;
