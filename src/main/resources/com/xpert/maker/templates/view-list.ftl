@@ -17,7 +17,10 @@
                          value="${sharp}{${entity.nameLower}${configuration.managedBeanSuffix}.dataModel}" lazy="true" >
                 <p:column styleClass="uix-datatable-index">
                     <f:facet name="header">
-                        <p:commandButton onclick="${entity.widgetVarDataTable}.filter()" type="button" icon="ui-icon-refresh" />
+                        <p:menuButton value="">
+                            <p:menuitem value="${sharp}{xmsg['refresh']}" onclick="${entity.widgetVarDataTable}.filter()" icon="ui-icon-refresh"/>
+                            <p:menuitem value="${sharp}{xmsg['clearFilters']}" onclick="${entity.widgetVarDataTable}.clearFilters()" icon="ui-icon-close"/>
+                        </p:menuButton>
                     </f:facet>
                     <h:outputText value="${sharp}{index+1}"/>
                 </p:column>
@@ -25,8 +28,8 @@
                 <#if field.collection == false && field.id == false>
                 <p:column headerText="${sharp}{${resourceBundle}['${entity.nameLower}.${field.name}']}" sortBy="${sharp}{${entity.nameLower}.${field.name}}"
                           <#if field.string == true || field.integer == true || field.enumeration == true || field.yesNo == true || field.date == true>filterBy="${sharp}{${entity.nameLower}.${field.name}}"</#if> <#if field.yesNo == true>filterOptions="${sharp}{booleanSelectItensEmptyOption}"</#if> <#if field.enumeration == true>filterOptions="${sharp}{findAllBean.getSelect(class${configuration.managedBeanSuffix}.${field.typeNameLower})}"</#if> <#if field.date == true || field.time == true || field.yesNo == true>style="text-align: center;"</#if><#if field.decimal == true>style="text-align: right;"</#if>>
-                    <#if field.lazy == true>
-                    <h:outputText value="${sharp}{${entity.nameLower}.${field.name}}">
+                          <#if field.lazy == true>
+                          <h:outputText value="${sharp}{${entity.nameLower}.${field.name}}">
                         <x:initializer/>
                     </h:outputText>
                     </#if>
@@ -60,7 +63,7 @@
                 </#list>
                 <p:column styleClass="uix-datatable-actions" exportable="false" headerText="${sharp}{xmsg['actions']}">
                     <f:facet name="header">
-                         <h:outputText value="${sharp}{xmsg['actions']}"/>
+                        <h:outputText value="${sharp}{xmsg['actions']}"/>
                     </f:facet>
                     <p:commandButton oncomplete="${entity.widgetVarDetail}.show();"  icon="ui-icon-zoomin" 
                                      process="@form" update=":formDetail${entity.name}" title="${sharp}{xmsg['detail']}" >
@@ -75,7 +78,7 @@
                     </#if>
                     <#if configuration.generatesSecurityArea == false >
                     <p:button icon="ui-icon-pencil" outcome="create${entity.name}" title="${sharp}{xmsg['edit']}">
-                         <f:param name="id" value="${sharp}{${entity.nameLower}.${entity.idFieldName}}" />
+                        <f:param name="id" value="${sharp}{${entity.nameLower}.${entity.idFieldName}}" />
                     </p:button>
                     </#if>
                     <#if configuration.generatesSecurityArea == true >
@@ -89,7 +92,7 @@
                     </#if>
                     <#if configuration.generatesSecurityArea == false >
                     <p:commandButton icon="ui-icon-trash" title="${sharp}{xmsg['delete']}" process="@form" update="@form" 
-                                        action="${sharp}{${entity.nameLower}${configuration.managedBeanSuffix}.delete}" >
+                                     action="${sharp}{${entity.nameLower}${configuration.managedBeanSuffix}.delete}" >
                         <f:setPropertyActionListener value="${sharp}{${entity.nameLower}.${entity.idFieldName}}" target="${sharp}{${entity.nameLower}${configuration.managedBeanSuffix}.id}" />
                         <x:confirmation message="${sharp}{xmsg['confirmDelete']} - ${sharp}{${entity.nameLower}}" />
                     </p:commandButton>
@@ -110,7 +113,7 @@
 
         <p:dialog widgetVar="${entity.widgetVarDetailName}" header="${sharp}{msg['${entity.nameLower}.detail']}" ${entity.appendTo} 
                   modal="true" <#if configuration.bootstrapVersion?? >styleClass="uix-dialog-fluid"<#else>height="500" width="800"</#if> >
-            <ui:include src="detail${entity.name}.xhtml" />
+                  <ui:include src="detail${entity.name}.xhtml" />
         </p:dialog>
     </ui:define>
 </ui:composition>

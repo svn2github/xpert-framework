@@ -42,6 +42,7 @@
 .uix-dialog-fluid .ui-dialog-content { max-height: 80% !important;}
 .uix-datatable-actions{white-space: nowrap !important;}
 .panel-calendar-filter a{font-weight: normal; font-size: 10px;}
+th.uix-datatable-index .ui-menubutton .ui-button{height: 24px; width: 30px;}
 
 
 
