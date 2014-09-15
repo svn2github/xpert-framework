@@ -29,7 +29,7 @@
                 <p:column headerText="${sharp}{${resourceBundle}['${entity.nameLower}.${field.name}']}" sortBy="${sharp}{${entity.nameLower}.${field.name}}"
                           <#if field.string == true || field.integer == true || field.enumeration == true || field.yesNo == true || field.date == true>filterBy="${sharp}{${entity.nameLower}.${field.name}}"</#if> <#if field.yesNo == true>filterOptions="${sharp}{booleanSelectItensEmptyOption}"</#if> <#if field.enumeration == true>filterOptions="${sharp}{findAllBean.getSelect(class${configuration.managedBeanSuffix}.${field.typeNameLower})}"</#if> <#if field.date == true || field.time == true || field.yesNo == true>style="text-align: center;"</#if><#if field.decimal == true>style="text-align: right;"</#if>>
                           <#if field.lazy == true>
-                          <h:outputText value="${sharp}{${entity.nameLower}.${field.name}}">
+                    <h:outputText value="${sharp}{${entity.nameLower}.${field.name}}">
                         <x:initializer/>
                     </h:outputText>
                     </#if>
