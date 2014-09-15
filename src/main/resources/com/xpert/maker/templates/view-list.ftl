@@ -18,8 +18,8 @@
                 <p:column styleClass="uix-datatable-index">
                     <f:facet name="header">
                         <p:menuButton value="">
-                            <p:menuitem value="${sharp}{xmsg['refresh']}" onclick="${entity.widgetVarDataTable}.filter()" icon="ui-icon-refresh"/>
-                            <p:menuitem value="${sharp}{xmsg['clearFilters']}" onclick="${entity.widgetVarDataTable}.clearFilters()" icon="ui-icon-close"/>
+                            <p:menuitem value="${sharp}{xmsg['refresh']}" onclick="${entity.widgetVarDataTable}.filter()" icon="ui-icon-refresh" url="${sharp}"/>
+                            <p:menuitem value="${sharp}{xmsg['clearFilters']}" onclick="${entity.widgetVarDataTable}.clearFilters()" icon="ui-icon-close" url="${sharp}"/>
                         </p:menuButton>
                     </f:facet>
                     <h:outputText value="${sharp}{index+1}"/>
