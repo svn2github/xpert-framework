@@ -1,5 +1,6 @@
 package com.xpert.core.validation;
 
+import com.xpert.utils.Mod11;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -228,6 +229,34 @@ public class Validation {
         if (string == null || string.trim().isEmpty()) {
             return true;
         }
+        return false;
+
+    }
+    
+    /**
+     * TRUE if RENAVAM is valid
+     *
+     * @param string
+     * @return
+     */
+    public static boolean validateRENAVAM(String string) {
+
+        if(isBlank(string)){
+            return false;
+        }
+        
+        if (string.length() < 9 || (string.length() > 9 && string.length() < 11)) {
+            return false;
+        }
+        
+        String dv = string.substring(string.length()-1);
+        
+        String dvGenerate = Mod11.getDV(string.substring(0, string.length()-1));
+        
+        if(dv.equals(dvGenerate)){
+             return true;
+        }
+        
         return false;
 
     }
