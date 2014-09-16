@@ -245,7 +245,7 @@ public class Validation {
             return false;
         }
         
-        if (string.length() < 9 || (string.length() > 9 && string.length() < 11)) {
+        if (string.length() < 9 || string.length() > 11) {
             return false;
         }
         
