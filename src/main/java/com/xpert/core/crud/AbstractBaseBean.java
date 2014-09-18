@@ -25,7 +25,8 @@ import javax.annotation.PostConstruct;
 import javax.faces.context.FacesContext;
 
 /**
- *
+ * Generic Managed Bean to create CRUD
+ * 
  * @author Ayslan
  * @param <T> type of entity
  */

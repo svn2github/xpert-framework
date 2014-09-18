@@ -10,7 +10,8 @@ import com.xpert.persistence.utils.EntityUtils;
 import java.util.List;
 
 /**
- *
+ * Generic Business Object to create CRUD
+ * 
  * @author Ayslan
  */
 public abstract class AbstractBusinessObject<T> {
