@@ -50,27 +50,29 @@ public class RestorableFilter extends UIComponentBase {
         return COMPONENT_FAMILY;
     }
 
-
     public static void storeFilterInSession(Map filters) {
         FacesContext context = FacesContext.getCurrentInstance();
-        DataTable dataTable = (DataTable) UIComponent.getCurrentComponent(FacesContext.getCurrentInstance());
+        UIComponent dataTable = UIComponent.getCurrentComponent(FacesContext.getCurrentInstance());
         FacesUtils.addToSession(dataTable.getClientId(), filters);
         context.getViewRoot().getViewMap().put(dataTable.getClientId() + "_restorableFilter", true);
     }
 
     public static void restoreFilterFromSession(Map currentFilters) {
         FacesContext context = FacesContext.getCurrentInstance();
-        DataTable dataTable = (DataTable) UIComponent.getCurrentComponent(context);
+        UIComponent component = UIComponent.getCurrentComponent(context);
         Map viewMap = context.getViewRoot().getViewMap();
 
         //only first time
-        Object fromViewMap = viewMap.get(dataTable.getClientId() + "_restorableFilter");
+        Object fromViewMap = viewMap.get(component.getClientId() + "_restorableFilter");
         if (fromViewMap != null) {
             return;
         }
-        Map filters = (Map) FacesUtils.getFromSession(dataTable.getClientId());
-        if (filters != null && !filters.isEmpty()) {
-            dataTable.setFilters(filters);
+        Map filters = (Map) FacesUtils.getFromSession(component.getClientId());
+        if (component instanceof DataTable) {
+            DataTable dataTable = (DataTable) component;
+            if (filters != null && !filters.isEmpty()) {
+                dataTable.setFilters(filters);
+            }
         }
         if (currentFilters != null && filters != null) {
             currentFilters.putAll(filters);
