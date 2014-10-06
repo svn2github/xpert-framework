@@ -4,8 +4,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Iterator;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.el.ELContext;
 import javax.el.ExpressionFactory;
 import javax.el.ValueExpression;
@@ -26,51 +24,93 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 /**
+ * Collection of utility methods for the JSF API
  *
  * @author Ayslan
  */
 public class FacesUtils {
 
+    /**
+     * Get a object from Http Session
+     *
+     * @param attributeName Object name in session
+     * @return 
+     */
     public static Object getFromSession(String attributeName) {
         ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
         HttpSession session = (HttpSession) externalContext.getSession(true);
         return session.getAttribute(attributeName);
     }
 
+    /**
+     * Get the value of the parameter in request  callin HttpServletRequest.getParameter.
+     * 
+     * @param parameterName
+     * @return 
+     */
     public static String getParameter(String parameterName) {
         HttpServletRequest request = getRequest();
         return request.getParameter(parameterName);
     }
 
+    /**
+     * Add the object in Http session map
+     * 
+     * @param attributeName
+     * @param value 
+     */
     public static void addToSession(String attributeName, Object value) {
         ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
         HttpSession session = (HttpSession) externalContext.getSession(false);
         session.setAttribute(attributeName, value);
     }
 
+    /**
+     * Remove a object from session
+     * 
+     * @param attributeName 
+     */
     public static void removeFromSession(String attributeName) {
         ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
         HttpSession session = (HttpSession) externalContext.getSession(false);
         session.removeAttribute(attributeName);
     }
 
+    /**
+     * Invalidate the current Http session using HttpSession.invalidate()
+     */
     public static void invalidateSession() {
         ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
         ((HttpSession) externalContext.getSession(true)).invalidate();
     }
 
+    /**
+     * Get the current Http request from JSF "ExternalContext"
+     * 
+     * @return HttpServletRequest get from JSF
+     */
     public static HttpServletRequest getRequest() {
         ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
         HttpServletRequest request = (HttpServletRequest) externalContext.getRequest();
         return request;
     }
 
+    /**
+     * Get the current Http response from JSF "ExternalContext"
+     * 
+     * @return HttpServletResponse get from JSF
+     */
     public static HttpServletResponse getResponse() {
         ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
         HttpServletResponse response = (HttpServletResponse) externalContext.getResponse();
         return response;
     }
 
+    /**
+     * Get the  ServletContext from JSF "ExternalContext
+     * 
+     * @return 
+     */
     public static ServletContext getServletContext() {
         ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
         return (ServletContext) externalContext.getContext();
