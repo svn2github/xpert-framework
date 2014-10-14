@@ -38,6 +38,7 @@ public class RestrictionsNormalizer {
             restriction.setRestrictionType(originalRestriction.getRestrictionType());
             restriction.setTemporalType(originalRestriction.getTemporalType());
             restriction.setValue(originalRestriction.getValue());
+            restriction.setParameters(originalRestriction.getParameters());
 
             //if RestrictionType is null set default to EQUALS
             if (restriction.getRestrictionType() == null) {

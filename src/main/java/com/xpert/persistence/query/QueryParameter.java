@@ -8,7 +8,8 @@ import javax.persistence.TemporalType;
  */
 public class QueryParameter {
 
-    private int position;
+    private Integer position;
+    private String property;
     private Object value;
     private TemporalType temporalType;
 
@@ -22,12 +23,32 @@ public class QueryParameter {
         this.position = position;
         this.value = value;
     }
+
+    public QueryParameter(String property, Object value) {
+        this.property = property;
+        this.value = value;
+    }
+
+    public QueryParameter(String property, Object value, TemporalType temporalType) {
+        this.property = property;
+        this.value = value;
+        this.temporalType = temporalType;
+    }
+
+    public String getProperty() {
+        return property;
+    }
+
+    public void setProperty(String property) {
+        this.property = property;
+    }
     
-    public int getPosition() {
+
+    public Integer getPosition() {
         return position;
     }
 
-    public void setPosition(int position) {
+    public void setPosition(Integer position) {
         this.position = position;
     }
 

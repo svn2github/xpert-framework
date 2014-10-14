@@ -20,7 +20,8 @@ public class Restriction {
     private RestrictionType restrictionType;
     private LikeType likeType;
     private TemporalType temporalType;
-
+    private List<QueryParameter> parameters;
+    
     public Restriction() {
     }
 
@@ -263,6 +264,14 @@ public class Restriction {
     public static Restriction notEquals(String property, Calendar value, TemporalType temporalType) {
         return new Restriction(property, RestrictionType.NOT_EQUALS, value, temporalType);
 
+    }
+
+    public List<QueryParameter> getParameters() {
+        return parameters;
+    }
+
+    public void setParameters(List<QueryParameter> parameters) {
+        this.parameters = parameters;
     }
 
     @Override

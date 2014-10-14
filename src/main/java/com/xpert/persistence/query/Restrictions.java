@@ -3,6 +3,7 @@ package com.xpert.persistence.query;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 import javax.persistence.TemporalType;
 
 /**
@@ -100,6 +101,37 @@ public class Restrictions extends ArrayList<Restriction> {
         this.add(new Restriction(property, RestrictionType.QUERY_STRING));
         return this;
     }
+    
+    /**
+     * Add a RestrictionType.QUERY_STRING
+     *
+     * @param property
+     * @param parameters
+     * @return Current Restrictions with added restriction
+     */
+    public Restrictions addQueryString(String property, List<QueryParameter> parameters) {
+        Restriction restriction =new Restriction(property, RestrictionType.QUERY_STRING);
+        restriction.setParameters(parameters);
+        this.add(restriction);
+        return this;
+    }
+    /**
+     * Add a RestrictionType.QUERY_STRING
+     *
+     * @param property
+     * @param parameter
+     * @return Current Restrictions with added restriction
+     */
+    public Restrictions addQueryString(String property, QueryParameter parameter) {
+        Restriction restriction =new Restriction(property, RestrictionType.QUERY_STRING);
+        List<QueryParameter> parameters = new ArrayList<QueryParameter>();
+        parameters.add(parameter);
+        restriction.setParameters(parameters);
+        this.add(restriction);
+        return this;
+    }
+    
+    
 
     /**
      * Add a RestrictionType.NULL (property 'is null')

@@ -248,6 +248,10 @@ public class QueryBuilder {
         int position = 1;
         List<QueryParameter> parameters = new ArrayList<QueryParameter>();
         for (Restriction re : normalizedRestrictions) {
+            //add custom parameters
+            if (re.getParameters() != null) {
+                parameters.addAll(re.getParameters());
+            }
             if (re.getRestrictionType().isIgnoreParameter()) {
                 continue;
             }
@@ -370,14 +374,33 @@ public class QueryBuilder {
 
         List<QueryParameter> parameters = getQueryParameters();
         for (QueryParameter parameter : parameters) {
+            //dates (Date and Calendar)
             if (parameter.getTemporalType() != null && (parameter.getValue() instanceof Date || parameter.getValue() instanceof Calendar)) {
                 if (parameter.getValue() instanceof Date) {
-                    query.setParameter(parameter.getPosition(), (Date) parameter.getValue(), parameter.getTemporalType());
+                    if (parameter.getPosition() != null) {
+                        query.setParameter(parameter.getPosition(), (Date) parameter.getValue(), parameter.getTemporalType());
+                    } else {
+                        if (parameter.getProperty() != null) {
+                            query.setParameter(parameter.getProperty(), (Date) parameter.getValue(), parameter.getTemporalType());
+                        }
+                    }
                 } else if (parameter.getValue() instanceof Calendar) {
-                    query.setParameter(parameter.getPosition(), (Calendar) parameter.getValue(), parameter.getTemporalType());
+                    if (parameter.getPosition() != null) {
+                        query.setParameter(parameter.getPosition(), (Calendar) parameter.getValue(), parameter.getTemporalType());
+                    } else {
+                        if (parameter.getProperty() != null) {
+                            query.setParameter(parameter.getProperty(), (Calendar) parameter.getValue(), parameter.getTemporalType());
+                        }
+                    }
                 }
             } else {
-                query.setParameter(parameter.getPosition(), parameter.getValue());
+                if (parameter.getPosition() != null) {
+                    query.setParameter(parameter.getPosition(), parameter.getValue());
+                } else {
+                    if (parameter.getProperty() != null) {
+                        query.setParameter(parameter.getProperty(), parameter.getValue());
+                    }
+                }
             }
         }
 
