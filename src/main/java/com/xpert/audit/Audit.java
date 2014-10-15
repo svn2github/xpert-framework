@@ -352,7 +352,7 @@ public class Audit {
                 }
                 AbstractMetadata metadata = Configuration.getAbstractMetadata();
                 if (fieldValue != null && fieldValue.getClass().isAnnotationPresent(Embeddable.class)) {
-                    List<AbstractMetadata> embedableMetadata = getMetadata(fieldValue, persisted, auditing);
+                    List<AbstractMetadata> embedableMetadata = getMetadata(fieldValue, method.invoke(persisted), auditing);
                     if (embedableMetadata != null && !embedableMetadata.isEmpty()) {
                         metadatas.addAll(embedableMetadata);
                     }

@@ -698,6 +698,36 @@ public class QueryBuilder {
         this.add(new Restriction(property, RestrictionType.QUERY_STRING));
         return this;
     }
+    
+     /**
+     * Add a RestrictionType.QUERY_STRING
+     *
+     * @param property
+     * @param parameters
+     * @return Current Restrictions with added restriction
+     */
+    public QueryBuilder addQueryString(String property, List<QueryParameter> parameters) {
+        Restriction restriction =new Restriction(property, RestrictionType.QUERY_STRING);
+        restriction.setParameters(parameters);
+        this.add(restriction);
+        return this;
+    }
+    
+    /**
+     * Add a RestrictionType.QUERY_STRING
+     *
+     * @param property
+     * @param parameter
+     * @return Current Restrictions with added restriction
+     */
+    public QueryBuilder addQueryString(String property, QueryParameter parameter) {
+        Restriction restriction =new Restriction(property, RestrictionType.QUERY_STRING);
+        List<QueryParameter> parameters = new ArrayList<QueryParameter>();
+        parameters.add(parameter);
+        restriction.setParameters(parameters);
+        this.add(restriction);
+        return this;
+    }
 
     /**
      * Add a RestrictionType.NULL (property 'is null')
