@@ -483,21 +483,17 @@ public class QueryBuilder {
                 try {
                     Object entity = clazz.newInstance();
                     for (int i = 0; i < fields.length; i++) {
-                        try {
-                            String property = fields[i].trim().replaceAll("/s", "");
-                            initializeCascade(property, entity);
-                            if (object instanceof Object[]) {
-                                PropertyUtils.setProperty(entity, property, ((Object[]) object)[i]);
-                            } else {
-                                PropertyUtils.setProperty(entity, property, object);
-                            }
-                        } catch (Exception ex) {
-                            logger.log(Level.SEVERE, null, ex);
+                        String property = fields[i].trim().replaceAll("/s", "");
+                        initializeCascade(property, entity);
+                        if (object instanceof Object[]) {
+                            PropertyUtils.setProperty(entity, property, ((Object[]) object)[i]);
+                        } else {
+                            PropertyUtils.setProperty(entity, property, object);
                         }
                     }
                     result.add(entity);
                 } catch (Exception ex) {
-                    logger.log(Level.SEVERE, null, ex);
+                    throw new RuntimeException(ex);
                 }
             }
             return result;
@@ -698,8 +694,8 @@ public class QueryBuilder {
         this.add(new Restriction(property, RestrictionType.QUERY_STRING));
         return this;
     }
-    
-     /**
+
+    /**
      * Add a RestrictionType.QUERY_STRING
      *
      * @param property
@@ -707,12 +703,12 @@ public class QueryBuilder {
      * @return Current Restrictions with added restriction
      */
     public QueryBuilder addQueryString(String property, List<QueryParameter> parameters) {
-        Restriction restriction =new Restriction(property, RestrictionType.QUERY_STRING);
+        Restriction restriction = new Restriction(property, RestrictionType.QUERY_STRING);
         restriction.setParameters(parameters);
         this.add(restriction);
         return this;
     }
-    
+
     /**
      * Add a RestrictionType.QUERY_STRING
      *
@@ -721,7 +717,7 @@ public class QueryBuilder {
      * @return Current Restrictions with added restriction
      */
     public QueryBuilder addQueryString(String property, QueryParameter parameter) {
-        Restriction restriction =new Restriction(property, RestrictionType.QUERY_STRING);
+        Restriction restriction = new Restriction(property, RestrictionType.QUERY_STRING);
         List<QueryParameter> parameters = new ArrayList<QueryParameter>();
         parameters.add(parameter);
         restriction.setParameters(parameters);
