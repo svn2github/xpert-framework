@@ -197,7 +197,7 @@ public abstract class BaseDAOImpl<T> implements BaseDAO<T> {
                 getNewAudit().delete(id, entityClass);
             }
 
-            Query query = getEntityManager().createQuery("DELETE FROM " + entityClass.getName() + " WHERE " + EntityUtils.getIdFieldName(entityClass) + " = ? ");
+            Query query = getEntityManager().createQuery("DELETE FROM " + entityClass.getName() + " WHERE " + EntityUtils.getIdFieldName(entityClass) + " = ?1 ");
             query.setParameter(1, id);
             query.executeUpdate();
         } catch (Exception ex) {

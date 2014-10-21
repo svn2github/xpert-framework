@@ -279,7 +279,7 @@ public abstract class AbstractBaseBean<T> {
      * This method will delete the current entity calling "bo.delete()":
      * <ol>
      * <li>calls "preDelete()"</li>
-     * <li>calls "getBO().remove"</li>
+     * <li>calls "getBO().delete"</li>
      * <li>calls "postDelete()" if deletion is successful</li>
      * </ol>
      *

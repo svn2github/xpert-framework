@@ -10,6 +10,7 @@ import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.convert.Converter;
 import javax.faces.convert.FacesConverter;
+import javax.persistence.EmbeddedId;
 import javax.persistence.Id;
 import org.hibernate.proxy.HibernateProxy;
 
@@ -121,14 +122,14 @@ public class EntityConverter implements Converter {
             Field[] fields = clazz.getDeclaredFields();
             Method[] methods = clazz.getDeclaredMethods();
             for (Field field : fields) {
-                if (field.isAnnotationPresent(Id.class) || field.isAnnotationPresent(ConverterId.class)) {
+                if (field.isAnnotationPresent(Id.class) || field.isAnnotationPresent(EmbeddedId.class)  || field.isAnnotationPresent(ConverterId.class)) {
                     field.setAccessible(true);
                     FIELDS_CACHE.put(clazz, field);
                     return field.get(object);
                 }
             }
             for (Method method : methods) {
-                if (method.isAnnotationPresent(Id.class) || method.isAnnotationPresent(ConverterId.class)) {
+                if (method.isAnnotationPresent(Id.class) || method.isAnnotationPresent(EmbeddedId.class) || method.isAnnotationPresent(ConverterId.class)) {
                     METHOD_CACHE.put(clazz, method);
                     return method.invoke(object);
                 }

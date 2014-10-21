@@ -93,6 +93,9 @@ public class AuditBean implements Serializable{
     }
 
     public boolean isPersisted(Object object) {
+        if(object != null && !Audit.isAudit(object.getClass())){
+            return false;
+        }
         if (EntityUtils.getId(object) != null) {
             return true;
         }

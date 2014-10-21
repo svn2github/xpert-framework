@@ -134,7 +134,6 @@ public class EntityUtils {
      * Return the name of @Id/@EmbeddedId field/method from entity
      *
      * @param clazz
-     * @param object
      * @return
      */
     public static String getIdFieldName(Class clazz) {
