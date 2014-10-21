@@ -45,11 +45,8 @@ public class DetailAuditBean {
         } else if (beanModel.getId() instanceof Number) {
             //if is a number try to convert to long
             restrictions.add(new Restriction("identifier", ((Number) beanModel.getId()).longValue()));
-        } else if (beanModel.getId() instanceof String) {
-            //if is a string try to convert to long
-            restrictions.add(new Restriction("identifier", Long.valueOf(beanModel.getId().toString())));
         } else {
-            throw new IllegalArgumentException("Type of id " + beanModel.getId().getClass().getName() + " from from class " + beanModel.getEntity() + " is not supported in audit");
+            throw new IllegalArgumentException("Type of id " + beanModel.getId().getClass().getName() + " from class " + beanModel.getEntity() + " is not supported in audit");
         }
         restrictions.add(new Restriction("entity", beanModel.getEntity()));
 
