@@ -115,7 +115,7 @@ public class BeanCreator {
         for (Field field : fields) {
 
             //recursive call to getViewFields id exists EmbeddedId or Embeddable
-            if (isAnnotationPresent(field, EmbeddedId.class) || isAnnotationPresent(field, Embeddable.class)) {
+            if (isAnnotationPresent(field, EmbeddedId.class) || isAnnotationPresent(field, Embedded.class)) {
                 List<Field> fieldsFromEmbedded = getFields(field.getType());
                 List<ViewField> viewFieldsEmbedded = getViewFields(fieldsFromEmbedded, field.getName());
                 if (viewFieldsEmbedded != null && !viewFieldsEmbedded.isEmpty()) {
@@ -314,8 +314,8 @@ public class BeanCreator {
         List<Field> fields = getFields(clazz);
         StringBuilder builder = new StringBuilder();
         for (Field field : fields) {
-            //recursive call for EmbeddedId and Embeddable
-            if (field.isAnnotationPresent(EmbeddedId.class) || field.isAnnotationPresent(Embeddable.class)) {
+            //recursive call for EmbeddedId and Embedded
+            if (field.isAnnotationPresent(EmbeddedId.class) || field.isAnnotationPresent(Embedded.class)) {
                 builder.append(getI18NFromFields(field.getType(), className));
                 continue;
             }

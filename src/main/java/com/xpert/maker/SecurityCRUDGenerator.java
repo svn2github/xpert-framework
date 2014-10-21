@@ -5,6 +5,7 @@ import com.xpert.utils.StringUtils;
 import java.io.File;
 import java.util.List;
 import java.util.logging.Logger;
+import javax.persistence.Embeddable;
 
 /**
  * Class to create acess control generation. The xpert-framework base project
@@ -20,7 +21,9 @@ public class SecurityCRUDGenerator {
         StringBuilder builder = new StringBuilder();
         if (classes != null) {
             for (Class clazz : classes) {
-                builder.append(create(clazz, view));
+                if (!clazz.isAnnotationPresent(Embeddable.class)) {
+                    builder.append(create(clazz, view));
+                }
             }
         }
         return builder.toString();
