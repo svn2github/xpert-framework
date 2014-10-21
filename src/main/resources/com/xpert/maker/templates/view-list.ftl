@@ -26,7 +26,7 @@
                 </p:column>
                 <#list entity.fields as field>
                 <#if field.collection == false && field.id == false>
-                <p:column headerText="${sharp}{${resourceBundle}['${entity.nameLower}.${field.name}']}" sortBy="${sharp}{${entity.nameLower}.${field.name}}"
+                <p:column headerText="${sharp}{${resourceBundle}['${entity.nameLower}.${field.label}']}" sortBy="${sharp}{${entity.nameLower}.${field.name}}"
                           <#if field.string == true || field.integer == true || field.enumeration == true || field.yesNo == true || field.date == true>filterBy="${sharp}{${entity.nameLower}.${field.name}}"</#if> <#if field.yesNo == true>filterOptions="${sharp}{booleanSelectItensEmptyOption}"</#if> <#if field.enumeration == true>filterOptions="${sharp}{findAllBean.getSelect(class${configuration.managedBeanSuffix}.${field.typeNameLower})}"</#if> <#if field.date == true || field.time == true || field.yesNo == true>style="text-align: center;"</#if><#if field.decimal == true>style="text-align: right;"</#if>>
                           <#if field.lazy == true>
                     <h:outputText value="${sharp}{${entity.nameLower}.${field.name}}">
@@ -69,17 +69,34 @@
                                      process="@form" update=":formDetail${entity.name}" title="${sharp}{xmsg['detail']}" >
                         <f:setPropertyActionListener value="${sharp}{${entity.nameLower}}" target="${sharp}{${entity.nameLower}${configuration.managedBeanSuffix}.entity}" />
                     </p:commandButton>
+                    <#if entity.embeddedId == false >
                     <#if configuration.generatesSecurityArea == true >
                     <x:securityArea rolesAllowed="${entity.nameLower}.create">
                         <p:button icon="ui-icon-pencil" outcome="create${entity.name}" title="${sharp}{xmsg['edit']}">
                             <f:param name="id" value="${sharp}{${entity.nameLower}.${entity.idFieldName}}" />
                         </p:button>
                     </x:securityArea>
-                    </#if>
-                    <#if configuration.generatesSecurityArea == false >
+                    <#else>
                     <p:button icon="ui-icon-pencil" outcome="create${entity.name}" title="${sharp}{xmsg['edit']}">
                         <f:param name="id" value="${sharp}{${entity.nameLower}.${entity.idFieldName}}" />
                     </p:button>
+                    </#if>
+                    <#else>
+                    <#if configuration.generatesSecurityArea == true >
+                    <x:securityArea rolesAllowed="${entity.nameLower}.create">
+                        <p:commandButton icon="ui-icon-pencil"  action="${sharp}{${entity.nameLower}${configuration.managedBeanSuffix}.putEntityInRequest}"
+                                         ajax="false" title="${sharp}{xmsg['edit']}" >
+                            <f:setPropertyActionListener value="${sharp}{${entity.nameLower}}" target="${sharp}{${entity.nameLower}${configuration.managedBeanSuffix}.entity}" />
+                            <f:setPropertyActionListener value="create${entity.name}" target="${sharp}{${entity.nameLower}${configuration.managedBeanSuffix}.outcome}" />
+                        </p:commandButton>
+                    </x:securityArea>
+                    <#else>
+                    <p:commandButton icon="ui-icon-pencil"  action="${sharp}{${entity.nameLower}${configuration.managedBeanSuffix}.putEntityInRequest}"
+                                     ajax="false" title="${sharp}{xmsg['edit']}" >
+                        <f:setPropertyActionListener value="${sharp}{${entity.nameLower}}" target="${sharp}{${entity.nameLower}${configuration.managedBeanSuffix}.entity}" />
+                        <f:setPropertyActionListener value="create${entity.name}" target="${sharp}{${entity.nameLower}${configuration.managedBeanSuffix}.outcome}" />
+                    </p:commandButton>
+                    </#if>
                     </#if>
                     <#if configuration.generatesSecurityArea == true >
                     <x:securityArea rolesAllowed="${entity.nameLower}.delete">
@@ -89,8 +106,7 @@
                             <x:confirmation message="${sharp}{xmsg['confirmDelete']} - ${sharp}{${entity.nameLower}}" />
                         </p:commandButton>
                     </x:securityArea>
-                    </#if>
-                    <#if configuration.generatesSecurityArea == false >
+                    <#else>
                     <p:commandButton icon="ui-icon-trash" title="${sharp}{xmsg['delete']}" process="@form" update="@form" 
                                      action="${sharp}{${entity.nameLower}${configuration.managedBeanSuffix}.delete}" >
                         <f:setPropertyActionListener value="${sharp}{${entity.nameLower}.${entity.idFieldName}}" target="${sharp}{${entity.nameLower}${configuration.managedBeanSuffix}.id}" />
@@ -103,8 +119,7 @@
                     <x:securityArea rolesAllowed="${entity.nameLower}.audit">
                         <x:auditDelete for="${sharp}{${entity.nameLower}${configuration.managedBeanSuffix}.entityClass}"/>
                     </x:securityArea>
-                    </#if>
-                    <#if configuration.generatesSecurityArea == false >
+                    <#else>
                     <x:auditDelete for="${sharp}{${entity.nameLower}${configuration.managedBeanSuffix}.entityClass}"/>
                     </#if>
                 </f:facet>

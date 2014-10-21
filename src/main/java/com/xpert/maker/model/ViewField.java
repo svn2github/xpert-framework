@@ -9,9 +9,11 @@ import com.xpert.utils.StringUtils;
 public class ViewField {
 
     private String name;
+    private String label;
     private String typeName;
     private boolean required;
     private boolean id;
+    private boolean embeddedId;
     private boolean oneToOne;
     private boolean oneToMany;
     private boolean manyToOne;
@@ -27,7 +29,7 @@ public class ViewField {
     private String maxlength;
     
     public boolean isRenderFieldInFormCreate(){
-        return yesNo || string || integer || decimal || date || time || enumeration || manyToMany || manyToOne;
+        return embeddedId || yesNo || string || integer || decimal || date || time || enumeration || manyToMany || manyToOne;
     }
 
     public String getTypeNameLower() {
@@ -37,6 +39,22 @@ public class ViewField {
         return typeName;
     }
 
+    public String getLabel() {
+        return label;
+    }
+
+    public void setLabel(String label) {
+        this.label = label;
+    }
+    
+    public boolean isEmbeddedId() {
+        return embeddedId;
+    }
+
+    public void setEmbeddedId(boolean embeddedId) {
+        this.embeddedId = embeddedId;
+    }
+    
     public boolean isTime() {
         return time;
     }

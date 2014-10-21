@@ -13,8 +13,7 @@
             <x:securityArea rolesAllowed="${entity.nameLower}.create">
                 <p:button icon="ui-icon-plus" value="${sharp}{xmsg['create']}" outcome="create${entity.name}" />
             </x:securityArea>
-            </#if>
-            <#if configuration.generatesSecurityArea == false >
+            <#else>
             <p:button icon="ui-icon-search" value="${sharp}{xmsg['list']}" outcome="list${entity.name}" />
             <p:button icon="ui-icon-plus" value="${sharp}{xmsg['create']}" outcome="create${entity.name}" />
             </#if>

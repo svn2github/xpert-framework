@@ -14,6 +14,7 @@ import java.lang.reflect.Field;
 import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.persistence.Embeddable;
 import javax.persistence.EntityManager;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -45,31 +46,34 @@ public class PersistenceMappedBean {
             if (beanConfiguration.getBusinessObjectSuffix() == null || beanConfiguration.getBusinessObjectSuffix().isEmpty()) {
                 beanConfiguration.setBusinessObjectSuffix(BeanCreator.SUFFIX_BUSINESS_OBJECT);
             }
-            if (beanConfiguration.getDatePattern()== null || beanConfiguration.getDatePattern().isEmpty()) {
+            if (beanConfiguration.getDatePattern() == null || beanConfiguration.getDatePattern().isEmpty()) {
                 beanConfiguration.setDatePattern(BeanCreator.DEFAULT_DATE_PATTERN);
             }
-            if (beanConfiguration.getTimePattern()== null || beanConfiguration.getTimePattern().isEmpty()) {
+            if (beanConfiguration.getTimePattern() == null || beanConfiguration.getTimePattern().isEmpty()) {
                 beanConfiguration.setTimePattern(BeanCreator.DEFAULT_TIME_PATTERN);
             }
         }
         for (Class clazz : classes) {
-            try {
-                MappedBean mappedBean = new MappedBean(clazz);
-                mappedBean.setI18n(BeanCreator.getI18N(clazz));
-                mappedBean.setManagedBean(BeanCreator.createBean(new Bean(clazz, BeanType.MANAGED_BEAN), beanConfiguration));
-                mappedBean.setBusinnesObject(BeanCreator.createBean(new Bean(clazz, BeanType.BUSINESS_OBJECT), beanConfiguration));
-                mappedBean.setDao(BeanCreator.createBean(new Bean(clazz, BeanType.DAO), beanConfiguration));
-                mappedBean.setDaoImpl(BeanCreator.createBean(new Bean(clazz, BeanType.DAO_IMPL), beanConfiguration));
-                mappedBean.setFormCreateView(BeanCreator.createBean(new Bean(clazz, BeanType.VIEW_FORM_CREATE), beanConfiguration));
-                mappedBean.setCreateView(BeanCreator.createBean(new Bean(clazz, BeanType.VIEW_CREATE), beanConfiguration));
-                mappedBean.setListView(BeanCreator.createBean(new Bean(clazz, BeanType.VIEW_LIST), beanConfiguration));
-                mappedBean.setMenu(BeanCreator.createBean(new Bean(clazz, BeanType.VIEW_MENU), beanConfiguration));
-                mappedBean.setDetail(BeanCreator.createBean(new Bean(clazz, BeanType.VIEW_DETAIL), beanConfiguration));
-                mappedBeans.add(mappedBean);
-            } catch (IOException ex) {
-                logger.log(Level.SEVERE, null, ex);
-            } catch (TemplateException ex) {
-                logger.log(Level.SEVERE, null, ex);
+            //ignore Embeddable
+            if (!clazz.isAnnotationPresent(Embeddable.class)) {
+                try {
+                    MappedBean mappedBean = new MappedBean(clazz);
+                    mappedBean.setI18n(BeanCreator.getI18N(clazz));
+                    mappedBean.setManagedBean(BeanCreator.createBean(new Bean(clazz, BeanType.MANAGED_BEAN), beanConfiguration));
+                    mappedBean.setBusinnesObject(BeanCreator.createBean(new Bean(clazz, BeanType.BUSINESS_OBJECT), beanConfiguration));
+                    mappedBean.setDao(BeanCreator.createBean(new Bean(clazz, BeanType.DAO), beanConfiguration));
+                    mappedBean.setDaoImpl(BeanCreator.createBean(new Bean(clazz, BeanType.DAO_IMPL), beanConfiguration));
+                    mappedBean.setFormCreateView(BeanCreator.createBean(new Bean(clazz, BeanType.VIEW_FORM_CREATE), beanConfiguration));
+                    mappedBean.setCreateView(BeanCreator.createBean(new Bean(clazz, BeanType.VIEW_CREATE), beanConfiguration));
+                    mappedBean.setListView(BeanCreator.createBean(new Bean(clazz, BeanType.VIEW_LIST), beanConfiguration));
+                    mappedBean.setMenu(BeanCreator.createBean(new Bean(clazz, BeanType.VIEW_MENU), beanConfiguration));
+                    mappedBean.setDetail(BeanCreator.createBean(new Bean(clazz, BeanType.VIEW_DETAIL), beanConfiguration));
+                    mappedBeans.add(mappedBean);
+                } catch (IOException ex) {
+                    logger.log(Level.SEVERE, null, ex);
+                } catch (TemplateException ex) {
+                    logger.log(Level.SEVERE, null, ex);
+                }
             }
         }
         sortMappedBean(mappedBeans);

@@ -160,7 +160,7 @@
                                 rendered="#{not empty beanMaker.classes}" toggleable="true">
 
                         <h:selectManyCheckbox value="#{beanMaker.nameSelectedClasses}" id="selectClasses">
-                            <x:spread columns="3"/>
+                            <x:spread columns="2"/>
                             <f:selectItems value="#{beanMaker.classes}" var="clazz" itemLabel="#{clazz.name}" itemValue="#{clazz.name}"  />
                         </h:selectManyCheckbox>
                         <p:spacer height="5"/>

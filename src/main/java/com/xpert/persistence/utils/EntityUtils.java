@@ -25,6 +25,20 @@ public class EntityUtils {
     private static final Map<Class, Class> ID_TYPE_MAP = new HashMap<Class, Class>();
 
     /**
+     * Return true is @EmbeddedId is present in class
+     *
+     * @param clazz
+     * @return
+     */
+    public static boolean hasEmbeddedId(Class clazz) {
+        AccessibleObject accessibleObject = getIdAccessibleObject(clazz);
+        if (accessibleObject != null && accessibleObject.isAnnotationPresent(EmbeddedId.class)) {
+            return true;
+        }
+        return false;
+    }
+
+    /**
      * Method to return entity id (field/method with annotation @Id or
      *
      * @EmbeddedId)

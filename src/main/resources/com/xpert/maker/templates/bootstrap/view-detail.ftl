@@ -10,7 +10,7 @@
             <#list entity.fields as field>
                 <#if field.collection == false && field.id == false>
                 <div class="${configuration.bootstrapVersion.defaultColumns}">
-                    <h:outputLabel value="${sharp}{${resourceBundle}['${entity.nameLower}.${field.name}']}:" styleClass="control-label" /><br/>
+                    <h:outputLabel value="${sharp}{${resourceBundle}['${entity.nameLower}.${field.label}']}:" styleClass="control-label" /><br/>
                     <#if field.lazy == true>
                     <h:outputText value="${sharp}{${entity.nameLower}${configuration.managedBeanSuffix}.entity.${field.name}}" styleClass="uix-content-detail">
                         <x:initializer/>
@@ -27,7 +27,7 @@
                     </h:outputText>
                     </#if>
                     <#if field.time == true>
-                    <h:outputText value="${sharp}{${entity.nameLower}.${field.name}}" styleClass="uix-content-detail">
+                    <h:outputText value="${sharp}{${entity.nameLower}${configuration.managedBeanSuffix}.entity.${field.name}}" styleClass="uix-content-detail">
                         <f:convertDateTime pattern="${configuration.timePattern}"/>
                     </h:outputText>
                     </#if>
@@ -49,8 +49,7 @@
             <x:securityArea rolesAllowed="${entity.nameLower}.audit">
                 <x:audit for="${sharp}{${entity.nameLower}${configuration.managedBeanSuffix}.entity}"/>
             </x:securityArea>
-            </#if>
-            <#if configuration.generatesSecurityArea == false >
+            <#else>
             <x:audit for="${sharp}{${entity.nameLower}${configuration.managedBeanSuffix}.entity}"/>
             </#if>
         </div>

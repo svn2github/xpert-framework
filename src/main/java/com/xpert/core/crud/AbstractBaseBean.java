@@ -22,11 +22,12 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
+import javax.faces.application.NavigationHandler;
 import javax.faces.context.FacesContext;
 
 /**
  * Generic Managed Bean to create CRUD
- * 
+ *
  * @author Ayslan
  * @param <T> type of entity
  */
@@ -35,12 +36,14 @@ public abstract class AbstractBaseBean<T> {
     private static final Logger logger = Logger.getLogger(AbstractBaseBean.class.getName());
     private static final String ID = "id";
     private Object id;
+    private String outcome;
     private String dialog;
     private LazyDataModelImpl<T> dataModel;
     private T entity;
     private Class entityClass;
     private boolean loadEntityOnPostConstruct = true;
-    private static final String ENTITY_CLASS_TO_LOAD = "xpert.entityClassToLoad";
+    public static final String ENTITY_REQUEST_TO_LOAD = "xpert.requestEntity";
+    public static final String ENTITY_CLASS_TO_LOAD = "xpert.entityClassToLoad";
 
     /**
      * @return a AbstractBusinessObject instance to be used in operations
@@ -89,15 +92,50 @@ public abstract class AbstractBaseBean<T> {
 
     /**
      * Method called on "@PostConstruct" event
+     *
+     * Try to get the entity from request map. If not found try to load from
+     * "id" parameter
+     *
      */
     @PostConstruct
     public void postConstruct() {
-        loadEntityFromParameter();
+        //try to get from request map, the complete object
+        loadEntityFromRequestParameter();
+        //try to load entity from "id" in parameters
+        if (entity == null) {
+            loadEntityFromParameter();
+        }
         if (entity == null) {
             create();
         }
         init();
         createDataModel();
+    }
+
+    /**
+     * put a entity in request map
+     */
+    public void putEntityInRequest() {
+        FacesContext facesContext = FacesContext.getCurrentInstance();
+        Map<String, Object> requestMap = facesContext.getExternalContext().getRequestMap();
+        requestMap.put(ENTITY_REQUEST_TO_LOAD, entity);
+        String outcome = getOutcome();
+        if (outcome != null && !outcome.isEmpty()) {
+            NavigationHandler navigationHandler = facesContext.getApplication().getNavigationHandler();
+            navigationHandler.handleNavigation(facesContext, null, outcome);
+        }
+    }
+
+    /**
+     * Load the entity from request map
+     */
+    public void loadEntityFromRequestParameter() {
+        T entityFromParameter = (T) FacesContext.getCurrentInstance().getExternalContext().getRequestMap().get(ENTITY_REQUEST_TO_LOAD);
+        if (entityFromParameter != null) {
+            entity = entityFromParameter;
+            //reload from database
+            reloadEntity();
+        }
     }
 
     /**
@@ -118,7 +156,7 @@ public abstract class AbstractBaseBean<T> {
     }
 
     /**
-     * @return A Number instance of id passed in parameter
+     * @return A instance of id passed in parameter
      */
     private Object getIdFromParameter() {
         String parameter = FacesUtils.getParameter(ID);
@@ -131,8 +169,10 @@ public abstract class AbstractBaseBean<T> {
                 return Long.parseLong(StringUtils.getOnlyIntegerNumbers(parameter));
             } else if (idType.equals(Integer.class)) {
                 return Integer.parseInt(StringUtils.getOnlyIntegerNumbers(parameter));
-            }else if (idType.equals(BigDecimal.class)) {
+            } else if (idType.equals(BigDecimal.class)) {
                 return new BigDecimal(StringUtils.getOnlyIntegerNumbers(parameter));
+            } else if (idType.equals(String.class)) {
+                return parameter;
             } else {
                 logger.log(Level.SEVERE, "Type {0} from entity {1} is not mapped in generic base bean", new Object[]{idType.getName(), entityClass.getName()});
                 return null;
@@ -380,4 +420,18 @@ public abstract class AbstractBaseBean<T> {
     public void setLoadEntityOnPostConstruct(boolean loadEntityOnPostConstruct) {
         this.loadEntityOnPostConstruct = loadEntityOnPostConstruct;
     }
+
+    /**
+     * return a String representation of an outocome page
+     *
+     * @return an outcome page
+     */
+    public String getOutcome() {
+        return outcome;
+    }
+
+    public void setOutcome(String outcome) {
+        this.outcome = outcome;
+    }
+
 }

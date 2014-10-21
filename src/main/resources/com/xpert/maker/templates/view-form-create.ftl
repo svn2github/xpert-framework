@@ -14,50 +14,50 @@
                 <#list entity.fields as field>
                 <#if field.renderFieldInFormCreate == true >
 
-                <h:outputLabel for="${field.name}" value="<#if field.required == true>* </#if>${sharp}{${resourceBundle}['${entity.nameLower}.${field.name}']}:" />
+                <h:outputLabel for="${field.label}" value="<#if field.required == true>* </#if>${sharp}{${resourceBundle}['${entity.nameLower}.${field.label}']}:" />
                 <#-- String -->
                 <#if field.string == true>
-                <p:inputText id="${field.name}" value="${sharp}{${entity.nameLower}${configuration.managedBeanSuffix}.entity.${field.name}}" maxlength="${field.maxlength?string}"  size="70"  />
+                <p:inputText id="${field.label}" value="${sharp}{${entity.nameLower}${configuration.managedBeanSuffix}.entity.${field.name}}" maxlength="${field.maxlength?string}"  size="70"  />
                 </#if>
                 <#-- Boolean -->
                 <#if field.yesNo == true>
-                <h:selectBooleanCheckbox id="${field.name}" value="${sharp}{${entity.nameLower}${configuration.managedBeanSuffix}.entity.${field.name}}" />
+                <h:selectBooleanCheckbox id="${field.label}" value="${sharp}{${entity.nameLower}${configuration.managedBeanSuffix}.entity.${field.name}}" />
                 </#if>
                 <#-- Integer/Long -->
                 <#if field.integer == true>
-                <p:inputMask id="${field.name}" mask="9?999999999" placeHolder="" value="${sharp}{${entity.nameLower}${configuration.managedBeanSuffix}.entity.${field.name}}"  />
+                <p:inputMask id="${field.label}" mask="9?999999999" placeHolder="" value="${sharp}{${entity.nameLower}${configuration.managedBeanSuffix}.entity.${field.name}}"  />
                 </#if>
                 <#-- Decimal (BigDecimal, Double) -->
                 <#if field.decimal == true>
-                <x:inputNumber id="${field.name}" value="${sharp}{${entity.nameLower}${configuration.managedBeanSuffix}.entity.${field.name}}" />
+                <x:inputNumber id="${field.label}" value="${sharp}{${entity.nameLower}${configuration.managedBeanSuffix}.entity.${field.name}}" />
                 </#if>
                 <#-- Date -->
                 <#if field.date == true>
                 <#if configuration.maskCalendar == true>
-                <p:calendar id="${field.name}" value="${sharp}{${entity.nameLower}${configuration.managedBeanSuffix}.entity.${field.name}}" 
+                <p:calendar id="${field.label}" value="${sharp}{${entity.nameLower}${configuration.managedBeanSuffix}.entity.${field.name}}" 
                             showOn="button" pattern="${configuration.datePattern}" >
                     <x:mask/>
                 </p:calendar>
                 <#else>
-                <p:calendar id="${field.name}" value="${sharp}{${entity.nameLower}${configuration.managedBeanSuffix}.entity.${field.name}}" 
+                <p:calendar id="${field.label}" value="${sharp}{${entity.nameLower}${configuration.managedBeanSuffix}.entity.${field.name}}" 
                             showOn="button" pattern="${configuration.datePattern}" />
                 </#if>
                 </#if>
                 <#-- Time -->
                 <#if field.time == true>
                 <#if configuration.maskCalendar == true>
-                <p:calendar id="${field.name}" value="${sharp}{${entity.nameLower}${configuration.managedBeanSuffix}.entity.${field.name}}" 
+                <p:calendar id="${field.label}" value="${sharp}{${entity.nameLower}${configuration.managedBeanSuffix}.entity.${field.name}}" 
                             showOn="button" pattern="${configuration.timePattern}" timeOnly="true">
                     <x:mask/>
                 </p:calendar>
                 <#else>
-                <p:calendar id="${field.name}" value="${sharp}{${entity.nameLower}${configuration.managedBeanSuffix}.entity.${field.name}}" 
+                <p:calendar id="${field.label}" value="${sharp}{${entity.nameLower}${configuration.managedBeanSuffix}.entity.${field.name}}" 
                             showOn="button" pattern="${configuration.timePattern}" timeOnly="true"/>
                 </#if>
                 </#if>
                 <#-- Enuns/ManyToOne (render a combobox) -->
                 <#if field.enumeration == true || field.manyToOne == true>
-                <h:selectOneMenu id="${field.name}" value="${sharp}{${entity.nameLower}${configuration.managedBeanSuffix}.entity.${field.name}}" <#if field.enumeration == false>converter="entityConverter"</#if>  >
+                <h:selectOneMenu id="${field.label}" value="${sharp}{${entity.nameLower}${configuration.managedBeanSuffix}.entity.${field.name}}" <#if field.enumeration == false>converter="entityConverter"</#if>  >
                     <#if field.lazy == true>
                     <x:initializer/>
                     </#if>
@@ -69,7 +69,7 @@
                 </#if>
                 <#-- Collections (render a checkbox list) -->
                 <#if field.manyToMany == true >
-                <h:selectManyCheckbox id="${field.name}" value="${sharp}{${entity.nameLower}${configuration.managedBeanSuffix}.entity.${field.name}}" converter="entityConverter" >
+                <h:selectManyCheckbox id="${field.label}" value="${sharp}{${entity.nameLower}${configuration.managedBeanSuffix}.entity.${field.name}}" converter="entityConverter" >
                     <#if field.lazy == true>
                     <x:initializer/>
                     </#if>
@@ -92,8 +92,7 @@
             <x:securityArea rolesAllowed="${entity.nameLower}.audit">
                  <x:audit for="${sharp}{${entity.nameLower}${configuration.managedBeanSuffix}.entity}"/>
             </x:securityArea>
-            </#if>
-            <#if configuration.generatesSecurityArea == false >
+             <#else>
             <p:commandButton process="@form" update="@form" action="${sharp}{${entity.nameLower}${configuration.managedBeanSuffix}.save}" value="${sharp}{xmsg['save']}" />
             <x:audit for="${sharp}{${entity.nameLower}${configuration.managedBeanSuffix}.entity}"/>
             </#if>

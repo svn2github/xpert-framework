@@ -14,6 +14,7 @@ public class ViewEntity {
 
     private String name;
     private String idFieldName;
+    private boolean embeddedId;
     private PrimeFacesVersion primeFacesVersion;
     private List<ViewField> fields = new ArrayList<ViewField>();
 
@@ -62,6 +63,14 @@ public class ViewEntity {
         return name;
     }
 
+    public boolean isEmbeddedId() {
+        return embeddedId;
+    }
+
+    public void setEmbeddedId(boolean embeddedId) {
+        this.embeddedId = embeddedId;
+    }
+    
     public String getIdFieldName() {
         return idFieldName;
     }

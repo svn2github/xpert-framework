@@ -110,18 +110,27 @@ public class BeanCreator {
         return writer.toString();
     }
 
-    public static ViewEntity createViewEntity(Class clazz, BeanConfiguration configuration) {
-        ViewEntity entity = new ViewEntity();
-        entity.setName(clazz.getSimpleName());
-        entity.setPrimeFacesVersion(configuration.getPrimeFacesVersion());
-        entity.setIdFieldName(EntityUtils.getIdFieldName(clazz));
-        List<Field> fields = getFields(clazz);
+    public static List<ViewField> getViewFields(List<Field> fields, String entityType) {
+        List<ViewField> viewFields = new ArrayList<ViewField>();
         for (Field field : fields) {
+
+            //recursive call to getViewFields id exists EmbeddedId or Embeddable
+            if (isAnnotationPresent(field, EmbeddedId.class) || isAnnotationPresent(field, Embeddable.class)) {
+                List<Field> fieldsFromEmbedded = getFields(field.getType());
+                List<ViewField> viewFieldsEmbedded = getViewFields(fieldsFromEmbedded, field.getName());
+                if (viewFieldsEmbedded != null && !viewFieldsEmbedded.isEmpty()) {
+                    viewFields.addAll(viewFieldsEmbedded);
+                }
+                continue;
+            }
+
             if (isAnnotationPresent(field, Transient.class)) {
                 continue;
             }
             ViewField viewField = new ViewField();
-            viewField.setName(field.getName());
+            //for embedded, example: entityPk.fieldName
+            viewField.setName(entityType == null ? field.getName() : (entityType + "." + field.getName()));
+            viewField.setLabel(field.getName());
             //@Id
             if (isAnnotationPresent(field, Id.class)) {
                 viewField.setId(true);
@@ -179,8 +188,20 @@ public class BeanCreator {
             } else {
                 viewField.setTypeName(field.getType().getSimpleName());
             }
-            entity.getFields().add(viewField);
+            viewFields.add(viewField);
         }
+        return viewFields;
+    }
+
+    public static ViewEntity createViewEntity(Class clazz, BeanConfiguration configuration) {
+
+        ViewEntity entity = new ViewEntity();
+        entity.setName(clazz.getSimpleName());
+        entity.setPrimeFacesVersion(configuration.getPrimeFacesVersion());
+        entity.setIdFieldName(EntityUtils.getIdFieldName(clazz));
+        entity.setEmbeddedId(EntityUtils.hasEmbeddedId(clazz));
+        List<Field> fields = getFields(clazz);
+        entity.setFields(getViewFields(fields, null));
 
         return entity;
     }
@@ -288,9 +309,31 @@ public class BeanCreator {
         return field.getName().equals("serialVersionUID");
     }
 
-    public static String getI18N(Class clazz) {
+    public static String getI18NFromFields(Class clazz, String className) {
 
         List<Field> fields = getFields(clazz);
+        StringBuilder builder = new StringBuilder();
+        for (Field field : fields) {
+            //recursive call for EmbeddedId and Embeddable
+            if (field.isAnnotationPresent(EmbeddedId.class) || field.isAnnotationPresent(Embeddable.class)) {
+                builder.append(getI18NFromFields(field.getType(), className));
+                continue;
+            }
+            if (isSerialVersionUID(field)) {
+                continue;
+            }
+            builder.append(className);
+            builder.append(".");
+            builder.append(field.getName());
+            builder.append("=");
+            builder.append(new HumaniseCamelCase().humanise(field.getName()));
+            builder.append("\n");
+        }
+        return builder.toString();
+    }
+
+    public static String getI18N(Class clazz) {
+
         StringBuilder builder = new StringBuilder();
         String className = StringUtils.getLowerFirstLetter(clazz.getSimpleName());
         String humanName = new HumaniseCamelCase().humanise(clazz.getSimpleName());
@@ -302,22 +345,9 @@ public class BeanCreator {
         builder.append(className).append(".create").append("=").append(XpertResourceBundle.get("makerCreate", locale)).append(" ").append(humanName).append("\n");
         builder.append(className).append(".list").append("=").append(XpertResourceBundle.get("makerList", locale)).append(" ").append(humanName).append("\n");
         builder.append(className).append(".detail").append("=").append(humanName).append(" - ").append(XpertResourceBundle.get("makerDetail", locale)).append("\n");
-        boolean first = false;
-        for (Field field : fields) {
-            if (isSerialVersionUID(field)) {
-                continue;
-            }
-            if (!first) {
-                builder.append("\n");
-            } else {
-                first = true;
-            }
-            builder.append(className);
-            builder.append(".");
-            builder.append(field.getName());
-            builder.append("=");
-            builder.append(new HumaniseCamelCase().humanise(field.getName()));
-        }
+
+        builder.append("\n");
+        builder.append(getI18NFromFields(clazz, className));
 
         return builder.toString();
 
@@ -672,7 +702,7 @@ public class BeanCreator {
     }
 
     public static boolean isDecimal(Field field) {
-        return field.getType().equals(BigDecimal.class) 
+        return field.getType().equals(BigDecimal.class)
                 || field.getType().equals(Double.class) || field.getType().equals(double.class)
                 || field.getType().equals(Float.class) || field.getType().equals(float.class);
     }

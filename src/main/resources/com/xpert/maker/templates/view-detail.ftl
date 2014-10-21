@@ -9,7 +9,7 @@
         <#list entity.fields as field>
             <#if field.collection == false && field.id == false>
            
-            <h:outputLabel value="${sharp}{${resourceBundle}['${entity.nameLower}.${field.name}']}:" />
+            <h:outputLabel value="${sharp}{${resourceBundle}['${entity.nameLower}.${field.label}']}:" />
             <#if field.lazy == true>
             <h:outputText value="${sharp}{${entity.nameLower}${configuration.managedBeanSuffix}.entity.${field.name}}">
                 <x:initializer/>
@@ -26,7 +26,7 @@
             </h:outputText>
             </#if>
             <#if field.time == true>
-            <h:outputText value="${sharp}{${entity.nameLower}.${field.name}}">
+            <h:outputText value="${sharp}{${entity.nameLower}${configuration.managedBeanSuffix}.entity.${field.name}}">
                 <f:convertDateTime pattern="${configuration.timePattern}"/>
             </h:outputText>
             </#if>
@@ -47,8 +47,7 @@
             <x:securityArea rolesAllowed="${entity.nameLower}.audit">
                 <x:audit for="${sharp}{${entity.nameLower}${configuration.managedBeanSuffix}.entity}"/>
             </x:securityArea>
-            </#if>
-            <#if configuration.generatesSecurityArea == false >
+            <#else>
             <x:audit for="${sharp}{${entity.nameLower}${configuration.managedBeanSuffix}.entity}"/>
             </#if>
         </div>
