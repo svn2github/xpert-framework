@@ -37,6 +37,11 @@ public class AuditBean implements Serializable{
     public boolean isPrimeFaces3(){
         return PrimeFacesUtils.isVersion3();
     }
+    
+    public boolean isPrimeFaces4(){
+        return PrimeFacesUtils.isVersion4();
+    }
+    
 
     public void detail(Object object) {
         this.object = object;
