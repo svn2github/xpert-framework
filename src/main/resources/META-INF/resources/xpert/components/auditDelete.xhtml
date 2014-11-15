@@ -12,6 +12,9 @@
     <cc:interface>
         <cc:attribute name="for" required="true" type="java.lang.Class"/>
         <cc:attribute name="collapsed" type="boolean" default="true" />
+        <cc:attribute name="buttonStyleClass" type="java.lang.String"  />
+        <cc:attribute name="panelStyleClass" type="java.lang.String"  />
+        <cc:attribute name="buttonIcon" type="java.lang.String" default="ui-icon-plus" />
     </cc:interface>
 
     <!-- IMPLEMENTATION -->
@@ -20,9 +23,9 @@
         <span id="#{cc.attrs.clientId}">
             <h:panelGroup id="detail">
 
-                <p:commandButton process="@this" action="#{auditDeleteBean.load}" icon="ui-icon-plus"
+                <p:commandButton process="@this" action="#{auditDeleteBean.load}" icon="#{cc.attrs.buttonIcon}"
                                  rendered="#{cc.attrs.collapsed}"
-                                 styleClass="button-detail-auditing-delete" style="margin-bottom: 2px;"
+                                 styleClass="button-detail-auditing-delete #{cc.attrs.buttonStyleClass}" style="margin-bottom: 2px;"
                                  oncomplete="$(PrimeFaces.escapeClientId('#{cc.attrs.clientId}')).find('.button-detail-auditing-delete').hide();$(PrimeFaces.escapeClientId('#{cc.attrs.clientId}')).find('.panel-detail-auditing-delete').show()"
                                  update="accordionDetail" value="#{xmsg.listDeletions}" >
                     <f:setPropertyActionListener value="#{cc.attrs.for}" target="#{auditDeleteBean.entity}" />
@@ -32,7 +35,7 @@
                     <f:event type="preRenderComponent" listener="#{auditDeleteBean.load(cc.attrs.for)}" />
                 </h:panelGroup>
 
-                <h:panelGroup styleClass="panel-detail-auditing-delete" style="#{cc.attrs.collapsed ? 'display: none;' : ''}">
+                <h:panelGroup styleClass="panel-detail-auditing-delete #{cc.attrs.panelStyleClass}" style="#{cc.attrs.collapsed ? 'display: none;' : ''}">
                     <p:accordionPanel id="accordionDetail" >
                         <p:tab title="#{xmsg.deletions}">
 

@@ -13,6 +13,9 @@
         <cc:attribute name="for" required="true" />
         <cc:attribute name="forClass" required="java.lang.Class" />
         <cc:attribute name="collapsed" type="boolean" default="true" />
+        <cc:attribute name="buttonStyleClass" type="java.lang.String"  />
+        <cc:attribute name="panelStyleClass" type="java.lang.String"  />
+        <cc:attribute name="buttonIcon" type="java.lang.String" default="ui-icon-plus" />
     </cc:interface>
 
     <!-- IMPLEMENTATION -->
@@ -23,9 +26,9 @@
             <h:panelGroup rendered="#{auditBean.isPersisted(cc.attrs.for)}" id="auditingPanel">
                 <h:panelGroup id="detail">
 
-                    <p:commandButton process="@this" action="#{auditBean.detail}" icon="ui-icon-plus"
+                    <p:commandButton process="@this" action="#{auditBean.detail}" icon="#{cc.attrs.buttonIcon}"
                                      rendered="#{cc.attrs.collapsed}"
-                                     styleClass="button-detail-auditing"
+                                     styleClass="button-detail-auditing #{cc.attrs.buttonStyleClass}"
                                      oncomplete="$(PrimeFaces.escapeClientId('#{cc.attrs.clientId}')).find('.button-detail-auditing').hide();$(PrimeFaces.escapeClientId('#{cc.attrs.clientId}')).find('.panel-detail-auditing').show()"
                                      update="accordionDetail" value="#{xmsg.auditing}" >
                         <f:setPropertyActionListener value="#{cc.attrs.for}" target="#{auditBean.object}" />
@@ -35,7 +38,7 @@
                         <f:event type="preRenderComponent" listener="#{auditBean.detail(cc.attrs.for)}" />
                     </h:panelGroup>
 
-                    <h:panelGroup styleClass="panel-detail-auditing" style="#{cc.attrs.collapsed ? 'display: none;' : ''}">
+                    <h:panelGroup styleClass="panel-detail-auditing #{cc.attrs.panelStyleClass}" style="#{cc.attrs.collapsed ? 'display: none;' : ''}" >
                         <p:accordionPanel id="accordionDetail" >
                             <p:tab title="#{xmsg.auditingDetail}">
                                 <ui:param name="xpertAuditingDetail" value="#{auditBean.getDetailAuditBean(cc.attrs.for)}"/>
