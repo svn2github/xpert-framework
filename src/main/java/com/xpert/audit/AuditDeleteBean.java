@@ -8,7 +8,6 @@ import com.xpert.audit.model.AuditingType;
 import com.xpert.faces.primefaces.LazyDataModelImpl;
 import com.xpert.faces.primefaces.PrimeFacesUtils;
 import com.xpert.persistence.dao.BaseDAO;
-import com.xpert.persistence.query.JoinBuilder;
 import com.xpert.persistence.query.Restriction;
 import com.xpert.persistence.query.RestrictionType;
 import com.xpert.persistence.utils.EntityUtils;
@@ -18,8 +17,6 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ViewScoped;
 import org.apache.commons.beanutils.PropertyUtils;
 import org.primefaces.model.LazyDataModel;
 
@@ -27,8 +24,6 @@ import org.primefaces.model.LazyDataModel;
  *
  * @author Ayslan
  */
-@ManagedBean
-@ViewScoped
 public class AuditDeleteBean implements Serializable {
 
     private static final Logger logger = Logger.getLogger(AuditDeleteBean.class.getName());

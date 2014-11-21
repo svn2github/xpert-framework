@@ -9,7 +9,6 @@ import java.util.logging.Logger;
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.convert.Converter;
-import javax.faces.convert.FacesConverter;
 import javax.persistence.EmbeddedId;
 import javax.persistence.Id;
 import org.hibernate.proxy.HibernateProxy;
@@ -22,7 +21,6 @@ import org.hibernate.proxy.HibernateProxy;
  *
  * @author ayslan
  */
-@FacesConverter(value = "entityConverter")
 public class EntityConverter implements Converter {
 
     private static final Logger logger = Logger.getLogger(EntityConverter.class.getName());

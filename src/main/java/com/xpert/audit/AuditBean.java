@@ -11,15 +11,11 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ViewScoped;
 
 /**
  *
  * @author Ayslan
  */
-@ManagedBean
-@ViewScoped
 public class AuditBean implements Serializable{
 
     private static final Logger logger = Logger.getLogger(AuditBean.class.getName());

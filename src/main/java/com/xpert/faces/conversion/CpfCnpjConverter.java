@@ -4,7 +4,6 @@ import com.xpert.core.conversion.Mask;
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.convert.Converter;
-import javax.faces.convert.FacesConverter;
 
 /**
  *
@@ -12,7 +11,6 @@ import javax.faces.convert.FacesConverter;
  *
  * @author Ayslan
  */
-@FacesConverter(value = "cpfCnpjConverter")
 public class CpfCnpjConverter implements Converter {
 
     @Override

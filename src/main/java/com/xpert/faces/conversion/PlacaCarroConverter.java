@@ -4,7 +4,6 @@ import com.xpert.core.conversion.Mask;
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.convert.Converter;
-import javax.faces.convert.FacesConverter;
 
 /**
  *
@@ -13,7 +12,6 @@ import javax.faces.convert.FacesConverter;
  *
  * @author Arnaldo
  */
-@FacesConverter(value = "placaCarroConverter")
 public class PlacaCarroConverter implements Converter {
 
     @Override

@@ -7,8 +7,6 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
 import javax.servlet.http.HttpServletRequest;
 
@@ -16,8 +14,6 @@ import javax.servlet.http.HttpServletRequest;
  *
  * @author Ayslan
  */
-@ManagedBean
-@SessionScoped
 public class LocaleBean implements Serializable {
 
     private Locale locale;

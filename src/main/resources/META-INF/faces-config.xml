@@ -23,6 +23,93 @@
         </system-event-listener>
     </application>
     
+    
+    <converter>
+        <converter-id>entityConverter</converter-id>
+        <converter-class>com.xpert.faces.conversion.EntityConverter</converter-class>
+    </converter>
+    <converter>
+        <converter-id>activeInactiveConverter</converter-id>
+        <converter-class>com.xpert.faces.conversion.ActiveInactiveConverter</converter-class>
+    </converter>
+    <converter>
+        <converter-id>cnpjConverter</converter-id>
+        <converter-class>com.xpert.faces.conversion.CnpjConverter</converter-class>
+    </converter>
+    <converter>
+        <converter-id>cpfCnpjConverter</converter-id>
+        <converter-class>com.xpert.faces.conversion.CpfCnpjConverter</converter-class>
+    </converter>
+    <converter>
+        <converter-id>cpfConverter</converter-id>
+        <converter-class>com.xpert.faces.conversion.CpfConverter</converter-class>
+    </converter>
+    <converter>
+        <converter-id>placaCarroConverter</converter-id>
+        <converter-class>com.xpert.faces.conversion.PlacaCarroConverter</converter-class>
+    </converter>
+    <converter>
+        <converter-id>yesNoConverter</converter-id>
+        <converter-class>com.xpert.faces.conversion.YesNoConverter</converter-class>
+    </converter>
+    
+    <validator>
+        <validator-id>cnpjValidator</validator-id>
+        <validator-class>com.xpert.faces.validation.CnpjValidator</validator-class>
+    </validator>
+    <validator>
+        <validator-id>cpfValidator</validator-id>
+        <validator-class>com.xpert.faces.validation.CpfValidator</validator-class>
+    </validator>
+    <validator>
+        <validator-id>latitudeValidator</validator-id>
+        <validator-class>com.xpert.faces.validation.LatitudeValidator</validator-class>
+    </validator>
+    <validator>
+        <validator-id>longitudeValidator</validator-id>
+        <validator-class>com.xpert.faces.validation.LongitudeValidator</validator-class>
+    </validator>
+    <validator>
+        <validator-id>renavamValidator</validator-id>
+        <validator-class>com.xpert.faces.validation.RenavamValidator</validator-class>
+    </validator>
+    
+    <managed-bean>
+        <managed-bean-name>auditBean</managed-bean-name>
+        <managed-bean-class>com.xpert.audit.AuditBean</managed-bean-class>
+        <managed-bean-scope>view</managed-bean-scope>
+    </managed-bean>
+    <managed-bean>
+        <managed-bean-name>auditDeleteBean</managed-bean-name>
+        <managed-bean-class>com.xpert.audit.AuditDeleteBean</managed-bean-class>
+        <managed-bean-scope>view</managed-bean-scope>
+    </managed-bean>
+    <managed-bean>
+        <managed-bean-name>beanMaker</managed-bean-name>
+        <managed-bean-class>com.xpert.faces.bean.BeanMaker</managed-bean-class>
+        <managed-bean-scope>session</managed-bean-scope>
+    </managed-bean>
+    <managed-bean>
+        <managed-bean-name>booleanSelectItens</managed-bean-name>
+        <managed-bean-class>com.xpert.faces.bean.BooleanSelectItens</managed-bean-class>
+        <managed-bean-scope>request</managed-bean-scope>
+    </managed-bean>
+    <managed-bean>
+        <managed-bean-name>booleanSelectItensEmptyOption</managed-bean-name>
+        <managed-bean-class>com.xpert.faces.bean.BooleanSelectItensEmptyOption</managed-bean-class>
+        <managed-bean-scope>request</managed-bean-scope>
+    </managed-bean>
+    <managed-bean>
+        <managed-bean-name>localeBean</managed-bean-name>
+        <managed-bean-class>com.xpert.faces.bean.LocaleBean</managed-bean-class>
+        <managed-bean-scope>session</managed-bean-scope>
+    </managed-bean>
+    <managed-bean>
+        <managed-bean-name>primeFacesVersion</managed-bean-name>
+        <managed-bean-class>com.xpert.faces.bean.PrimeFacesVersion</managed-bean-class>
+        <managed-bean-scope>request</managed-bean-scope>
+    </managed-bean>
+    
     <behavior>
         <behavior-id>xpert.faces.DownloadBehavior</behavior-id>
         <behavior-class>com.xpert.faces.behavior.DownloadBehavior</behavior-class>
