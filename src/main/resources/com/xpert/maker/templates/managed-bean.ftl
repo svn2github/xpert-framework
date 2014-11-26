@@ -38,6 +38,6 @@ public class ${name}${configuration.managedBeanSuffix} extends AbstractBaseBean<
 
     @Override
     public String getDataModelOrder() {
-        return "id";
+        return "${entity.idFieldName}";
     }
 }
