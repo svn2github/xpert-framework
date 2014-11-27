@@ -70,6 +70,7 @@ public class BeanCreator {
 
     public static String createBean(Bean bean, BeanConfiguration configuration) throws IOException, TemplateException {
         ViewEntity viewEntity = createViewEntity(bean.getEntity(), configuration);
+        bean.setViewEntity(viewEntity);
         String templatePath = bean.getBeanType().getTemplate();
         //logger.log(Level.INFO, "Creating template {0}", new Object[]{templatePath});
 

@@ -1,5 +1,7 @@
 package com.xpert.maker;
 
+import com.xpert.maker.model.ViewEntity;
+
 /**
  *
  * @author Ayslan
@@ -11,6 +13,7 @@ public class Bean {
     private BeanConfiguration configuration;
     private String author;
     private String resourceBundle;
+    private ViewEntity viewEntity;
     
     public Bean(Class entity, BeanType beanType) {
         this.entity = entity;
@@ -25,6 +28,14 @@ public class Bean {
         return "";
     }
 
+    public ViewEntity getViewEntity() {
+        return viewEntity;
+    }
+
+    public void setViewEntity(ViewEntity viewEntity) {
+        this.viewEntity = viewEntity;
+    }
+    
     public String getResourceBundle() {
         return resourceBundle;
     }
