@@ -17,18 +17,29 @@
             <p:outputPanel autoUpdate="#{cc.attrs.autoUpdate}">
                 <h:panelGroup rendered="#{not empty facesContext.messageList}">
                     <p:dialog showHeader="false" closable="false" modal="true" appendToBody="true"
-                              onShow="$('button[id*=buttonConfirmMessage]').focus();"
-                              id="xpertModalMessages"
+                              onShow="$('.button-confirm-modal').focus();"
+                              rendered="#{primeFacesVersion.primeFaces3}"
                               styleClass="faces-modal-messages" resizable="false"
                               widgetVar="xpertModalDialogMessages" visible="true">
                         <div class="modal-messages">
                             <p:messages/>
                             <div align="center">
-                                <p:commandButton rendered="#{primeFacesVersion.primeFaces3}"
-                                                 onclick="xpertModalDialogMessages.hide();$('.faces-modal-messages').remove();$('div[id*=xpertModalMessages]').remove();" type="button" value="Ok" />
-                               
-                                <p:commandButton rendered="#{not primeFacesVersion.primeFaces3}"
-                                                 onclick="PF('xpertModalDialogMessages').hide();$('.faces-modal-messages').remove();$('div[id*=xpertModalMessages]').remove();" type="button" value="Ok" />
+                                <p:commandButton onclick="Xpert.closeModalMessages(xpertModalDialogMessages)"
+                                                 styleClass="button-confirm-modal" type="button" value="Ok" />
+
+                            </div>
+                        </div>
+                    </p:dialog>
+                    <p:dialog showHeader="false" closable="false" modal="true" appendTo="@(body)"
+                              onShow="$('.button-confirm-modal').focus();"
+                              rendered="#{not primeFacesVersion.primeFaces3}"
+                              styleClass="faces-modal-messages" resizable="false"
+                              widgetVar="xpertModalDialogMessages" visible="true">
+                        <div class="modal-messages">
+                            <p:messages/>
+                            <div align="center">
+                                <p:commandButton onclick="Xpert.closeModalMessages(PF('xpertModalDialogMessages'))"
+                                                 styleClass="button-confirm-modal" type="button" value="Ok" />
                             </div>
                         </div>
                     </p:dialog>
