@@ -16,6 +16,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
 import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.logging.Level;
@@ -713,6 +714,7 @@ public class BeanCreator {
 
     public static boolean isInteger(Field field) {
         return field.getType().equals(Integer.class) || field.getType().equals(int.class)
+                || field.getType().equals(BigInteger.class)
                 || field.getType().equals(Long.class) || field.getType().equals(long.class)
                 || field.getType().equals(Short.class) || field.getType().equals(short.class)
                 || field.getType().equals(Byte.class) || field.getType().equals(byte.class);
