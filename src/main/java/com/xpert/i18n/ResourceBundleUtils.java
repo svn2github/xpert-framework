@@ -1,7 +1,12 @@
 package com.xpert.i18n;
 
+import com.xpert.core.conversion.NumberUtils;
 import com.xpert.maker.BeanCreator;
+import com.xpert.utils.DateUtils;
 import com.xpert.utils.StringUtils;
+import java.math.BigDecimal;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.Locale;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
@@ -84,7 +89,8 @@ public class ResourceBundleUtils {
                     String chave = matcher.group();
                     int posicao = Integer.valueOf(StringUtils.getOnlyIntegerNumbers(chave));
                     if (posicao < array.length && array[posicao] != null) {
-                        key = key.replace(chave, array[posicao].toString());
+                        Object object = array[posicao];
+                        key = key.replace(chave, getObjectString(object));
                     }
                 }
                 return key;
@@ -95,5 +101,27 @@ public class ResourceBundleUtils {
         }
 
         return key;
+    }
+    
+    public static String getObjectString(Object object){
+        if(object== null){
+            return "";
+        }
+        if(object instanceof String){
+            return (String)object;
+        }
+        if(object instanceof BigDecimal){
+            return NumberUtils.convertToNumber((BigDecimal)object);
+        }
+        if(object instanceof Double){
+            return NumberUtils.convertToNumber((Double)object);
+        }
+        if(object instanceof Date){
+            return DateUtils.formatDate((Date)object, I18N.getDatePattern());
+        }
+        if(object instanceof Calendar){
+            return DateUtils.formatDate((Calendar)object, I18N.getDatePattern());
+        }
+        return object.toString();
     }
 }

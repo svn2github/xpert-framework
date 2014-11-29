@@ -26,6 +26,22 @@ public class NumberUtils {
         return retorno;
     }
 
+    public static String convertToMoney(Double valor) {
+
+        NumberFormat nf = NumberFormat.getCurrencyInstance(I18N.getLocale());
+        String retorno = nf.format(valor);
+
+        return retorno;
+    }
+
+    public static String convertToNumber(Double valor) {
+
+        NumberFormat numberFormat = getNumberFormat();
+        String retorno = numberFormat.format(valor);
+
+        return retorno;
+    }
+
     public static String convertToNumber(String valor) {
 
         NumberFormat numberFormat = getNumberFormat();

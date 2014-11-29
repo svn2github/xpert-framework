@@ -1,5 +1,6 @@
 package com.xpert.utils;
 
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -47,6 +48,29 @@ public class DateUtils {
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(date);
         return calendar.get(Calendar.DATE);
+    }
+    
+    /**
+     * Format a date from the parameter pattern
+     * 
+     * @param date
+     * @param pattern Date pattern. Example: dd/MM/yyyy
+     * @return 
+     */
+    public static String formatDate(Date date, String pattern){
+        SimpleDateFormat format = new SimpleDateFormat(pattern);
+        return format.format(date);
+    }
+    
+    /**
+     * Format a date from the parameter pattern
+     * 
+     * @param date
+     * @param pattern Date pattern. Example: dd/MM/yyyy
+     * @return 
+     */
+    public static String formatDate(Calendar date, String pattern){
+        return formatDate(date.getTime(), pattern);
     }
 
 }
