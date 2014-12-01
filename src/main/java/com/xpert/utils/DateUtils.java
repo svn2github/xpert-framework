@@ -4,6 +4,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 
 /**
  * Ulity class to use with java.util.Date and java.util.Calendar
@@ -11,13 +12,50 @@ import java.util.Date;
  * @author Ayslan
  */
 public class DateUtils {
+    
+    /**
+     * Get Date with only day, month and year (removing hour, minute, second and milisecond)
+     * 
+     * @param date
+     * @return 
+     */
+    public static Date removeTime(Date date) {
+
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+        calendar.set(Calendar.HOUR_OF_DAY, 0);
+        calendar.set(Calendar.MINUTE, 0);
+        calendar.set(Calendar.SECOND, 0);
+        calendar.set(Calendar.MILLISECOND, 0);
+
+        return calendar.getTime();
+    }
 
     /**
-     * Return the first day in year.
-     * Example: year 2013 return '2013-01-01' (yyyy-MM-dd)
-     * 
+     * Return a age (based on year)
+     *
+     * @param date
+     * @return
+     */
+    public static int getAge(Date date) {
+        Calendar dateOfBirth = new GregorianCalendar();
+        dateOfBirth.setTime(date);
+        Calendar today = Calendar.getInstance();
+        int age = today.get(Calendar.YEAR) - dateOfBirth.get(Calendar.YEAR);
+        dateOfBirth.add(Calendar.YEAR, age);
+        if (today.before(dateOfBirth)) {
+            age--;
+        }
+        return age;
+
+    }
+
+    /**
+     * Return the first day in year. Example: year 2013 return '2013-01-01'
+     * (yyyy-MM-dd)
+     *
      * @param year
-     * @return 
+     * @return
      */
     public static Date getFirstDayInYear(int year) {
         Calendar calendar = Calendar.getInstance();
@@ -26,13 +64,13 @@ public class DateUtils {
         calendar.set(Calendar.YEAR, year);
         return calendar.getTime();
     }
-    
+
     /**
-     * Return the last day in year.
-     * Example: year 2013 return '2013-12-31' (yyyy-MM-dd)
-     * 
+     * Return the last day in year. Example: year 2013 return '2013-12-31'
+     * (yyyy-MM-dd)
+     *
      * @param year
-     * @return 
+     * @return
      */
     public static Date getLastDayInYear(int year) {
         Calendar calendar = Calendar.getInstance();
