@@ -13,6 +13,36 @@ import java.util.Date;
 public class DateUtils {
 
     /**
+     * Return the first day in year.
+     * Example: year 2013 return '2013-01-01' (yyyy-MM-dd)
+     * 
+     * @param year
+     * @return 
+     */
+    public static Date getFirstDayInYear(int year) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(Calendar.DATE, 1);
+        calendar.set(Calendar.MONTH, 0);
+        calendar.set(Calendar.YEAR, year);
+        return calendar.getTime();
+    }
+    
+    /**
+     * Return the last day in year.
+     * Example: year 2013 return '2013-12-31' (yyyy-MM-dd)
+     * 
+     * @param year
+     * @return 
+     */
+    public static Date getLastDayInYear(int year) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(Calendar.DATE, 31);
+        calendar.set(Calendar.MONTH, 11);
+        calendar.set(Calendar.YEAR, year);
+        return calendar.getTime();
+    }
+
+    /**
      * Return the year of a date. Example: '2014-01-02' (yyyy-MM-dd) returns
      * '2014'
      *
