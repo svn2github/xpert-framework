@@ -13,6 +13,7 @@
 
     <!-- IMPLEMENTATION -->
     <cc:implementation> 
+        <h:outputScript library="xpert" name="scripts/core.js" target="head" />
         <div id="#{cc.attrs.clientId}" >
             <p:outputPanel autoUpdate="#{cc.attrs.autoUpdate}">
                 <h:panelGroup rendered="#{not empty facesContext.messageList}">

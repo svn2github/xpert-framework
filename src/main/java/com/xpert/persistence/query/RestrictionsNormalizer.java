@@ -65,20 +65,32 @@ public class RestrictionsNormalizer {
                 //set to type to EQUALS when is not String
                 if (!propertyType.equals(String.class)) {
                     restriction.setRestrictionType(RestrictionType.EQUALS);
-                    if (propertyType.isEnum()) {
-                        restriction.setValue(Enum.valueOf(propertyType, restriction.getValue().toString()));
-                    }
-                    if (propertyType.equals(Integer.class) || propertyType.equals(int.class)) {
-                        restriction.setValue(Integer.valueOf(StringUtils.getOnlyIntegerNumbers(restriction.getValue().toString())));
-                    }
-                    if (propertyType.equals(Long.class) || propertyType.equals(long.class)) {
-                        restriction.setValue(Long.valueOf(StringUtils.getOnlyIntegerNumbers(restriction.getValue().toString())));
-                    }
-                    if (propertyType.equals(BigDecimal.class)) {
-                        restriction.setValue(new BigDecimal(restriction.getValue().toString()));
-                    }
-                    if (propertyType.equals(Boolean.class) || propertyType.equals(boolean.class)) {
-                        restriction.setValue(Boolean.valueOf(restriction.getValue().toString()));
+                    if (restriction.getValue().toString() != null && !restriction.getValue().toString().isEmpty()) {
+                        if (propertyType.isEnum()) {
+                            restriction.setValue(Enum.valueOf(propertyType, restriction.getValue().toString()));
+                        }
+                        if (propertyType.equals(Integer.class) || propertyType.equals(int.class)) {
+                            String valueNumber = StringUtils.getOnlyIntegerNumbers(restriction.getValue().toString());
+                            if (valueNumber != null && !valueNumber.isEmpty()) {
+                                restriction.setValue(Integer.valueOf(StringUtils.getOnlyIntegerNumbers(restriction.getValue().toString())));
+                            } else {
+                                ignoreRestriction = true;
+                            }
+                        }
+                        if (propertyType.equals(Long.class) || propertyType.equals(long.class)) {
+                            String valueNumber = StringUtils.getOnlyIntegerNumbers(restriction.getValue().toString());
+                            if (valueNumber != null && !valueNumber.isEmpty()) {
+                                restriction.setValue(Long.valueOf(valueNumber));
+                            } else {
+                                ignoreRestriction = true;
+                            }
+                        }
+                        if (propertyType.equals(BigDecimal.class)) {
+                            restriction.setValue(new BigDecimal(restriction.getValue().toString()));
+                        }
+                        if (propertyType.equals(Boolean.class) || propertyType.equals(boolean.class)) {
+                            restriction.setValue(Boolean.valueOf(restriction.getValue().toString()));
+                        }
                     }
                     //if is a date, then its a interval, set GREATER THAN and LESS THAN
                     if (propertyType.equals(Date.class) || propertyType.equals(Calendar.class)) {
@@ -132,7 +144,7 @@ public class RestrictionsNormalizer {
             if (ignoreRestriction == false) {
                 normalizedRestrictions.add(restriction);
             }
-            if (moreRestrictions != null) {
+            if (moreRestrictions != null && !moreRestrictions.isEmpty()) {
                 normalizedRestrictions.addAll(moreRestrictions);
             }
         }
