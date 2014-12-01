@@ -117,10 +117,10 @@ public class ResourceBundleUtils {
             return NumberUtils.convertToNumber((Double)object);
         }
         if(object instanceof Date){
-            return DateUtils.formatDate((Date)object, I18N.getDatePattern());
+            return DateUtils.dateToString((Date)object, I18N.getDatePattern());
         }
         if(object instanceof Calendar){
-            return DateUtils.formatDate((Calendar)object, I18N.getDatePattern());
+            return DateUtils.dateToString((Calendar)object, I18N.getDatePattern());
         }
         return object.toString();
     }
