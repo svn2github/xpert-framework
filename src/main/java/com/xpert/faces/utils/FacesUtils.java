@@ -34,7 +34,7 @@ public class FacesUtils {
      * Get a object from Http Session
      *
      * @param attributeName Object name in session
-     * @return 
+     * @return
      */
     public static Object getFromSession(String attributeName) {
         ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
@@ -43,10 +43,11 @@ public class FacesUtils {
     }
 
     /**
-     * Get the value of the parameter in request  callin HttpServletRequest.getParameter.
-     * 
+     * Get the value of the parameter in request callin
+     * HttpServletRequest.getParameter.
+     *
      * @param parameterName
-     * @return 
+     * @return
      */
     public static String getParameter(String parameterName) {
         HttpServletRequest request = getRequest();
@@ -55,9 +56,9 @@ public class FacesUtils {
 
     /**
      * Add the object in Http session map
-     * 
+     *
      * @param attributeName
-     * @param value 
+     * @param value
      */
     public static void addToSession(String attributeName, Object value) {
         ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
@@ -67,8 +68,8 @@ public class FacesUtils {
 
     /**
      * Remove a object from session
-     * 
-     * @param attributeName 
+     *
+     * @param attributeName
      */
     public static void removeFromSession(String attributeName) {
         ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
@@ -86,18 +87,20 @@ public class FacesUtils {
 
     /**
      * Get the current Http request from JSF "ExternalContext"
-     * 
+     *
      * @return HttpServletRequest get from JSF
      */
     public static HttpServletRequest getRequest() {
         ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
-        HttpServletRequest request = (HttpServletRequest) externalContext.getRequest();
-        return request;
+        if (externalContext != null) {
+            return (HttpServletRequest) externalContext.getRequest();
+        }
+        return null;
     }
 
     /**
      * Get the current Http response from JSF "ExternalContext"
-     * 
+     *
      * @return HttpServletResponse get from JSF
      */
     public static HttpServletResponse getResponse() {
@@ -107,9 +110,9 @@ public class FacesUtils {
     }
 
     /**
-     * Get the  ServletContext from JSF "ExternalContext
-     * 
-     * @return 
+     * Get the ServletContext from JSF "ExternalContext
+     *
+     * @return
      */
     public static ServletContext getServletContext() {
         ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
@@ -391,11 +394,15 @@ public class FacesUtils {
     }
 
     public static String getIP() {
-        String ipAddress = getRequest().getHeader("X-Forwarded-For");
-        if (ipAddress == null || ipAddress.isEmpty()) {
-            ipAddress = getRequest().getRemoteAddr();
+        HttpServletRequest request = getRequest();
+        if (request != null) {
+            String ipAddress = request.getHeader("X-Forwarded-For");
+            if (ipAddress == null || ipAddress.isEmpty()) {
+                ipAddress = request.getRemoteAddr();
+            }
+            return ipAddress;
         }
-        return ipAddress;
+        return null;
     }
 
     /**
