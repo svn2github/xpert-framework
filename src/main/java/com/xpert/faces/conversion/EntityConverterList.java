@@ -15,7 +15,7 @@ import javax.faces.convert.Converter;
 public class EntityConverterList implements Converter {
 
     private static final Logger logger = Logger.getLogger(EntityConverterList.class.getName());
-    private static final boolean DEBUG = true;
+    private static final boolean DEBUG = false;
 
     public Object getAsObject(FacesContext context, UIComponent component, String value) {
 
