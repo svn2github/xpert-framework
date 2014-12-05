@@ -4,7 +4,6 @@ import com.xpert.audit.Audit;
 import com.xpert.Configuration;
 import com.xpert.persistence.exception.DeleteException;
 import com.xpert.persistence.query.QueryBuilder;
-import com.xpert.persistence.query.QueryType;
 import com.xpert.persistence.query.Restriction;
 import com.xpert.persistence.utils.EntityUtils;
 import com.xpert.utils.StringUtils;
@@ -28,7 +27,6 @@ import org.hibernate.Session;
 import org.hibernate.collection.internal.PersistentBag;
 import org.hibernate.collection.internal.PersistentSet;
 import org.hibernate.collection.spi.PersistentCollection;
-import org.hibernate.ejb.EntityManagerImpl;
 import org.hibernate.internal.SessionFactoryImpl;
 import org.hibernate.proxy.HibernateProxy;
 import org.hibernate.proxy.LazyInitializer;
@@ -36,7 +34,6 @@ import org.hibernate.proxy.LazyInitializer;
 public abstract class BaseDAOImpl<T> implements BaseDAO<T> {
 
     private Class entityClass;
-    private Session session;
     private static final Logger logger = Logger.getLogger(BaseDAOImpl.class.getName());
     private static final Map<ClassField, String> ORDER_BY_MAP = new HashMap<ClassField, String>();
 
@@ -88,16 +85,7 @@ public abstract class BaseDAOImpl<T> implements BaseDAO<T> {
 
     @Override
     public Session getSession() {
-        if (session == null) {
-            if (getEntityManager().getDelegate() instanceof EntityManagerImpl) {
-                EntityManagerImpl entityManagerImpl = (EntityManagerImpl) getEntityManager().getDelegate();
-                return entityManagerImpl.getSession();
-            } else {
-                return (Session) getEntityManager().getDelegate();
-            }
-        } else {
-            return session;
-        }
+        return getEntityManager().unwrap(Session.class);
     }
 
     @Override
@@ -267,7 +255,7 @@ public abstract class BaseDAOImpl<T> implements BaseDAO<T> {
 
         QueryBuilder builder = new QueryBuilder(getEntityManager());
 
-        return builder.select("o."+attributeName)
+        return builder.select("o." + attributeName)
                 .from(entityClass, "o")
                 .add("o." + EntityUtils.getIdFieldName(entityClass), id)
                 .getSigleResult();
@@ -284,7 +272,7 @@ public abstract class BaseDAOImpl<T> implements BaseDAO<T> {
 
         QueryBuilder builder = new QueryBuilder(getEntityManager());
 
-        return builder.select("o."+attributeName)
+        return builder.select("o." + attributeName)
                 .from(entityClass, "o")
                 .add("o." + EntityUtils.getIdFieldName(entityClass), id)
                 .getResultList();
@@ -293,7 +281,7 @@ public abstract class BaseDAOImpl<T> implements BaseDAO<T> {
 
     @Override
     public Object findList(String attributeName, Object object) {
-        return findAttribute(attributeName, (Number)EntityUtils.getId(object));
+        return findAttribute(attributeName, (Number) EntityUtils.getId(object));
     }
 
     @Override
@@ -488,13 +476,13 @@ public abstract class BaseDAOImpl<T> implements BaseDAO<T> {
     public List<T> list(Class clazz, List<Restriction> restrictions, String order, Integer firstResult, Integer maxResults, String attributes) {
 
         return new QueryBuilder(getEntityManager())
-                            .select(attributes)
-                            .from(clazz)
-                            .add(restrictions)
-                            .orderBy(order)
-                            .setFirstResult(firstResult)
-                            .setMaxResults(maxResults)
-                            .getResultList(clazz);
+                .select(attributes)
+                .from(clazz)
+                .add(restrictions)
+                .orderBy(order)
+                .setFirstResult(firstResult)
+                .setMaxResults(maxResults)
+                .getResultList(clazz);
 
     }
 

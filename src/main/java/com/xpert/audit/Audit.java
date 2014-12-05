@@ -15,10 +15,8 @@ import java.util.logging.Logger;
 import javax.faces.context.FacesContext;
 import javax.persistence.*;
 import org.hibernate.Session;
-import org.hibernate.SessionFactory;
 import org.hibernate.collection.internal.PersistentBag;
 import org.hibernate.collection.spi.PersistentCollection;
-import org.hibernate.ejb.EntityManagerImpl;
 import org.hibernate.proxy.HibernateProxy;
 
 /**
@@ -36,7 +34,6 @@ public class Audit {
     private static final Map<Class, String> MAPPED_NAME = new HashMap<Class, String>();
     private static final Map<Class, List<Method>> MAPPED_METHODS = new HashMap<Class, List<Method>>();
     private static final Map<Method, Boolean> MAPPED_ONE_TO_ONE_CASCADE_ALL = new HashMap<Method, Boolean>();
-    private Session session;
     private final EntityManager entityManager;
 
     public Audit(EntityManager entityManager) {
@@ -106,23 +103,6 @@ public class Audit {
             return entityManager.find(clazz, id);
         }
         return null;
-    }
-
-    public Session getSession() {
-        if (session == null) {
-            if (entityManager.getDelegate() instanceof EntityManagerImpl) {
-                EntityManagerImpl entityManagerImpl = (EntityManagerImpl) entityManager.getDelegate();
-                return entityManagerImpl.getSession();
-            } else {
-                return (Session) entityManager.getDelegate();
-            }
-        } else {
-            return session;
-        }
-    }
-
-    public SessionFactory getSessionFactory() {
-        return getSession().getSessionFactory();
     }
 
     /**

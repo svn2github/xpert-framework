@@ -1,15 +1,9 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.xpert.maker;
 
 import com.xpert.audit.model.AbstractAuditing;
 import com.xpert.audit.model.AbstractMetadata;
-import freemarker.template.Template;
 import freemarker.template.TemplateException;
 import java.io.IOException;
-import java.io.StringWriter;
 import java.lang.reflect.Field;
 import java.util.*;
 import java.util.logging.Level;
@@ -18,7 +12,6 @@ import javax.persistence.Embeddable;
 import javax.persistence.EntityManager;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
-import org.hibernate.ejb.EntityManagerImpl;
 import org.hibernate.internal.SessionFactoryImpl;
 import org.hibernate.metadata.ClassMetadata;
 import org.hibernate.persister.entity.AbstractEntityPersister;
@@ -30,7 +23,6 @@ import org.hibernate.persister.entity.AbstractEntityPersister;
 public class PersistenceMappedBean {
 
     private static final Logger logger = Logger.getLogger(PersistenceMappedBean.class.getName());
-    private Session session;
     private EntityManager entityManager;
 
     public PersistenceMappedBean(EntityManager entityManager) {
@@ -152,15 +144,6 @@ public class PersistenceMappedBean {
     }
 
     public Session getSession() {
-        if (session == null) {
-            if (entityManager.getDelegate() instanceof EntityManagerImpl) {
-                EntityManagerImpl entityManagerImpl = (EntityManagerImpl) entityManager.getDelegate();
-                return entityManagerImpl.getSession();
-            } else {
-                return (Session) entityManager.getDelegate();
-            }
-        } else {
-            return session;
-        }
+        return entityManager.unwrap(Session.class);
     }
 }
