@@ -25,6 +25,10 @@
     
     
     <converter>
+        <converter-id>entityConverterList</converter-id>
+        <converter-class>com.xpert.faces.conversion.EntityConverterList</converter-class>
+    </converter>
+    <converter>
         <converter-id>entityConverter</converter-id>
         <converter-class>com.xpert.faces.conversion.EntityConverter</converter-class>
     </converter>
