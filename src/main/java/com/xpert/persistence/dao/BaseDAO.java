@@ -66,18 +66,35 @@ public interface BaseDAO<T> {
     public void setEntityClass(Class entityClass);
 
     /**
-     *
+     * Save a object. This method call entityManager.persist
+     * 
      * @param object
      */
     public void save(T object);
 
     /**
-     * 
+     * Save a object. This method call entityManager.persist
      * @param object
      * @param audit Audit Operation
      */
     public void save(T object, boolean audit);
 
+    /**
+     * Call entityManager.persist if @Id is null or entityManager.merge if is not
+     * 
+     * @param object 
+     */
+    public void saveOrMerge(T object);
+    
+
+    /**
+     * Call entityManager.persist if @Id is null or entityManager.merge if is not
+     * 
+     * @param object 
+     * @param audit Audit Operation
+     */
+    public void saveOrMerge(T object, boolean audit);
+    
     /**
      * Call saveOrUpdate from Session (Hibernate Implementation)
      * 

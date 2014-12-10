@@ -152,6 +152,27 @@ public abstract class BaseDAOImpl<T> implements BaseDAO<T> {
     }
 
     @Override
+    public void saveOrMerge(T object) {
+        saveOrMerge(object, Configuration.isAudit());
+    }
+
+    @Override
+    public void saveOrMerge(T object, boolean audit) {
+        boolean persisted = EntityUtils.isPersisted(object);
+        if (persisted == false) {
+            getEntityManager().persist(object);
+            if (audit) {
+                getNewAudit().insert(object);
+            }
+        } else {
+            if (audit) {
+                getNewAudit().update(object);
+            }
+            getEntityManager().merge(object);
+        }
+    }
+
+    @Override
     public T merge(T object) {
         return merge(object, Configuration.isAudit());
     }

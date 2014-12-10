@@ -10,6 +10,9 @@ public class CollectionsUtils {
 
     @SuppressWarnings("unchecked")
     public static void orderAsc(List list, String ordenacao) {
+        if (list == null || list.isEmpty()) {
+            return;
+        }
         ComparatorChain multiSort = new ComparatorChain();
         String array[] = ordenacao.split(",");
         for (int i = 0; i < array.length; i++) {
@@ -20,6 +23,9 @@ public class CollectionsUtils {
 
     @SuppressWarnings("unchecked")
     public static void orderDesc(List list, String ordenacao) {
+        if (list == null || list.isEmpty()) {
+            return;
+        }
         ComparatorChain multiSort = new ComparatorChain();
         String array[] = ordenacao.split(",");
         for (int i = 0; i < array.length; i++) {
@@ -36,6 +42,9 @@ public class CollectionsUtils {
      */
     @SuppressWarnings("unchecked")
     public static void order(List list, String ordenacao) throws IllegalArgumentException {
+        if (list == null || list.isEmpty()) {
+            return;
+        }
         ComparatorChain multiSort = new ComparatorChain();
         String array[] = ordenacao.split(",");
         for (int i = 0; i < array.length; i++) {
