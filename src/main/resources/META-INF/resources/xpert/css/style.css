@@ -43,6 +43,7 @@
 .uix-datatable-actions{white-space: nowrap !important;}
 .panel-calendar-filter a{font-weight: normal; font-size: 10px;}
 th.uix-datatable-index .ui-menubutton .ui-button{height: 24px; width: 30px;}
+.faces-modal-messages{max-height: 90%; max-width: 90%; overflow-y: auto !important;}
 
 
 

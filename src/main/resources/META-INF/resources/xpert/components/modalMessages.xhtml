@@ -13,6 +13,7 @@
 
     <!-- IMPLEMENTATION -->
     <cc:implementation> 
+        <h:outputStylesheet library="xpert" name="css/style.css" />
         <h:outputScript library="xpert" name="scripts/core.js" target="head" />
         <div id="#{cc.attrs.clientId}" >
             <p:outputPanel autoUpdate="#{cc.attrs.autoUpdate}">
@@ -23,7 +24,9 @@
                               styleClass="faces-modal-messages" resizable="false"
                               widgetVar="xpertModalDialogMessages" visible="true">
                         <div class="modal-messages">
-                            <p:messages/>
+                            <div class="modal-messages-list">
+                                <p:messages/>
+                            </div>
                             <div align="center">
                                 <p:commandButton onclick="Xpert.closeModalMessages(xpertModalDialogMessages)"
                                                  styleClass="button-confirm-modal" type="button" value="Ok" />
@@ -37,7 +40,9 @@
                               styleClass="faces-modal-messages" resizable="false"
                               widgetVar="xpertModalDialogMessages" visible="true">
                         <div class="modal-messages">
-                            <p:messages/>
+                            <div class="modal-messages-list">
+                                <p:messages/>
+                            </div>
                             <div align="center">
                                 <p:commandButton onclick="Xpert.closeModalMessages(PF('xpertModalDialogMessages'))"
                                                  styleClass="button-confirm-modal" type="button" value="Ok" />
