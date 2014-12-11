@@ -337,7 +337,7 @@ public class FacesUtils {
             addCookie(FILE_DOWNLOAD_TOKEN, request.getParameter("javax.faces.ViewState"));
             response.setContentType(contentType);
             if (attachment) {
-                response.setHeader("Content-Disposition", "attachment; filename=" + fileName);
+                response.setHeader("Content-Disposition", "attachment; filename=\"" + fileName+"\"");
             }
             response.setContentLength(bytes.length);
             response.getOutputStream().write(bytes);
