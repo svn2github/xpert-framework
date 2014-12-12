@@ -42,6 +42,7 @@ public abstract class AbstractBaseBean<T> {
     private T entity;
     private Class entityClass;
     private boolean loadEntityOnPostConstruct = true;
+    private boolean forceReloadEntity = true;
     public static final String ENTITY_REQUEST_TO_LOAD = "xpert.requestEntity";
     public static final String ENTITY_CLASS_TO_LOAD = "xpert.entityClassToLoad";
 
@@ -133,8 +134,10 @@ public abstract class AbstractBaseBean<T> {
         T entityFromParameter = (T) FacesContext.getCurrentInstance().getExternalContext().getRequestMap().get(ENTITY_REQUEST_TO_LOAD);
         if (entityFromParameter != null) {
             entity = entityFromParameter;
-            //reload from database
-            reloadEntity();
+            if (isForceReloadEntity()) {
+                //reload from database
+                reloadEntity();
+            }
         }
     }
 
@@ -432,6 +435,19 @@ public abstract class AbstractBaseBean<T> {
 
     public void setOutcome(String outcome) {
         this.outcome = outcome;
+    }
+
+    /**
+     * Verify if entity must be reloaded
+     *
+     * @return
+     */
+    public boolean isForceReloadEntity() {
+        return forceReloadEntity;
+    }
+
+    public void setForceReloadEntity(boolean forceReloadEntity) {
+        this.forceReloadEntity = forceReloadEntity;
     }
 
 }
