@@ -24,7 +24,7 @@ public class PrimeFacesUtils {
         return widgetVar;
     }
 
-    public static String normalizeDialog(String dialog) {
+    public static String normalizeWidgetVar(String dialog) {
         if (dialog != null && !PrimeFacesUtils.isVersion3()) {
             return "PF('" + dialog + "')";
         }
@@ -33,7 +33,7 @@ public class PrimeFacesUtils {
 
     public static void closeDialog(String dialog) {
         if (dialog != null && !dialog.trim().isEmpty()) {
-            dialog = normalizeDialog(dialog);
+            dialog = normalizeWidgetVar(dialog);
             RequestContext requestContext = RequestContext.getCurrentInstance();
             requestContext.execute(dialog + ".hide()");
         }
@@ -41,7 +41,7 @@ public class PrimeFacesUtils {
 
     public static void showDialog(String dialog) {
         if (dialog != null && !dialog.trim().isEmpty()) {
-            dialog = normalizeDialog(dialog);
+            dialog = normalizeWidgetVar(dialog);
             RequestContext requestContext = RequestContext.getCurrentInstance();
             requestContext.execute(dialog + ".show()");
         }

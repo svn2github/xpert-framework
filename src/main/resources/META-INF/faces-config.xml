@@ -113,6 +113,11 @@
         <managed-bean-class>com.xpert.faces.bean.PrimeFacesVersion</managed-bean-class>
         <managed-bean-scope>request</managed-bean-scope>
     </managed-bean>
+    <managed-bean>
+        <managed-bean-name>xpert</managed-bean-name>
+        <managed-bean-class>com.xpert.faces.bean.Xpert</managed-bean-class>
+        <managed-bean-scope>request</managed-bean-scope>
+    </managed-bean>
     
     <behavior>
         <behavior-id>xpert.faces.DownloadBehavior</behavior-id>
