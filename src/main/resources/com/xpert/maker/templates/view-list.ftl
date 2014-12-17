@@ -10,25 +10,33 @@
         <ui:include src="menu${entity.name}.xhtml" />
         <h:form id="formList${entity.name}">
             <x:modalMessages/>
+
+            <x:dataTableActions fileName="${entity.nameLower}_export" target=":formList${entity.name}:dataTable${entity.name}"
+                                     widgetVar="${entity.widgetVarDataTableName}"  />
+
             <p:dataTable paginator="true" rows="10" rowsPerPageTemplate="10,20,30" paginatorPosition="bottom" emptyMessage="${sharp}{xmsg['noRecordFound']}"
                          var="${entity.nameLower}" rowIndexVar="index" id="dataTable${entity.name}" widgetVar="${entity.widgetVarDataTableName}" styleClass="table-responsive"
                          currentPageReportTemplate="${sharp}{${entity.nameLower}${configuration.managedBeanSuffix}.dataModel.currentPageReportTemplate}"
                          paginatorTemplate="${sharp}{${entity.nameLower}${configuration.managedBeanSuffix}.dataModel.paginatorTemplate}"
                          value="${sharp}{${entity.nameLower}${configuration.managedBeanSuffix}.dataModel}" lazy="true" >
                 <p:column styleClass="uix-datatable-index">
-                    <f:facet name="header">
-                        <p:menuButton value="">
-                            <p:menuitem value="${sharp}{xmsg['refresh']}" onclick="${entity.widgetVarDataTable}.filter()" icon="ui-icon-refresh" url="${sharp}"/>
-                            <p:menuitem value="${sharp}{xmsg['clearFilters']}" onclick="${entity.widgetVarDataTable}.clearFilters()" icon="ui-icon-close" url="${sharp}"/>
-                        </p:menuButton>
-                    </f:facet>
                     <h:outputText value="${sharp}{index+1}"/>
                 </p:column>
                 <#list entity.fields as field>
                 <#if field.collection == false && field.id == false>
                 <p:column headerText="${sharp}{${resourceBundle}['${entity.nameLower}.${field.label}']}" sortBy="${sharp}{${entity.nameLower}.${field.name}}"
-                          <#if field.string == true || field.integer == true || field.enumeration == true || field.yesNo == true || field.date == true>filterBy="${sharp}{${entity.nameLower}.${field.name}}"</#if> <#if field.yesNo == true>filterOptions="${sharp}{booleanSelectItensEmptyOption}"</#if> <#if field.enumeration == true>filterOptions="${sharp}{findAllBean.getSelect(class${configuration.managedBeanSuffix}.${field.typeNameLower})}"</#if> <#if field.date == true || field.time == true || field.yesNo == true>style="text-align: center;"</#if><#if field.decimal == true>style="text-align: right;"</#if>>
-                          <#if field.lazy == true>
+                    <#if field.string == true || field.integer == true || field.enumeration == true || field.yesNo == true || field.date == true>filterBy="${sharp}{${entity.nameLower}.${field.name}}"</#if> <#if field.yesNo == true>filterOptions="${sharp}{booleanSelectItensEmptyOption}"</#if> <#if field.enumeration == true>filterOptions="${sharp}{findAllBean.getSelect(class${configuration.managedBeanSuffix}.${field.typeNameLower})}"</#if> <#if field.date == true || field.time == true || field.yesNo == true>style="text-align: center;"</#if><#if field.decimal == true>style="text-align: right;"</#if>>
+                     <#if field.date == true>
+                    <f:facet name="header">
+                        ${sharp}{${resourceBundle}['${entity.nameLower}.${field.name}']}
+                        <x:dateFilter/>
+                    </f:facet>
+                    <#else>
+                    <f:facet name="header">
+                        <h:outputText value="${sharp}{${resourceBundle}['${entity.nameLower}.${field.name}']}" />
+                    </f:facet>
+                    </#if>
+                    <#if field.lazy == true>
                     <h:outputText value="${sharp}{${entity.nameLower}.${field.name}}">
                         <x:initializer/>
                     </h:outputText>
@@ -114,16 +122,16 @@
                     </p:commandButton>
                     </#if>
                 </p:column>
-                <f:facet name="footer">
-                    <#if configuration.generatesSecurityArea == true >
-                    <x:securityArea rolesAllowed="${entity.nameLower}.audit">
-                        <x:auditDelete for="${sharp}{${entity.nameLower}${configuration.managedBeanSuffix}.entityClass}"/>
-                    </x:securityArea>
-                    <#else>
-                    <x:auditDelete for="${sharp}{${entity.nameLower}${configuration.managedBeanSuffix}.entityClass}"/>
-                    </#if>
-                </f:facet>
             </p:dataTable>
+            <div class="uix-audit-delete">
+            <#if configuration.generatesSecurityArea == true >
+                <x:securityArea rolesAllowed="${entity.nameLower}.audit">
+                    <x:auditDelete for="${sharp}{${entity.nameLower}${configuration.managedBeanSuffix}.entityClass}"/>
+                </x:securityArea>
+            <#else>
+                <x:auditDelete for="${sharp}{${entity.nameLower}${configuration.managedBeanSuffix}.entityClass}"/>
+            </#if>
+            </div>  
         </h:form>
 
         <p:dialog widgetVar="${entity.widgetVarDetailName}" header="${sharp}{msg['${entity.nameLower}.detail']}" ${entity.appendTo} 
