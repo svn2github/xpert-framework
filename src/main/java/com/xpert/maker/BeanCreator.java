@@ -177,6 +177,11 @@ public class BeanCreator {
                 Size size = field.getAnnotation(Size.class);
                 if (size != null && size.max() != SIZE_ANNOTATION_MAX_DEFAULT) {
                     maxlength = size.max();
+                }else{
+                    Column column = field.getAnnotation(Column.class);
+                    if(column != null){
+                        maxlength = column.length();
+                    }
                 }
                 viewField.setMaxlength(maxlength + "");
                 viewField.setString(true);
