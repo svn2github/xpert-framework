@@ -102,6 +102,21 @@ public class MakerSwingFrame extends javax.swing.JFrame {
     }
 
     public final void initCustomLayout() {
+        
+        buttonCreateClasses.setOpaque(true);
+        buttonSearchClasses.setOpaque(true);
+        buttonSelectAll.setOpaque(true);
+        buttonSelectBO.setOpaque(true);
+        buttonSelectDAO.setOpaque(true);
+        buttonSelectDAOImpl.setOpaque(true);
+        buttonSelectMB.setOpaque(true);
+        buttonSelectNone.setOpaque(true);
+        buttonSelectView.setOpaque(true);
+        buttonTab1Next.setOpaque(true);
+        buttonTab2Back.setOpaque(true);
+        buttonTab2Next.setOpaque(true);
+        buttonTab3Back.setOpaque(true);
+        
         createLabelTabbedPanel("Select Classes", 0);
         createLabelTabbedPanel("Project Configuration", 1);
         createLabelTabbedPanel("Create Classes", 2);
