@@ -28,11 +28,13 @@
 
                 <p:menuButton value="#{xmsg['currentPage']}">
                     <p:menuitem value="Excel" immediate="true" ajax="false">
-                        <pe:exporter pageOnly="true" type="xlsx" target="#{cc.attrs.target}" fileName="#{cc.attrs.fileName}"/>
+                        <pe:exporter pageOnly="true" type="xlsx" target="#{cc.attrs.target}" fileName="#{cc.attrs.fileName}"
+                                     skipComponents="javax.faces.component.UIPanel"/>
                     </p:menuitem>
                     <p:menuitem value="PDF" immediate="true" ajax="false">
                         <pe:exporter pageOnly="true" cellFontSize="#{cc.attrs.fontSize}" facetFontSize="#{cc.attrs.fontSize}" 
                                      orientation="#{cc.attrs.landscape ? 'Landscape' : 'Portrait'}" 
+                                     skipComponents="javax.faces.component.UIPanel"
                                      preProcessor="#{defaultDataTableExporter.preProcessorPDF}" postProcessor="#{defaultDataTableExporter.postProcessorPDF}"
                                      type="pdf" target="#{cc.attrs.target}" fileName="#{cc.attrs.fileName}"/>
                     </p:menuitem>
@@ -42,11 +44,13 @@
                 </p:menuButton>
                 <p:menuButton value="#{xmsg['allPages']}">
                     <p:menuitem value="Excel" immediate="true" ajax="false">
-                        <pe:exporter  type="xlsx" target="#{cc.attrs.target}" fileName="#{cc.attrs.fileName}"/>
+                        <pe:exporter  type="xlsx" target="#{cc.attrs.target}" fileName="#{cc.attrs.fileName}"
+                                      skipComponents="javax.faces.component.UIPanel"/>
                     </p:menuitem>
                     <p:menuitem value="PDF" immediate="true" ajax="false">
                         <pe:exporter orientation="#{cc.attrs.landscape ? 'Landscape' : 'Portrait'}" type="pdf" 
                                      cellFontSize="#{cc.attrs.fontSize}" facetFontSize="#{cc.attrs.fontSize}" 
+                                     skipComponents="javax.faces.component.UIPanel"
                                      preProcessor="#{defaultDataTableExporter.preProcessorPDF}" postProcessor="#{defaultDataTableExporter.postProcessorPDF}"
                                      target="#{cc.attrs.target}" fileName="#{cc.attrs.fileName}"/>
                     </p:menuitem>
