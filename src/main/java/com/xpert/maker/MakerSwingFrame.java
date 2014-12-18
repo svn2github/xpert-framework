@@ -586,6 +586,7 @@ public class MakerSwingFrame extends javax.swing.JFrame {
         buttonSearchClasses.setBackground(BLUE);
         buttonSearchClasses.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
         buttonSearchClasses.setForeground(new java.awt.Color(255, 255, 255));
+        buttonSearchClasses.setBorderPainted(false);
         buttonSearchClasses.setLabel("Search Classes");
         buttonSearchClasses.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -606,6 +607,7 @@ public class MakerSwingFrame extends javax.swing.JFrame {
         buttonSelectAll.setForeground(new java.awt.Color(255, 255, 255));
         buttonSelectAll.setToolTipText("Select all classes");
         buttonSelectAll.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
+        buttonSelectAll.setBorderPainted(false);
         buttonSelectAll.setLabel("All");
         buttonSelectAll.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -618,6 +620,7 @@ public class MakerSwingFrame extends javax.swing.JFrame {
         buttonSelectNone.setForeground(new java.awt.Color(255, 255, 255));
         buttonSelectNone.setToolTipText("Remove selection");
         buttonSelectNone.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
+        buttonSelectNone.setBorderPainted(false);
         buttonSelectNone.setLabel("None");
         buttonSelectNone.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -677,6 +680,7 @@ public class MakerSwingFrame extends javax.swing.JFrame {
         buttonTab1Next.setForeground(new java.awt.Color(255, 255, 255));
         buttonTab1Next.setText("Next");
         buttonTab1Next.setToolTipText("");
+        buttonTab1Next.setBorderPainted(false);
         buttonTab1Next.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 buttonTab1NextActionPerformed(evt);
@@ -1022,6 +1026,7 @@ public class MakerSwingFrame extends javax.swing.JFrame {
         buttonSelectBO.setBackground(BLUE);
         buttonSelectBO.setForeground(new java.awt.Color(255, 255, 255));
         buttonSelectBO.setText("...");
+        buttonSelectBO.setBorderPainted(false);
         buttonSelectBO.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 buttonSelectBOActionPerformed(evt);
@@ -1043,6 +1048,7 @@ public class MakerSwingFrame extends javax.swing.JFrame {
         buttonSelectDAO.setBackground(BLUE);
         buttonSelectDAO.setForeground(new java.awt.Color(255, 255, 255));
         buttonSelectDAO.setText("...");
+        buttonSelectDAO.setBorderPainted(false);
         buttonSelectDAO.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 buttonSelectDAOActionPerformed(evt);
@@ -1074,6 +1080,7 @@ public class MakerSwingFrame extends javax.swing.JFrame {
         buttonSelectDAOImpl.setBackground(BLUE);
         buttonSelectDAOImpl.setForeground(new java.awt.Color(255, 255, 255));
         buttonSelectDAOImpl.setText("...");
+        buttonSelectDAOImpl.setBorderPainted(false);
         buttonSelectDAOImpl.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 buttonSelectDAOImplActionPerformed(evt);
@@ -1099,6 +1106,7 @@ public class MakerSwingFrame extends javax.swing.JFrame {
         buttonSelectMB.setBackground(BLUE);
         buttonSelectMB.setForeground(new java.awt.Color(255, 255, 255));
         buttonSelectMB.setText("...");
+        buttonSelectMB.setBorderPainted(false);
         buttonSelectMB.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 buttonSelectMBActionPerformed(evt);
@@ -1228,6 +1236,7 @@ public class MakerSwingFrame extends javax.swing.JFrame {
         buttonSelectView.setBackground(BLUE);
         buttonSelectView.setForeground(new java.awt.Color(255, 255, 255));
         buttonSelectView.setText("...");
+        buttonSelectView.setBorderPainted(false);
         buttonSelectView.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 buttonSelectViewActionPerformed(evt);
@@ -1311,6 +1320,7 @@ public class MakerSwingFrame extends javax.swing.JFrame {
         buttonTab2Back.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
         buttonTab2Back.setForeground(new java.awt.Color(255, 255, 255));
         buttonTab2Back.setText("Back");
+        buttonTab2Back.setBorderPainted(false);
         buttonTab2Back.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 buttonTab2BackActionPerformed(evt);
@@ -1321,6 +1331,7 @@ public class MakerSwingFrame extends javax.swing.JFrame {
         buttonTab2Next.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
         buttonTab2Next.setForeground(new java.awt.Color(255, 255, 255));
         buttonTab2Next.setText("Next");
+        buttonTab2Next.setBorderPainted(false);
         buttonTab2Next.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 buttonTab2NextActionPerformed(evt);
@@ -1567,10 +1578,11 @@ public class MakerSwingFrame extends javax.swing.JFrame {
                 .addComponent(labelStep7Detail))
         );
 
-        buttonTab3Back.setBackground(new java.awt.Color(66, 139, 202));
+        buttonTab3Back.setBackground(BLUE);
         buttonTab3Back.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
         buttonTab3Back.setForeground(new java.awt.Color(255, 255, 255));
         buttonTab3Back.setText("Back");
+        buttonTab3Back.setBorderPainted(false);
         buttonTab3Back.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 buttonTab3BackActionPerformed(evt);
@@ -1581,6 +1593,7 @@ public class MakerSwingFrame extends javax.swing.JFrame {
         buttonCreateClasses.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
         buttonCreateClasses.setForeground(new java.awt.Color(255, 255, 255));
         buttonCreateClasses.setText("Create Classes");
+        buttonCreateClasses.setBorderPainted(false);
         buttonCreateClasses.setFocusPainted(false);
         buttonCreateClasses.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
