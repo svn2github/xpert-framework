@@ -11,9 +11,7 @@ import java.awt.Toolkit;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.File;
-import java.io.IOException;
 import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
@@ -36,6 +34,7 @@ public class MakerSwingFrame extends javax.swing.JFrame {
 
     private static final String JAVA_PROJECT_PREFFIX = File.separator + "java";
     private static final Logger logger = Logger.getLogger(MakerSwingFrame.class.getName());
+    private static final Color BLUE = new Color(66, 139, 202);
     private BeanConfiguration beanConfiguration;
     private ArrayList<Class<?>> classes = new ArrayList<Class<?>>();
     private File lastFile;
@@ -149,6 +148,7 @@ public class MakerSwingFrame extends javax.swing.JFrame {
         labelTab.setPreferredSize(new Dimension(130, 30));
         labelTab.setForeground(Color.WHITE);
         labelTab.setHorizontalAlignment(SwingConstants.CENTER);
+        tabbedPanelMain.setOpaque(true);
         tabbedPanelMain.setTabComponentAt(index, labelTab);
     }
 
@@ -567,7 +567,7 @@ public class MakerSwingFrame extends javax.swing.JFrame {
 
         jPanelMain.setBackground(new java.awt.Color(239, 239, 239));
 
-        tabbedPanelMain.setBackground(new java.awt.Color(66, 139, 202));
+        tabbedPanelMain.setBackground(BLUE);
         tabbedPanelMain.setForeground(new java.awt.Color(255, 255, 255));
         tabbedPanelMain.setFocusable(false);
         tabbedPanelMain.setFont(new java.awt.Font("Tahoma", 0, 13)); // NOI18N
@@ -583,7 +583,7 @@ public class MakerSwingFrame extends javax.swing.JFrame {
 
         textPackageName.setToolTipText("Java package of your classes");
 
-        buttonSearchClasses.setBackground(new java.awt.Color(66, 139, 202));
+        buttonSearchClasses.setBackground(BLUE);
         buttonSearchClasses.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
         buttonSearchClasses.setForeground(new java.awt.Color(255, 255, 255));
         buttonSearchClasses.setLabel("Search Classes");
@@ -601,7 +601,7 @@ public class MakerSwingFrame extends javax.swing.JFrame {
         labelSelectClasses.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         labelSelectClasses.setText("Classes found in package:");
 
-        buttonSelectAll.setBackground(new java.awt.Color(66, 139, 202));
+        buttonSelectAll.setBackground(BLUE);
         buttonSelectAll.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
         buttonSelectAll.setForeground(new java.awt.Color(255, 255, 255));
         buttonSelectAll.setToolTipText("Select all classes");
@@ -613,7 +613,7 @@ public class MakerSwingFrame extends javax.swing.JFrame {
             }
         });
 
-        buttonSelectNone.setBackground(new java.awt.Color(66, 139, 202));
+        buttonSelectNone.setBackground(BLUE);
         buttonSelectNone.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
         buttonSelectNone.setForeground(new java.awt.Color(255, 255, 255));
         buttonSelectNone.setToolTipText("Remove selection");
@@ -672,7 +672,7 @@ public class MakerSwingFrame extends javax.swing.JFrame {
                 .addGap(27, 27, 27))
         );
 
-        buttonTab1Next.setBackground(new java.awt.Color(66, 139, 202));
+        buttonTab1Next.setBackground(BLUE);
         buttonTab1Next.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
         buttonTab1Next.setForeground(new java.awt.Color(255, 255, 255));
         buttonTab1Next.setText("Next");
@@ -1019,7 +1019,7 @@ public class MakerSwingFrame extends javax.swing.JFrame {
 
         textBusinessObject.setToolTipText("Your directory of Business Object");
 
-        buttonSelectBO.setBackground(new java.awt.Color(66, 139, 202));
+        buttonSelectBO.setBackground(BLUE);
         buttonSelectBO.setForeground(new java.awt.Color(255, 255, 255));
         buttonSelectBO.setText("...");
         buttonSelectBO.addActionListener(new java.awt.event.ActionListener() {
@@ -1040,7 +1040,7 @@ public class MakerSwingFrame extends javax.swing.JFrame {
 
         textDAO.setToolTipText("Your directory of DAO interface (Data Acess Object)");
 
-        buttonSelectDAO.setBackground(new java.awt.Color(66, 139, 202));
+        buttonSelectDAO.setBackground(BLUE);
         buttonSelectDAO.setForeground(new java.awt.Color(255, 255, 255));
         buttonSelectDAO.setText("...");
         buttonSelectDAO.addActionListener(new java.awt.event.ActionListener() {
@@ -1071,7 +1071,7 @@ public class MakerSwingFrame extends javax.swing.JFrame {
         labelDAOImplPackage.setLabelFor(textPackageDAOImpl);
         labelDAOImplPackage.setText("Package:");
 
-        buttonSelectDAOImpl.setBackground(new java.awt.Color(66, 139, 202));
+        buttonSelectDAOImpl.setBackground(BLUE);
         buttonSelectDAOImpl.setForeground(new java.awt.Color(255, 255, 255));
         buttonSelectDAOImpl.setText("...");
         buttonSelectDAOImpl.addActionListener(new java.awt.event.ActionListener() {
@@ -1096,7 +1096,7 @@ public class MakerSwingFrame extends javax.swing.JFrame {
 
         textManagedBean.setToolTipText("Your directory of Managed Bean (Controller)");
 
-        buttonSelectMB.setBackground(new java.awt.Color(66, 139, 202));
+        buttonSelectMB.setBackground(BLUE);
         buttonSelectMB.setForeground(new java.awt.Color(255, 255, 255));
         buttonSelectMB.setText("...");
         buttonSelectMB.addActionListener(new java.awt.event.ActionListener() {
@@ -1225,7 +1225,7 @@ public class MakerSwingFrame extends javax.swing.JFrame {
 
         textView.setToolTipText("XHTML directory");
 
-        buttonSelectView.setBackground(new java.awt.Color(66, 139, 202));
+        buttonSelectView.setBackground(BLUE);
         buttonSelectView.setForeground(new java.awt.Color(255, 255, 255));
         buttonSelectView.setText("...");
         buttonSelectView.addActionListener(new java.awt.event.ActionListener() {
@@ -1307,7 +1307,7 @@ public class MakerSwingFrame extends javax.swing.JFrame {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        buttonTab2Back.setBackground(new java.awt.Color(66, 139, 202));
+        buttonTab2Back.setBackground(BLUE);
         buttonTab2Back.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
         buttonTab2Back.setForeground(new java.awt.Color(255, 255, 255));
         buttonTab2Back.setText("Back");
@@ -1317,7 +1317,7 @@ public class MakerSwingFrame extends javax.swing.JFrame {
             }
         });
 
-        buttonTab2Next.setBackground(new java.awt.Color(66, 139, 202));
+        buttonTab2Next.setBackground(BLUE);
         buttonTab2Next.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
         buttonTab2Next.setForeground(new java.awt.Color(255, 255, 255));
         buttonTab2Next.setText("Next");
@@ -1577,7 +1577,7 @@ public class MakerSwingFrame extends javax.swing.JFrame {
             }
         });
 
-        buttonCreateClasses.setBackground(new java.awt.Color(66, 139, 202));
+        buttonCreateClasses.setBackground(BLUE);
         buttonCreateClasses.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
         buttonCreateClasses.setForeground(new java.awt.Color(255, 255, 255));
         buttonCreateClasses.setText("Create Classes");
