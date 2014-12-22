@@ -94,8 +94,8 @@ public class DateUtils {
     }
 
     /**
-     * Return the month of a date. Example: '2014-01-02' (yyyy-MM-dd) returns
-     * '01'
+     * Return the month of a date. Example: '2014-01-02' (yyyy-MM-dd) returns 0 (january = 0)
+     * 
      *
      * @param date
      * @return
