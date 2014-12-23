@@ -23,7 +23,7 @@ public class UniqueFieldsValidation {
         uniqueFields.add(uniqueField);
         validateUniqueFields(uniqueFields, object, baseDAO);
     }
-    
+
     public static void validateUniqueFields(List<UniqueField> uniqueFields, Object object, BaseDAO baseDAO) throws UniqueFieldException {
 
         if (uniqueFields == null) {
@@ -34,15 +34,14 @@ public class UniqueFieldsValidation {
 
         for (UniqueField uniqueField : uniqueFields) {
             List<Restriction> restrictions = new ArrayList<Restriction>();
+            if (uniqueField.getRestrictions() != null && !uniqueField.getRestrictions().isEmpty()) {
+                restrictions.addAll(uniqueField.getRestrictions());
+            }
             for (String fieldName : uniqueField.getConstraints()) {
                 try {
                     Object value = PropertyUtils.getProperty(object, fieldName);
                     if (value != null && !value.toString().isEmpty()) {
                         restrictions.add(new Restriction(fieldName, value));
-                    } else {
-                        //remove restriction
-                        restrictions.clear();
-                        break;
                     }
                 } catch (Exception ex) {
                     throw new RuntimeException(ex);

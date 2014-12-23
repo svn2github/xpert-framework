@@ -4,6 +4,9 @@
  */
 package com.xpert.core.validation;
 
+import com.xpert.persistence.query.Restriction;
+import com.xpert.persistence.query.Restrictions;
+
 /**
  *
  * @author Ayslan
@@ -12,9 +15,39 @@ public class UniqueField {
 
     private String message;
     private String[] constraints;
+    private Restrictions restrictions = new Restrictions();
 
-    public UniqueField(String... fields) {
-        this.constraints = fields;
+    /**
+     *
+     * @param constraints
+     */
+    public UniqueField(String... constraints) {
+        this.constraints = constraints;
+    }
+
+    /**
+     *
+     * @param restrictions
+     * @param constraints
+     */
+    public UniqueField(Restrictions restrictions, String... constraints) {
+        this.constraints = constraints;
+        this.restrictions = restrictions;
+    }
+
+    /**
+     *
+     * @param restriction
+     * @param constraints
+     */
+    public UniqueField(Restriction restriction, String... constraints) {
+        this.constraints = constraints;
+        this.restrictions.add(restriction);
+    }
+
+    public UniqueField setMessage(String message) {
+        this.message = message;
+        return this;
     }
 
     public String[] getConstraints() {
@@ -28,9 +61,13 @@ public class UniqueField {
     public String getMessage() {
         return message;
     }
-    
-    public UniqueField setMessage(String message) {
-        this.message = message;
-        return this;
+
+    public Restrictions getRestrictions() {
+        return restrictions;
     }
+
+    public void setRestrictions(Restrictions restrictions) {
+        this.restrictions = restrictions;
+    }
+
 }
