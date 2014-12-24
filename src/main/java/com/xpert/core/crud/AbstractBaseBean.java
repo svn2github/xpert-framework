@@ -168,10 +168,12 @@ public abstract class AbstractBaseBean<T> {
         }
         try {
             Class idType = EntityUtils.getIdType(entityClass);
-            if (idType.equals(Long.class)) {
+            if (idType.equals(Long.class) || idType.equals(long.class) ) {
                 return Long.parseLong(StringUtils.getOnlyIntegerNumbers(parameter));
-            } else if (idType.equals(Integer.class)) {
+            } else if (idType.equals(Integer.class) || idType.equals(int.class)) {
                 return Integer.parseInt(StringUtils.getOnlyIntegerNumbers(parameter));
+            } else if (idType.equals(Short.class) || idType.equals(short.class)) {
+                return Short.parseShort(StringUtils.getOnlyIntegerNumbers(parameter));
             } else if (idType.equals(BigDecimal.class)) {
                 return new BigDecimal(StringUtils.getOnlyIntegerNumbers(parameter));
             } else if (idType.equals(String.class)) {
