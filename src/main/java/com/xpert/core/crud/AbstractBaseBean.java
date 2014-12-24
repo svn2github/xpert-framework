@@ -17,6 +17,7 @@ import com.xpert.persistence.query.Restriction;
 import com.xpert.persistence.utils.EntityUtils;
 import java.lang.reflect.ParameterizedType;
 import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
@@ -172,6 +173,8 @@ public abstract class AbstractBaseBean<T> {
                 return Long.parseLong(StringUtils.getOnlyIntegerNumbers(parameter));
             } else if (idType.equals(Integer.class) || idType.equals(int.class)) {
                 return Integer.parseInt(StringUtils.getOnlyIntegerNumbers(parameter));
+            } else if (idType.equals(BigInteger.class)) {
+                return new BigInteger(StringUtils.getOnlyIntegerNumbers(parameter));
             } else if (idType.equals(Short.class) || idType.equals(short.class)) {
                 return Short.parseShort(StringUtils.getOnlyIntegerNumbers(parameter));
             } else if (idType.equals(BigDecimal.class)) {
