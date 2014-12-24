@@ -28,16 +28,16 @@ public class Conversion {
         return new BigDecimal(stringToDouble(valor));
     }
 
-    public static String removeAccent(String valor) {
-        if (valor != null && !(valor.trim().equals(""))) {
+    public static String removeAccent(String value) {
+        if (value != null && !(value.trim().equals(""))) {
             char[] accents = new char[]{'ç', 'á', 'à', 'ã', 'â', 'ä', 'é', 'è', 'ê', 'ë', 'í', 'ì', 'î', 'ï', 'ó', 'ò', 'õ', 'ô', 'ö', 'ú', 'ù', 'û', 'ü'};
             char[] noAccents = new char[]{'c', 'a', 'a', 'a', 'a', 'a', 'e', 'e', 'e', 'e', 'i', 'i', 'i', 'i', 'o', 'o', 'o', 'o', 'o', 'u', 'u', 'u', 'u'};
             for (int i = 0; i < accents.length; i++) {
-                valor = valor.replace(accents[i], noAccents[i]);
-                valor = valor.replace(Character.toUpperCase(accents[i]), Character.toUpperCase(noAccents[i]));
+                value = value.replace(accents[i], noAccents[i]);
+                value = value.replace(Character.toUpperCase(accents[i]), Character.toUpperCase(noAccents[i]));
             }
-            return valor;
+            return value;
         }
-        return valor;
+        return value;
     }
 }

@@ -1,5 +1,6 @@
 package com.xpert.utils;
 
+import com.xpert.core.conversion.Conversion;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
@@ -211,5 +212,9 @@ public class StringUtils {
             }
         }
         return true;
+    }
+
+    public static String removeAccent(String value) {
+        return Conversion.removeAccent(value);
     }
 }
