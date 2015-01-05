@@ -4,14 +4,22 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.AccessibleObject;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
+import javax.persistence.EntityManager;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.hibernate.internal.SessionFactoryImpl;
+import org.hibernate.metadata.ClassMetadata;
+import org.hibernate.persister.entity.AbstractEntityPersister;
 
 /**
  * Utility class to manipulae JPA entities
@@ -26,6 +34,25 @@ public class EntityUtils {
     private static final Map<Class, Class> ID_TYPE_MAP = new HashMap<Class, Class>();
 
     /**
+     * Return mapped entities in EntityManager. Classes are get from
+     * ClassMetadata in SessionFactory
+     *
+     * @param entityManager
+     * @return
+     */
+    public static List<Class> getMappedEntities(EntityManager entityManager) {
+        SessionFactory sessionFactory = entityManager.unwrap(Session.class).getSessionFactory();
+        Map<String, ClassMetadata> map = (Map<String, ClassMetadata>) sessionFactory.getAllClassMetadata();
+        SessionFactoryImpl sessionFactoryImpl = (SessionFactoryImpl) sessionFactory;
+        List<Class> classes = new ArrayList<Class>();
+        for (String entityName : map.keySet()) {
+            Class entity = ((AbstractEntityPersister) sessionFactoryImpl.getEntityPersister(entityName)).getConcreteProxyClass();
+            classes.add(entity);
+        }
+        return classes;
+    }
+
+    /**
      * Return true is @GeneratedValue is present in id
      *
      * @param clazz
@@ -38,6 +65,7 @@ public class EntityUtils {
         }
         return false;
     }
+
     /**
      * Return true if @EmbeddedId is present in id
      *
