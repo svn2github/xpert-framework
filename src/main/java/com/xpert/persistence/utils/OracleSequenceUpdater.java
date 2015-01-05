@@ -16,7 +16,7 @@ public class OracleSequenceUpdater extends SequenceUpdater {
     public OracleSequenceUpdater(EntityManager entityManager) {
         this.entityManager = entityManager;
     }
-
+    
     @Override
     public void changeCurrentValue(String sequenceName, Long maxId) {
         
@@ -32,7 +32,7 @@ public class OracleSequenceUpdater extends SequenceUpdater {
         String alterDefault = "ALTER SEQUENCE " + sequenceName + " INCREMENT by 1";
         String alterMax = "ALTER SEQUENCE " + sequenceName + " INCREMENT by " + (maxId - nextValResult.longValue());
 
-        if ((maxId - nextValResult.longValue()) > 0) {
+        if ((maxId - nextValResult.longValue()) != 0) {
             Query queryAlterMax = entityManager.createNativeQuery(alterMax);
             queryAlterMax.executeUpdate();
         }
