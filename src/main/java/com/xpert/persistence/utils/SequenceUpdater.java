@@ -46,6 +46,9 @@ public abstract class SequenceUpdater {
                 Field.setAccessible(fields, true);
                 for (Field field : fields) {
                     sequenceGenerator = (SequenceGenerator) field.getAnnotation(SequenceGenerator.class);
+                    if(sequenceGenerator != null){
+                        break;
+                    }
                 }
             }
             if (sequenceGenerator != null) {
@@ -67,9 +70,6 @@ public abstract class SequenceUpdater {
         try {
             maxId = (Long) query.getSingleResult();
         } catch (NoResultException ex) {
-        }
-        if (maxId == null) {
-            maxId = 1L;
         }
         return maxId;
     }

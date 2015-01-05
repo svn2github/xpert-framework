@@ -5,7 +5,7 @@ import javax.persistence.Query;
 
 /**
  * Sequence update to PostgreSQL
- * 
+ *
  * @author ayslan, arnaldo
  */
 public class PostgreSQLSequenceUpdater extends SequenceUpdater {
@@ -19,9 +19,15 @@ public class PostgreSQLSequenceUpdater extends SequenceUpdater {
     @Override
     public void changeCurrentValue(String sequenceName, Long maxId) {
         //select setval('sequencename' ,1);
-        String setValQueryString = "SELECT SETVAL('" + sequenceName + "', " + maxId + ")";
+        String setValQueryString = null;
+        if (maxId == null) {
+            //false indicate that sequence is not called (maxId == null the table is empty)
+            setValQueryString = "SELECT SETVAL('" + sequenceName + "', 1, false)";
+        } else {
+            setValQueryString = "SELECT SETVAL('" + sequenceName + "', " + maxId + ")";
+        }
         Query querySetVal = entityManager.createNativeQuery(setValQueryString);
-        querySetVal.executeUpdate();
+        querySetVal.getSingleResult();
     }
 
     @Override

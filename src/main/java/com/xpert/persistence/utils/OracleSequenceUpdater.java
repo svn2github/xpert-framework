@@ -19,6 +19,10 @@ public class OracleSequenceUpdater extends SequenceUpdater {
 
     @Override
     public void changeCurrentValue(String sequenceName, Long maxId) {
+        
+        if(maxId == null){
+            maxId = 1L;
+        }
 
         String nextVal = "SELECT " + sequenceName + ".NEXTVAL FROM dual";
 
