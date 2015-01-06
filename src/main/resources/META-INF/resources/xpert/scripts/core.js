@@ -2,6 +2,7 @@ Xpert = {
     closeModalMessages: function(widgetDialog){
         widgetDialog.hide();
         $('.faces-modal-messages').remove();
+        $('div[id*=xpertModalMessages]').remove();
     },
     clearDownloadCookie: function(){
         $.cookie('xpert.download', null, {
