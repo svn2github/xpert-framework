@@ -15,6 +15,7 @@ import javax.persistence.Entity;
 import javax.persistence.EntityManager;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.Table;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.internal.SessionFactoryImpl;
@@ -32,6 +33,40 @@ public class EntityUtils {
     private static final Map<Class, String> ID_NAME_MAP = new HashMap<Class, String>();
     private static final Map<Class, AccessibleObject> ID_ACCESSIBLE_MAP = new HashMap<Class, AccessibleObject>();
     private static final Map<Class, Class> ID_TYPE_MAP = new HashMap<Class, Class>();
+
+    /**
+     * Returns a entity table name. Try to get from @Table annotation, if not
+     * exsits try to get @Entity, if not exists return class.getSimpleName()
+     *
+     * @param entity
+     * @param fullName Indicate if name comes with schema. Example:
+     * yourShema.tableName
+     * @return
+     */
+    public static String getEntityTableName(Class entity, boolean fullName) {
+
+        String name = null;
+        String schema = null;
+
+        Table table = (Table) entity.getAnnotation(Table.class);
+        if (table != null && table.name() != null && !table.name().isEmpty()) {
+            name = table.name();
+            schema = table.schema();
+        } else {
+            Entity entityAnnotation = (Entity) entity.getAnnotation(Entity.class);
+            if (entityAnnotation != null && entityAnnotation.name() != null && !entityAnnotation.name().isEmpty()) {
+                name = entityAnnotation.name();
+            } else {
+                name = entity.getSimpleName();
+            }
+        }
+
+        if (schema != null) {
+            name = schema + "." + name;
+        }
+
+        return name;
+    }
 
     /**
      * Return mapped entities in EntityManager. Classes are get from
