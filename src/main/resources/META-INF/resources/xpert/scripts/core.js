@@ -190,9 +190,9 @@ Xpert.behavior = {
             $createdDialog.find(".dialog-confirm-message").html(message);
             $createdDialog.find("#xpertCofirmationButton").attr("onclick", confirmClick);
         }else{
-            var html =  '<div style="visibility: visible;" class="ui-confirm-dialog ui-dialog ui-widget ui-widget-content ui-corner-all ui-shadow" id="'+id+'" >'
+            var html =  '<div style="visibility: visible;" class="uix-confirm-dialog ui-confirm-dialog ui-dialog ui-widget ui-widget-content ui-corner-all ui-shadow" id="'+id+'" >'
                             +'<div class="ui-dialog-content ui-widget-content" style="height: auto;">'
-                                    +'<p><span class="ui-icon ui-icon-alert ui-confirm-dialog-severity"></span><span class="dialog-confirm-message">'+message+'</span></p>'
+                                    +'<span class="ui-icon ui-icon-alert ui-confirm-dialog-severity"></span><div class="dialog-confirm-message">'+message+'</div>'
                             +'</div>'
                             +'<div class="ui-dialog-buttonpane ui-widget-content ui-helper-clearfix">'
                                 +'<form>'
@@ -206,7 +206,7 @@ Xpert.behavior = {
                                 +'</form>'
                             +'</div>'
                         +'</div>';
-            html = html+'<script type="text/javascript">PrimeFaces.cw("Dialog","widgetConfirmationDialog",{id:"'+id+'",modal:true,resizable:false,width:300,visible:true});</script>';
+            html = html+'<script type="text/javascript">PrimeFaces.cw("Dialog","widgetConfirmationDialog",{id:"'+id+'",modal:true,resizable:false,visible:true});</script>';
             $(html).appendTo("body");
         }  
         if (primefaces3 == true){
