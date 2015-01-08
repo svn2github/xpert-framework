@@ -78,11 +78,11 @@ public abstract class FindAllBean {
     }
 
     /**
-     * Get a type from UIComponent.
-     * If component is a primefaces Column, try to get "filterBy", other components get "value"
-     * 
+     * Get a type from UIComponent. If component is a primefaces Column, try to
+     * get "filterBy", other components get "value"
+     *
      * @param component
-     * @return 
+     * @return
      */
     public Class getType(UIComponent component) {
         Class type = null;
@@ -168,7 +168,17 @@ public abstract class FindAllBean {
         }
         //ClassModel itemLabel null then use order
         if (classModel.getItemLabel() != null && !classModel.getItemLabel().isEmpty()) {
-            return (String) PropertyUtils.getProperty(bean, classModel.getItemLabel());
+            //try to separate with comma
+            StringBuilder builder = new StringBuilder();
+            for (String label : classModel.getItemLabel().split(",")) {
+                if (label != null && !label.isEmpty()) {
+                    if (builder.length() > 0) {
+                        builder.append(" - ");
+                    }
+                    builder.append((String) PropertyUtils.getProperty(bean, label.trim()));
+                }
+            }
+            return builder.toString();
         } else if (classModel.getOrder() != null && !classModel.getOrder().isEmpty()) {
             return (String) PropertyUtils.getProperty(bean, classModel.getOrder());
         } else {
