@@ -549,7 +549,13 @@ public abstract class BaseDAOImpl<T> implements BaseDAO<T> {
                     if (Hibernate.isInitialized(object)) {
                         return (U) lazyInitializer.getImplementation();
                     }
-                    return (U) getEntityManager().find(lazyInitializer.getPersistentClass(), lazyInitializer.getIdentifier());
+                    Object initilized = getEntityManager().find(lazyInitializer.getPersistentClass(), lazyInitializer.getIdentifier());
+                    //if find returns a proxy, then call getImplementation() to return the real object
+                    if (initilized instanceof HibernateProxy) {
+                        return (U) lazyInitializer.getImplementation();
+                    } else {
+                        return (U) initilized;
+                    }
                 }
 
                 if (object instanceof PersistentCollection) {
@@ -591,7 +597,15 @@ public abstract class BaseDAOImpl<T> implements BaseDAO<T> {
                     Query query = getEntityManager().createQuery(queryString.toString());
                     query.setParameter(1, owner);
 
-                    collection.addAll(query.getResultList());
+                    for (Object result : query.getResultList()) {
+                        //prevent to add a proxy
+                        if (result instanceof HibernateProxy) {
+                            LazyInitializer lazyInitializer = ((HibernateProxy) result).getHibernateLazyInitializer();
+                            collection.add(lazyInitializer.getImplementation());
+                        } else {
+                            collection.add(result);
+                        }
+                    }
 
                     return (U) collection;
                 }
