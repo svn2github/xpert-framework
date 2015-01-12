@@ -552,6 +552,7 @@ public abstract class BaseDAOImpl<T> implements BaseDAO<T> {
                     Object initilized = getEntityManager().find(lazyInitializer.getPersistentClass(), lazyInitializer.getIdentifier());
                     //if find returns a proxy, then call getImplementation() to return the real object
                     if (initilized instanceof HibernateProxy) {
+                        lazyInitializer = ((HibernateProxy) initilized).getHibernateLazyInitializer();
                         return (U) lazyInitializer.getImplementation();
                     } else {
                         return (U) initilized;
