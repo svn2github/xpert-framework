@@ -11,6 +11,7 @@ import javax.faces.component.UIComponentBase;
  * @author Ayslan
  */
 @ResourceDependencies({
+    @ResourceDependency(library = "xpert", name = "css/style.css"),
     @ResourceDependency(library = "xpert", name = "scripts/core.js")
 })
 public class Confirmation extends UIComponentBase {
