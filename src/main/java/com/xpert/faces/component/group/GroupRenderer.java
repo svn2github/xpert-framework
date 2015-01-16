@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.xpert.faces.component.group;
 
 import com.xpert.faces.component.renderkit.CoreRenderer;
@@ -32,9 +27,6 @@ public class GroupRenderer extends CoreRenderer {
 
         String rowIndexVar = group.getRowIndexVar();
         Map<String, Object> requestMap = context.getExternalContext().getRequestMap();
-        ResponseWriter writer = context.getResponseWriter();
-        writer.startElement("div", group);
-        writer.writeAttribute("id", group.getClientId(context), "id");
 
         for (int i = 0; i < rowCount; i++) {
             if (rowIndexVar != null) {
@@ -48,7 +40,6 @@ public class GroupRenderer extends CoreRenderer {
                 renderChildren(context, group);
             }
         }
-        writer.endElement("div");
 
         //cleanup
         group.setRowIndex(-1);

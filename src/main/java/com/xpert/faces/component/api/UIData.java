@@ -20,7 +20,7 @@ import org.primefaces.util.ComponentUtils;
 
 /**
  *
- * @author ayslan
+ * based on primafaces UIData
  */
 public class UIData extends javax.faces.component.UIData {
 
