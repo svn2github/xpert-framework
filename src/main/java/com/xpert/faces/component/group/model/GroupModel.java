@@ -51,7 +51,7 @@ public class GroupModel<K, V> {
 
     public void groupItens() {
         if (value != null) {
-            System.out.println("Grouping by: " + groupBy + " size: " + value.size() + " list: " + value);
+         //   System.out.println("Grouping by: " + groupBy + " size: " + value.size() + " list: " + value);
             Map<Object, GroupModelItem> map = new HashMap<Object, GroupModelItem>();
             itens = new ArrayList<GroupModelItem<K, V>>();
             for (Object item : value) {
@@ -108,7 +108,7 @@ public class GroupModel<K, V> {
 
         }
 
-        System.out.println("quantidade de itens: " + itens.size());
+       // System.out.println("quantidade de itens: " + itens.size());
 
         //normalize
         if (itens != null) {

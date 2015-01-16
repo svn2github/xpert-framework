@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.Map;
 import javax.el.ValueExpression;
 import javax.faces.FacesException;
+import javax.faces.component.UIData;
 import javax.faces.context.FacesContext;
 import javax.faces.model.DataModel;
 import javax.faces.model.ListDataModel;
@@ -38,7 +39,7 @@ public class Group extends javax.faces.component.UIData {
 
     protected enum PropertyKeys {
 
-        groupBy, itemSortField, itemSortOrder, sortOrder, sortField, rowIndexVar;
+        value, groupBy, itemSortField, itemSortOrder, sortOrder, sortField, rowIndexVar;
 
         String toString;
 
@@ -64,15 +65,15 @@ public class Group extends javax.faces.component.UIData {
 
         Object current = getValue();
 
-        System.out.println("instancia: " + this+" id: "+getClientId());
-        Map<String, Object> requestMap = FacesContext.getCurrentInstance().getExternalContext().getRequestMap();
-        DataModel modelMap = (DataModel) requestMap.get("dataModel_" + getClientId());
-        if (modelMap != null) {
-            return modelMap;
-        }
-//        if (this.model != null) {
-//            return (model);
+        // System.out.println("instancia: " + this+" id: "+getClientId());
+//        Map<String, Object> requestMap = FacesContext.getCurrentInstance().getExternalContext().getRequestMap();
+//        DataModel modelMap = (DataModel) requestMap.get("dataModel_" + getClientId());
+//        if (modelMap != null) {
+//            return modelMap;
 //        }
+        if (this.model != null) {
+            return (model);
+        }
 
         if (current == null) {
             return null;
@@ -97,12 +98,17 @@ public class Group extends javax.faces.component.UIData {
         }
 
         groupModel.groupItens();
-        
+
         model = new ListDataModel(groupModel.getItens());
-        requestMap.put("dataModel_" + getClientId(), model);
+//        requestMap.put("dataModel_" + getClientId(), model);
         setDataModel(model);
 
         return model;
+    }
+
+    @Override
+    protected void setDataModel(DataModel dataModel) {
+        this.model = dataModel;
     }
 
     public String getSortField() {
@@ -155,6 +161,7 @@ public class Group extends javax.faces.component.UIData {
 
     @SuppressWarnings("unchecked")
     public void setAttribute(final Group.PropertyKeys property, final Object value) {
+
         getStateHelper().put(property, value);
 
         List<String> setAttributes = (List<String>) this.getAttributes().get("javax.faces.component.UIComponentBase.attributesThatAreSet");
