@@ -8,10 +8,10 @@ package com.xpert.faces.component.group;
 import com.xpert.faces.component.group.model.GroupModel;
 import com.xpert.faces.component.group.model.GroupSortOrder;
 import java.util.List;
+import java.util.Map;
 import javax.el.ValueExpression;
 import javax.faces.FacesException;
-import javax.faces.component.UIData;
-import javax.faces.event.FacesEvent;
+import javax.faces.context.FacesContext;
 import javax.faces.model.DataModel;
 import javax.faces.model.ListDataModel;
 
@@ -19,11 +19,11 @@ import javax.faces.model.ListDataModel;
  *
  * @author ayslan
  */
-public class Group extends UIData {
+public class Group extends javax.faces.component.UIData {
 
     public static final String COMPONENT_TYPE = "com.xpert.component.Group";
     public static final String COMPONENT_FAMILY = "com.xpert.component";
-    private static final String DEFAULT_RENDERER = "com.xpert.fapces.component.GroupRenderer<";
+    private static final String DEFAULT_RENDERER = "com.xpert.fapces.component.GroupRenderer";
 
     private DataModel model = null;
 
@@ -31,6 +31,7 @@ public class Group extends UIData {
         setRendererType(DEFAULT_RENDERER);
     }
 
+    @Override
     public String getFamily() {
         return COMPONENT_FAMILY;
     }
@@ -60,11 +61,18 @@ public class Group extends UIData {
      */
     @Override
     protected DataModel getDataModel() {
+
         Object current = getValue();
 
-        if (this.model != null) {
-            return (model);
+        System.out.println("instancia: " + this+" id: "+getClientId());
+        Map<String, Object> requestMap = FacesContext.getCurrentInstance().getExternalContext().getRequestMap();
+        DataModel modelMap = (DataModel) requestMap.get("dataModel_" + getClientId());
+        if (modelMap != null) {
+            return modelMap;
         }
+//        if (this.model != null) {
+//            return (model);
+//        }
 
         if (current == null) {
             return null;
@@ -89,10 +97,10 @@ public class Group extends UIData {
         }
 
         groupModel.groupItens();
+        
         model = new ListDataModel(groupModel.getItens());
+        requestMap.put("dataModel_" + getClientId(), model);
         setDataModel(model);
-
-        System.out.println("total: " + model.getRowCount());
 
         return model;
     }
@@ -145,7 +153,6 @@ public class Group extends UIData {
         setAttribute(PropertyKeys.rowIndexVar, rowIndexVar);
     }
 
-    
     @SuppressWarnings("unchecked")
     public void setAttribute(final Group.PropertyKeys property, final Object value) {
         getStateHelper().put(property, value);

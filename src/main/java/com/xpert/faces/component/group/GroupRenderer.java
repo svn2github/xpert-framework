@@ -10,6 +10,7 @@ import java.io.IOException;
 import java.util.Map;
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
+import javax.faces.context.ResponseWriter;
 
 /**
  *
@@ -31,16 +32,23 @@ public class GroupRenderer extends CoreRenderer {
 
         String rowIndexVar = group.getRowIndexVar();
         Map<String, Object> requestMap = context.getExternalContext().getRequestMap();
+        ResponseWriter writer = context.getResponseWriter();
+        writer.startElement("div", group);
+        writer.writeAttribute("id", group.getClientId(context), "id");
 
         for (int i = 0; i < rowCount; i++) {
             if (rowIndexVar != null) {
                 requestMap.put(rowIndexVar, i);
             }
             group.setRowIndex(i);
+            if (rowIndexVar != null) {
+                requestMap.put(rowIndexVar, i);
+            }
             if (group.isRowAvailable()) {
                 renderChildren(context, group);
             }
         }
+        writer.endElement("div");
 
         //cleanup
         group.setRowIndex(-1);
