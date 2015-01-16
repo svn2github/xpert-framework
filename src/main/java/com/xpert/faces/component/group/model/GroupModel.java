@@ -1,8 +1,9 @@
-package com.xpert.faces.component.group;
+package com.xpert.faces.component.group.model;
 
 import com.xpert.utils.CollectionsUtils;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -17,18 +18,19 @@ import org.apache.commons.beanutils.PropertyUtils;
  */
 public class GroupModel<K, V> {
 
-    private String field;
+    private String groupBy;
     private String itemSortField;
     private GroupSortOrder itemSortOrder;
+    private String sortField;
     private GroupSortOrder sortOrder;
     /**
      * the original value
      */
-    private Collection<V> value;
+    private List<V> value;
     private List<GroupModelItem<K, V>> itens;
 
-    public GroupModel(String field, Collection value) {
-        this.field = field;
+    public GroupModel(String field, List value) {
+        this.groupBy = field;
         this.value = value;
         this.itens = new ArrayList<GroupModelItem<K, V>>();
     }
@@ -55,7 +57,7 @@ public class GroupModel<K, V> {
                 try {
                     Object keyForData;
                     try {
-                        keyForData = PropertyUtils.getProperty(item, field);
+                        keyForData = PropertyUtils.getProperty(item, groupBy);
                     } catch (NestedNullException ex) {
                         //null key
                         keyForData = null;
@@ -74,7 +76,7 @@ public class GroupModel<K, V> {
                     }
                     groupModelItem.getValue().add(item);
                 } catch (Exception ex) {
-                    throw new RuntimeException("Error getting property " + field + " in collection ", ex);
+                    throw new RuntimeException("Error getting property " + groupBy + " in collection ", ex);
                 }
             }
 
@@ -83,10 +85,26 @@ public class GroupModel<K, V> {
         }
 
         //order main list
-        if (sortOrder == null || sortOrder.equals(GroupSortOrder.ASC)) {
-            CollectionsUtils.orderAsc(itens, "key");
-        } else {
-            CollectionsUtils.orderDesc(itens, "key");
+        String sortKey = "key";
+        if (sortField != null && !sortField.isEmpty()) {
+            sortKey = sortKey + "." + sortField;
+        }
+
+        if (itens != null && !itens.isEmpty()) {
+
+            Object firstItem = itens.get(0);
+            boolean isSort = false;
+            if (firstItem instanceof Comparable || (sortField != null && !sortField.isEmpty())) {
+                isSort = true;
+            }
+            if (isSort == true) {
+                if (sortOrder == null || sortOrder.equals(GroupSortOrder.ASC)) {
+                    CollectionsUtils.orderAsc(itens, sortKey);
+                } else {
+                    CollectionsUtils.orderDesc(itens, sortKey);
+                }
+            }
+
         }
 
         //normalize
@@ -104,7 +122,7 @@ public class GroupModel<K, V> {
                     if (itemSortOrder == null || itemSortOrder.equals(GroupSortOrder.ASC)) {
                         CollectionsUtils.orderAsc(groupModelItem.getValue(), itemSortField);
                     } else {
-                        CollectionsUtils.orderAsc(groupModelItem.getValue(), itemSortField);
+                        CollectionsUtils.orderDesc(groupModelItem.getValue(), itemSortField);
                     }
                 }
             }
@@ -112,12 +130,12 @@ public class GroupModel<K, V> {
 
     }
 
-    public String getField() {
-        return field;
+    public String getGroupBy() {
+        return groupBy;
     }
 
-    public void setField(String field) {
-        this.field = field;
+    public void setGroupBy(String groupBy) {
+        this.groupBy = groupBy;
     }
 
     public String getItemSortField() {
@@ -144,11 +162,11 @@ public class GroupModel<K, V> {
         this.sortOrder = sortOrder;
     }
 
-    public Collection<V> getValue() {
+    public List<V> getValue() {
         return value;
     }
 
-    public void setValue(Collection<V> value) {
+    public void setValue(List<V> value) {
         this.value = value;
     }
 
@@ -158,6 +176,14 @@ public class GroupModel<K, V> {
 
     public void setItens(List<GroupModelItem<K, V>> itens) {
         this.itens = itens;
+    }
+
+    public String getSortField() {
+        return sortField;
+    }
+
+    public void setSortField(String sortField) {
+        this.sortField = sortField;
     }
 
 }

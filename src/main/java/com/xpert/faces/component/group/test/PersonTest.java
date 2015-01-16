@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.xpert.faces.component.group;
+package com.xpert.faces.component.group.test;
 
 /**
  *

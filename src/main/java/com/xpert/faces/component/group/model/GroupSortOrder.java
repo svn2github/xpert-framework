@@ -1,4 +1,4 @@
-package com.xpert.faces.component.group;
+package com.xpert.faces.component.group.model;
 
 /**
  *

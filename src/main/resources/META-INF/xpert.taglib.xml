@@ -178,4 +178,45 @@
             <type>java.lang.String</type>
         </attribute>
     </tag>
+    <tag>
+        <tag-name>group</tag-name>
+        <component>
+            <component-type>com.xpert.faces.component.Group</component-type>
+            <renderer-type>com.xpert.faces.component.GroupRenderer</renderer-type>
+        </component>
+        <attribute>
+            <name>groupBy</name>
+            <required>true</required>
+            <type>java.lang.String</type>
+        </attribute>
+        <attribute>
+            <name>value</name>
+            <required>true</required>
+            <type>java.lang.String</type>
+        </attribute>
+        <attribute>
+            <name>var</name>
+            <type>java.lang.String</type>
+        </attribute>
+        <attribute>
+            <name>itemSortField</name>
+            <type>java.lang.String</type>
+        </attribute>
+        <attribute>
+            <name>itemSortOrder</name>
+            <type>java.lang.String</type>
+        </attribute>
+        <attribute>
+            <name>sortOrder</name>
+            <type>java.lang.String</type>
+        </attribute>
+        <attribute>
+            <name>sortField</name>
+            <type>java.lang.String</type>
+        </attribute>
+        <attribute>
+            <name>rowIndexVar</name>
+            <type>java.lang.String</type>
+        </attribute>
+    </tag>
 </facelet-taglib>

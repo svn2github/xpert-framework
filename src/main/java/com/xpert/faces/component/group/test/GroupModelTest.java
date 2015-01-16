@@ -3,8 +3,11 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.xpert.faces.component.group;
+package com.xpert.faces.component.group.test;
 
+import com.xpert.faces.component.group.model.GroupModel;
+import com.xpert.faces.component.group.model.GroupModelItem;
+import com.xpert.faces.component.group.model.GroupSortOrder;
 import java.util.ArrayList;
 import java.util.List;
 
