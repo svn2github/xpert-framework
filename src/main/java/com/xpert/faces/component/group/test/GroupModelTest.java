@@ -7,7 +7,7 @@ package com.xpert.faces.component.group.test;
 
 import com.xpert.faces.component.group.model.GroupModel;
 import com.xpert.faces.component.group.model.GroupModelItem;
-import com.xpert.faces.component.group.model.GroupSortOrder;
+import com.xpert.faces.component.api.SortOrder;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -39,7 +39,7 @@ public class GroupModelTest {
         list.add(personTest2);
 
         GroupModel<String, PersonTest> groupModel = new GroupModel("city", list);
-        groupModel.setSortOrder(GroupSortOrder.ASC);
+        groupModel.setSortOrder(SortOrder.ASCENDING);
         groupModel.setItemSortField("name");
         groupModel.groupItens();
         printItens(groupModel);

@@ -2,7 +2,7 @@ package com.xpert.faces.component.group;
 
 import com.xpert.faces.component.api.UIData;
 import com.xpert.faces.component.group.model.GroupModel;
-import com.xpert.faces.component.group.model.GroupSortOrder;
+import com.xpert.faces.component.api.SortOrder;
 import java.util.List;
 import javax.el.ValueExpression;
 import javax.faces.FacesException;
@@ -58,12 +58,6 @@ public class Group extends UIData {
 
         Object current = getValue();
 
-        // System.out.println("instancia: " + this+" id: "+getClientId());
-//        Map<String, Object> requestMap = FacesContext.getCurrentInstance().getExternalContext().getRequestMap();
-//        DataModel modelMap = (DataModel) requestMap.get("dataModel_" + getClientId());
-//        if (modelMap != null) {
-//            return modelMap;
-//        }
         if (this.model != null) {
             return (model);
         }
@@ -82,12 +76,20 @@ public class Group extends UIData {
 
         String sortOrder = getSortOrder();
         if (sortOrder != null && !sortOrder.isEmpty()) {
-            groupModel.setSortOrder(GroupSortOrder.valueOf(sortOrder.toUpperCase()));
+            if(!sortOrder.toUpperCase().equals(SortOrder.ASCENDING.name()) &&
+                    !sortOrder.toUpperCase().equals(SortOrder.DESCENDING.name())){
+                throw new FacesException("Sort Order must be \"ascending\" or \"descending\"");
+            }
+            groupModel.setSortOrder(SortOrder.valueOf(sortOrder.toUpperCase()));
         }
 
         String itemSortOrder = getItemSortOrder();
         if (itemSortOrder != null && !itemSortOrder.isEmpty()) {
-            groupModel.setItemSortOrder(GroupSortOrder.valueOf(itemSortOrder.toUpperCase()));
+             if(!itemSortOrder.toUpperCase().equals(SortOrder.ASCENDING.name()) &&
+                    !itemSortOrder.toUpperCase().equals(SortOrder.DESCENDING.name())){
+                throw new FacesException("Item Sort Order must be \"ascending\" or \"descending\"");
+            }
+            groupModel.setItemSortOrder(SortOrder.valueOf(itemSortOrder.toUpperCase()));
         }
 
         groupModel.groupItens();

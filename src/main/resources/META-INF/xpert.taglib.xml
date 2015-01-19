@@ -199,6 +199,7 @@
             <type>java.lang.String</type>
         </attribute>
         <attribute>
+            <description>Sets item sorting order. Can be "ascending" or "descending". Default is "ascending"</description>
             <name>itemSortField</name>
             <type>java.lang.String</type>
         </attribute>
@@ -207,6 +208,7 @@
             <type>java.lang.String</type>
         </attribute>
         <attribute>
+            <description>Sets sorting order. Can be "ascending" or "descending". Default is "ascending"</description>
             <name>sortOrder</name>
             <type>java.lang.String</type>
         </attribute>

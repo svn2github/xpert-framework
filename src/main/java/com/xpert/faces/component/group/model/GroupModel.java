@@ -1,5 +1,6 @@
 package com.xpert.faces.component.group.model;
 
+import com.xpert.faces.component.api.SortOrder;
 import com.xpert.utils.CollectionsUtils;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -18,9 +19,9 @@ public class GroupModel<K, V> {
 
     private String groupBy;
     private String itemSortField;
-    private GroupSortOrder itemSortOrder;
+    private SortOrder itemSortOrder;
     private String sortField;
-    private GroupSortOrder sortOrder;
+    private SortOrder sortOrder;
     /**
      * the original value
      */
@@ -97,7 +98,7 @@ public class GroupModel<K, V> {
                 isSort = true;
             }
             if (isSort == true) {
-                if (sortOrder == null || sortOrder.equals(GroupSortOrder.ASC)) {
+                if (sortOrder == null || sortOrder.equals(SortOrder.ASCENDING)) {
                     CollectionsUtils.orderAsc(itens, sortKey);
                 } else {
                     CollectionsUtils.orderDesc(itens, sortKey);
@@ -120,7 +121,7 @@ public class GroupModel<K, V> {
                 }
                 //order itens
                 if (itemSortField != null && !itemSortField.isEmpty()) {
-                    if (itemSortOrder == null || itemSortOrder.equals(GroupSortOrder.ASC)) {
+                    if (itemSortOrder == null || itemSortOrder.equals(SortOrder.ASCENDING)) {
                         CollectionsUtils.orderAsc(groupModelItem.getValue(), itemSortField);
                     } else {
                         CollectionsUtils.orderDesc(groupModelItem.getValue(), itemSortField);
@@ -147,19 +148,19 @@ public class GroupModel<K, V> {
         this.itemSortField = itemSortField;
     }
 
-    public GroupSortOrder getItemSortOrder() {
+    public SortOrder getItemSortOrder() {
         return itemSortOrder;
     }
 
-    public void setItemSortOrder(GroupSortOrder itemSortOrder) {
+    public void setItemSortOrder(SortOrder itemSortOrder) {
         this.itemSortOrder = itemSortOrder;
     }
 
-    public GroupSortOrder getSortOrder() {
+    public SortOrder getSortOrder() {
         return sortOrder;
     }
 
-    public void setSortOrder(GroupSortOrder sortOrder) {
+    public void setSortOrder(SortOrder sortOrder) {
         this.sortOrder = sortOrder;
     }
 
