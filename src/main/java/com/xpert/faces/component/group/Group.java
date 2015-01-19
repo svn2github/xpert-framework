@@ -1,10 +1,6 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.xpert.faces.component.group;
 
+import com.xpert.faces.component.api.UIData;
 import com.xpert.faces.component.group.model.GroupModel;
 import com.xpert.faces.component.group.model.GroupSortOrder;
 import java.util.List;
@@ -12,7 +8,6 @@ import javax.el.ValueExpression;
 import javax.faces.FacesException;
 import javax.faces.model.DataModel;
 import javax.faces.model.ListDataModel;
-import org.primefaces.component.api.UIData;
 
 /**
  *

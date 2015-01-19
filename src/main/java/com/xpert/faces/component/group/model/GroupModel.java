@@ -2,9 +2,7 @@ package com.xpert.faces.component.group.model;
 
 import com.xpert.utils.CollectionsUtils;
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import org.apache.commons.beanutils.NestedNullException;
@@ -52,7 +50,7 @@ public class GroupModel<K, V> {
     public void groupItens() {
         if (value != null) {
          //   System.out.println("Grouping by: " + groupBy + " size: " + value.size() + " list: " + value);
-            Map<Object, GroupModelItem> map = new HashMap<Object, GroupModelItem>();
+            Map<Object, GroupModelItem> map = new LinkedHashMap<Object, GroupModelItem>();
             itens = new ArrayList<GroupModelItem<K, V>>();
             for (Object item : value) {
                 try {
@@ -93,7 +91,7 @@ public class GroupModel<K, V> {
 
         if (itens != null && !itens.isEmpty()) {
 
-            Object firstItem = itens.get(0);
+            Object firstItem = itens.get(0).getKey();
             boolean isSort = false;
             if (firstItem instanceof Comparable || (sortField != null && !sortField.isEmpty())) {
                 isSort = true;
