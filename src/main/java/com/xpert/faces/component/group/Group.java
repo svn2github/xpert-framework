@@ -3,6 +3,7 @@ package com.xpert.faces.component.group;
 import com.xpert.faces.component.api.UIData;
 import com.xpert.faces.component.group.model.GroupModel;
 import com.xpert.faces.component.api.SortOrder;
+import java.util.Collections;
 import java.util.List;
 import javax.el.ValueExpression;
 import javax.faces.FacesException;
@@ -63,7 +64,8 @@ public class Group extends UIData {
         }
 
         if (current == null) {
-            return null;
+            model = new ListDataModel(Collections.EMPTY_LIST);
+            return (model);
         }
 
         if (!(current instanceof List)) {
