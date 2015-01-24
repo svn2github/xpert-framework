@@ -5,6 +5,33 @@
                 version="2.0">
     <namespace>http://xpert.com/faces</namespace>
     <composite-library-name>xpert/components</composite-library-name>
+    
+    <function>
+        <function-name>sum</function-name>
+        <function-class>com.xpert.faces.function.NumberFunctions</function-class>
+        <function-signature>java.math.BigDecimal sum(java.lang.Object, java.lang.String)</function-signature>
+    </function>
+    <function>
+        <function-name>sumInteger</function-name>
+        <function-class>com.xpert.faces.function.NumberFunctions</function-class>
+        <function-signature>java.math.BigDecimal sumInteger(java.lang.Object, java.lang.String)</function-signature>
+    </function>
+    <function>
+        <function-name>sumLong</function-name>
+        <function-class>com.xpert.faces.function.NumberFunctions</function-class>
+        <function-signature>java.math.BigDecimal sumLong(java.lang.Object, java.lang.String)</function-signature>
+    </function>
+    <function>
+        <function-name>sumAll</function-name>
+        <function-class>com.xpert.faces.function.NumberFunctions</function-class>
+        <function-signature>java.lang.Object sumAll(com.xpert.faces.primefaces.LazyDataModelImpl, java.lang.String)</function-signature>
+    </function>
+    <function>
+        <function-name>hasRole</function-name>
+        <function-class>com.xpert.security.SecuritySessionManager</function-class>
+        <function-signature>java.lang.Boolean hasRole(java.lang.String)</function-signature>
+    </function>
+    
     <tag>
         <tag-name>initializer</tag-name>
         <component>

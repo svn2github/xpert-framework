@@ -11,29 +11,34 @@ import java.util.ArrayList;
 public class UniqueFields extends ArrayList<UniqueField> {
 
     /**
-     * 
-     * @param fields 
+     *
+     * @param fields
      */
     public UniqueFields(String... fields) {
         add(new UniqueField(fields));
     }
 
     /**
-     * 
+     *
      * @param restrictions
-     * @param fields 
+     * @param fields
      */
     public UniqueFields(Restrictions restrictions, String... fields) {
         add(new UniqueField(restrictions, fields));
     }
 
     /**
-     * 
+     *
      * @param restriction
-     * @param fields 
+     * @param fields
      */
     public UniqueFields(Restriction restriction, String... fields) {
         add(new UniqueField(restriction, fields));
+    }
+
+    public UniqueFields add(Restriction restriction, String... fields) {
+        add(new UniqueField(restriction, fields));
+        return this;
     }
 
     public UniqueFields add(String... fields) {

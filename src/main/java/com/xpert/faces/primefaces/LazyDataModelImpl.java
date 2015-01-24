@@ -4,6 +4,7 @@ import com.xpert.faces.component.restorablefilter.RestorableFilter;
 import com.xpert.i18n.XpertResourceBundle;
 import com.xpert.persistence.dao.BaseDAO;
 import com.xpert.persistence.query.JoinBuilder;
+import com.xpert.persistence.query.QueryBuilder;
 import com.xpert.persistence.query.Restriction;
 import com.xpert.persistence.query.RestrictionType;
 import com.xpert.persistence.query.Restrictions;
@@ -296,6 +297,21 @@ public class LazyDataModelImpl<T> extends LazyDataModel {
         }
 
         return dados;
+    }
+
+    /**
+     * Return a sum of field, this method gets the QueryBuilder and add the
+     * current restrictions to generate the query
+     *
+     * @param field
+     * @return
+     */
+    public Object sum(String field) {
+        return dao.getQueryBuilder()
+                .from(dao.getEntityClass(), (joinBuilder != null ? joinBuilder.getRootAlias() : null))
+                .join(joinBuilder)
+                .add(queryRestrictions)
+                .sum(field);
     }
 
     /**
