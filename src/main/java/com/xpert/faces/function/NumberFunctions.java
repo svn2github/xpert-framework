@@ -21,7 +21,7 @@ public class NumberFunctions {
      * @param field
      * @return
      */
-    public static Object sumAll(LazyDataModelImpl lazyDataModel, String field) {
+    public static Object sumLazyDataModel(LazyDataModelImpl lazyDataModel, String field) {
         return lazyDataModel.sum(field);
     }
 
@@ -47,7 +47,18 @@ public class NumberFunctions {
         return collection;
     }
 
-    public static BigDecimal sum(Object objects, String field) {
+    /**
+     * If the object is instance of LazyDataModelImpl, then  shoudld call sum using query.
+     * If tht object is instance of
+     * 
+     * @param objects
+     * @param field
+     * @return 
+     */
+    public static Object sum(Object objects, String field) {
+        if (objects instanceof LazyDataModelImpl) {
+            return sumLazyDataModel((LazyDataModelImpl) objects, field);
+        }
         Collection collection = getCollection(objects);
         try {
             return NumberUtils.sum(collection, field);

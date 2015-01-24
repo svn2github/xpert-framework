@@ -9,7 +9,7 @@
     <function>
         <function-name>sum</function-name>
         <function-class>com.xpert.faces.function.NumberFunctions</function-class>
-        <function-signature>java.math.BigDecimal sum(java.lang.Object, java.lang.String)</function-signature>
+        <function-signature>java.lang.Object sum(java.lang.Object, java.lang.String)</function-signature>
     </function>
     <function>
         <function-name>sumInteger</function-name>
@@ -20,11 +20,6 @@
         <function-name>sumLong</function-name>
         <function-class>com.xpert.faces.function.NumberFunctions</function-class>
         <function-signature>java.math.BigDecimal sumLong(java.lang.Object, java.lang.String)</function-signature>
-    </function>
-    <function>
-        <function-name>sumAll</function-name>
-        <function-class>com.xpert.faces.function.NumberFunctions</function-class>
-        <function-signature>java.lang.Object sumAll(com.xpert.faces.primefaces.LazyDataModelImpl, java.lang.String)</function-signature>
     </function>
     <function>
         <function-name>hasRole</function-name>
