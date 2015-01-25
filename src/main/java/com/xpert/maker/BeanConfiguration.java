@@ -29,6 +29,8 @@ public class BeanConfiguration {
     private String daoLocation;
     private String daoImplLocation;
     private String viewLocation;
+    private String classManagedBeanLocation;
+    private boolean classManagedBeanGenerated;
 
     //suffix/preffix
     private String managedBeanSuffix;
@@ -55,6 +57,22 @@ public class BeanConfiguration {
         this.maskCalendar = true;
     }
 
+    public boolean isClassManagedBeanGenerated() {
+        return classManagedBeanGenerated;
+    }
+
+    public void setClassManagedBeanGenerated(boolean classManagedBeanGenerated) {
+        this.classManagedBeanGenerated = classManagedBeanGenerated;
+    }
+    
+    public String getClassManagedBeanLocation() {
+        return classManagedBeanLocation;
+    }
+
+    public void setClassManagedBeanLocation(String classManagedBeanLocation) {
+        this.classManagedBeanLocation = classManagedBeanLocation;
+    }
+    
     public String getTimePattern() {
         return timePattern;
     }

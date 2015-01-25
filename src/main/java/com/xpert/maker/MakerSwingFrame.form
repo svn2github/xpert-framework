@@ -589,11 +589,10 @@
               <Layout>
                 <DimensionLayout dim="0">
                   <Group type="103" groupAlignment="0" attributes="0">
-                      <Group type="102" attributes="0">
+                      <Group type="102" alignment="1" attributes="0">
                           <EmptySpace max="-2" attributes="0"/>
-                          <Group type="103" groupAlignment="0" attributes="0">
-                              <Component id="panelOthers" alignment="1" pref="796" max="32767" attributes="0"/>
-                              <Component id="panelJavaClassConfiguration" alignment="1" pref="796" max="32767" attributes="0"/>
+                          <Group type="103" groupAlignment="1" attributes="0">
+                              <Component id="panelOthers" pref="796" max="32767" attributes="0"/>
                               <Component id="panelViewConfiguration" alignment="0" max="32767" attributes="0"/>
                               <Component id="panelStep4" alignment="0" max="32767" attributes="0"/>
                               <Component id="panelStep2" alignment="0" max="32767" attributes="0"/>
@@ -603,6 +602,7 @@
                                   <EmptySpace max="32767" attributes="0"/>
                                   <Component id="buttonTab2Next" min="-2" pref="87" max="-2" attributes="0"/>
                               </Group>
+                              <Component id="panelJavaClassConfiguration" alignment="1" pref="796" max="32767" attributes="0"/>
                           </Group>
                           <EmptySpace max="-2" attributes="0"/>
                       </Group>
@@ -614,7 +614,7 @@
                           <EmptySpace min="-2" pref="6" max="-2" attributes="0"/>
                           <Component id="panelStep2" min="-2" max="-2" attributes="0"/>
                           <EmptySpace min="-2" pref="2" max="-2" attributes="0"/>
-                          <Component id="panelJavaClassConfiguration" min="-2" pref="219" max="-2" attributes="0"/>
+                          <Component id="panelJavaClassConfiguration" min="-2" pref="230" max="-2" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
                           <Component id="panelStep3" min="-2" max="-2" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
@@ -628,7 +628,7 @@
                               <Component id="buttonTab2Back" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="buttonTab2Next" alignment="3" min="-2" max="-2" attributes="0"/>
                           </Group>
-                          <EmptySpace pref="40" max="32767" attributes="0"/>
+                          <EmptySpace pref="52" max="32767" attributes="0"/>
                       </Group>
                   </Group>
                 </DimensionLayout>
@@ -641,7 +641,7 @@
                     </Property>
                     <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
                       <Border info="org.netbeans.modules.form.compat2.border.TitledBorderInfo">
-                        <TitledBorder position="3" title="Others">
+                        <TitledBorder position="3">
                           <Font PropertyName="font" name="Tahoma" size="12" style="0"/>
                           <Color PropertyName="color" blue="66" green="33" red="0" type="rgb"/>
                         </TitledBorder>
@@ -658,72 +658,70 @@
                           <Group type="102" alignment="0" attributes="0">
                               <EmptySpace max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="0" attributes="0">
-                                  <Group type="102" attributes="0">
+                                  <Group type="102" alignment="0" attributes="0">
                                       <Group type="103" groupAlignment="0" attributes="0">
-                                          <Group type="102" attributes="0">
-                                              <Component id="checkUseCDIBeans" min="-2" pref="284" max="-2" attributes="0"/>
-                                              <EmptySpace max="-2" attributes="0"/>
-                                              <Component id="checkGeneratesSecurityArea" min="-2" pref="321" max="-2" attributes="0"/>
+                                          <Group type="102" alignment="0" attributes="0">
+                                              <Component id="labelBaseDAOImpl" min="-2" pref="115" max="-2" attributes="0"/>
+                                              <EmptySpace min="-2" pref="183" max="-2" attributes="0"/>
+                                              <Component id="labelResourceBundle" min="-2" pref="82" max="-2" attributes="0"/>
+                                              <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                                              <Component id="labelAuthor" min="-2" pref="47" max="-2" attributes="0"/>
                                           </Group>
+                                          <Group type="102" alignment="0" attributes="0">
+                                              <Component id="textBaseDAOImpl" min="-2" pref="285" max="-2" attributes="0"/>
+                                              <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                                              <Component id="textResourceBundle" min="-2" pref="82" max="-2" attributes="0"/>
+                                              <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                                              <Component id="textAuthor" min="-2" pref="91" max="-2" attributes="0"/>
+                                          </Group>
+                                      </Group>
+                                      <Group type="103" groupAlignment="0" attributes="0">
+                                          <Group type="102" alignment="0" attributes="0">
+                                              <EmptySpace min="-2" pref="18" max="-2" attributes="0"/>
+                                              <Component id="textManagedBeanSuffix" min="-2" pref="110" max="-2" attributes="0"/>
+                                              <EmptySpace max="-2" attributes="0"/>
+                                              <Component id="textBusinessObjectSuffix" min="-2" pref="109" max="-2" attributes="0"/>
+                                          </Group>
+                                          <Group type="102" alignment="0" attributes="0">
+                                              <EmptySpace min="-2" pref="14" max="-2" attributes="0"/>
+                                              <Component id="labelMBSuffix" min="-2" pref="110" max="-2" attributes="0"/>
+                                              <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                                              <Component id="labelBOSuffix" min="-2" pref="105" max="-2" attributes="0"/>
+                                          </Group>
+                                      </Group>
+                                  </Group>
+                                  <Group type="102" alignment="0" attributes="0">
+                                      <Component id="textDatePattern" min="-2" pref="102" max="-2" attributes="0"/>
+                                      <EmptySpace type="separate" max="-2" attributes="0"/>
+                                      <Component id="textTimePattern" min="-2" pref="102" max="-2" attributes="0"/>
+                                  </Group>
+                                  <Group type="102" alignment="0" attributes="0">
+                                      <Group type="103" groupAlignment="0" attributes="0">
                                           <Group type="102" alignment="0" attributes="0">
                                               <Component id="labelDatePattern" min="-2" pref="115" max="-2" attributes="0"/>
                                               <EmptySpace max="-2" attributes="0"/>
                                               <Component id="labelTimePattern" min="-2" pref="115" max="-2" attributes="0"/>
                                           </Group>
-                                      </Group>
-                                      <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
-                                  </Group>
-                                  <Group type="102" attributes="0">
-                                      <Group type="103" groupAlignment="0" attributes="0">
-                                          <Group type="102" attributes="0">
-                                              <Group type="103" groupAlignment="0" attributes="0">
-                                                  <Group type="102" attributes="0">
-                                                      <Component id="labelBaseDAOImpl" min="-2" pref="115" max="-2" attributes="0"/>
-                                                      <EmptySpace min="-2" pref="183" max="-2" attributes="0"/>
-                                                      <Component id="labelResourceBundle" min="-2" pref="82" max="-2" attributes="0"/>
-                                                      <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                                                      <Component id="labelAuthor" min="-2" pref="47" max="-2" attributes="0"/>
-                                                  </Group>
-                                                  <Group type="102" attributes="0">
-                                                      <Component id="textBaseDAOImpl" min="-2" pref="285" max="-2" attributes="0"/>
-                                                      <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                                                      <Component id="textResourceBundle" min="-2" pref="82" max="-2" attributes="0"/>
-                                                      <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                                                      <Component id="textAuthor" min="-2" pref="91" max="-2" attributes="0"/>
-                                                  </Group>
-                                              </Group>
-                                              <Group type="103" groupAlignment="0" attributes="0">
-                                                  <Group type="102" alignment="0" attributes="0">
-                                                      <EmptySpace min="-2" pref="18" max="-2" attributes="0"/>
-                                                      <Component id="textManagedBeanSuffix" min="-2" pref="110" max="-2" attributes="0"/>
-                                                      <EmptySpace max="-2" attributes="0"/>
-                                                      <Component id="textBusinessObjectSuffix" min="-2" pref="109" max="-2" attributes="0"/>
-                                                  </Group>
-                                                  <Group type="102" alignment="0" attributes="0">
-                                                      <EmptySpace min="-2" pref="14" max="-2" attributes="0"/>
-                                                      <Component id="labelMBSuffix" min="-2" pref="110" max="-2" attributes="0"/>
-                                                      <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                                                      <Component id="labelBOSuffix" min="-2" pref="105" max="-2" attributes="0"/>
-                                                  </Group>
-                                              </Group>
-                                          </Group>
                                           <Group type="102" alignment="0" attributes="0">
-                                              <Component id="textDatePattern" min="-2" pref="102" max="-2" attributes="0"/>
-                                              <EmptySpace type="separate" max="-2" attributes="0"/>
-                                              <Component id="textTimePattern" min="-2" pref="102" max="-2" attributes="0"/>
-                                              <EmptySpace type="separate" max="-2" attributes="0"/>
-                                              <Component id="checkMaskCalendar" min="-2" pref="321" max="-2" attributes="0"/>
+                                              <Component id="checkUseCDIBeans" min="-2" pref="284" max="-2" attributes="0"/>
+                                              <EmptySpace max="-2" attributes="0"/>
+                                              <Group type="103" groupAlignment="0" attributes="0">
+                                                  <Component id="checkMaskCalendar" min="-2" pref="321" max="-2" attributes="0"/>
+                                                  <Component id="checkGeneratesSecurityArea" min="-2" pref="321" max="-2" attributes="0"/>
+                                              </Group>
                                           </Group>
                                       </Group>
-                                      <EmptySpace max="32767" attributes="0"/>
+                                      <EmptySpace min="-2" pref="116" max="-2" attributes="0"/>
                                   </Group>
                               </Group>
+                              <EmptySpace max="32767" attributes="0"/>
                           </Group>
                       </Group>
                     </DimensionLayout>
                     <DimensionLayout dim="1">
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Group type="102" alignment="0" attributes="0">
+                              <EmptySpace max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="3" attributes="0">
                                   <Component id="labelBaseDAOImpl" alignment="3" min="-2" max="-2" attributes="0"/>
                                   <Component id="labelResourceBundle" alignment="3" min="-2" max="-2" attributes="0"/>
@@ -747,15 +745,15 @@
                               <EmptySpace max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="3" attributes="0">
                                   <Component id="textDatePattern" alignment="3" min="-2" max="-2" attributes="0"/>
-                                  <Component id="checkMaskCalendar" alignment="3" min="-2" max="-2" attributes="0"/>
                                   <Component id="textTimePattern" alignment="3" min="-2" max="-2" attributes="0"/>
+                                  <Component id="checkMaskCalendar" alignment="3" min="-2" max="-2" attributes="0"/>
                               </Group>
                               <EmptySpace type="unrelated" max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="3" attributes="0">
                                   <Component id="checkUseCDIBeans" alignment="3" min="-2" max="-2" attributes="0"/>
                                   <Component id="checkGeneratesSecurityArea" alignment="3" min="-2" max="-2" attributes="0"/>
                               </Group>
-                              <EmptySpace max="32767" attributes="0"/>
+                              <EmptySpace pref="19" max="32767" attributes="0"/>
                           </Group>
                       </Group>
                     </DimensionLayout>
@@ -928,7 +926,7 @@
                     </Property>
                     <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
                       <Border info="org.netbeans.modules.form.compat2.border.TitledBorderInfo">
-                        <TitledBorder position="3" title="Java Classes">
+                        <TitledBorder position="3">
                           <Font PropertyName="font" name="Tahoma" size="12" style="0"/>
                           <Color PropertyName="color" blue="66" green="33" red="0" type="rgb"/>
                         </TitledBorder>
@@ -955,7 +953,7 @@
                                           <Component id="labelBOPackage" min="-2" pref="53" max="-2" attributes="0"/>
                                           <Component id="textPackageBO" min="-2" pref="180" max="-2" attributes="0"/>
                                       </Group>
-                                      <EmptySpace pref="38" max="32767" attributes="0"/>
+                                      <EmptySpace pref="46" max="32767" attributes="0"/>
                                   </Group>
                                   <Group type="102" attributes="0">
                                       <Group type="103" groupAlignment="0" attributes="0">
@@ -999,6 +997,12 @@
                                                   <Component id="textPackageMB" min="-2" pref="180" max="-2" attributes="0"/>
                                               </Group>
                                           </Group>
+                                          <Group type="102" alignment="0" attributes="0">
+                                              <Component id="textClassMB" min="-2" pref="523" max="-2" attributes="0"/>
+                                              <EmptySpace max="-2" attributes="0"/>
+                                              <Component id="buttonSelectClassMB" min="-2" pref="21" max="-2" attributes="0"/>
+                                          </Group>
+                                          <Component id="labelClassMBLocation" alignment="0" min="-2" pref="221" max="-2" attributes="0"/>
                                       </Group>
                                       <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
                                   </Group>
@@ -1056,7 +1060,14 @@
                                   <Component id="buttonSelectMB" alignment="3" min="-2" pref="21" max="-2" attributes="0"/>
                                   <Component id="textPackageMB" alignment="3" min="-2" max="-2" attributes="0"/>
                               </Group>
-                              <EmptySpace pref="17" max="32767" attributes="0"/>
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Component id="labelClassMBLocation" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace max="32767" attributes="0"/>
+                              <Group type="103" groupAlignment="3" attributes="0">
+                                  <Component id="textClassMB" alignment="3" min="-2" max="-2" attributes="0"/>
+                                  <Component id="buttonSelectClassMB" alignment="3" min="-2" pref="21" max="-2" attributes="0"/>
+                              </Group>
+                              <EmptySpace max="-2" attributes="0"/>
                           </Group>
                       </Group>
                     </DimensionLayout>
@@ -1285,6 +1296,38 @@
                         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="textPackageMBActionPerformed"/>
                       </Events>
                     </Component>
+                    <Component class="javax.swing.JLabel" name="labelClassMBLocation">
+                      <Properties>
+                        <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+                          <Font name="Tahoma" size="9" style="0"/>
+                        </Property>
+                        <Property name="horizontalAlignment" type="int" value="2"/>
+                        <Property name="labelFor" type="java.awt.Component" editor="org.netbeans.modules.form.ComponentChooserEditor">
+                          <ComponentRef name="textManagedBean"/>
+                        </Property>
+                        <Property name="text" type="java.lang.String" value="Class Managed Bean (ClassMB):"/>
+                      </Properties>
+                    </Component>
+                    <Component class="javax.swing.JTextField" name="textClassMB">
+                      <Properties>
+                        <Property name="toolTipText" type="java.lang.String" value="Your directory of Managed Bean (Controller)"/>
+                      </Properties>
+                    </Component>
+                    <Component class="javax.swing.JButton" name="buttonSelectClassMB">
+                      <Properties>
+                        <Property name="background" type="java.awt.Color" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+                          <Connection code="BLUE" type="code"/>
+                        </Property>
+                        <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
+                          <Color blue="ff" green="ff" red="ff" type="rgb"/>
+                        </Property>
+                        <Property name="text" type="java.lang.String" value="..."/>
+                        <Property name="borderPainted" type="boolean" value="false"/>
+                      </Properties>
+                      <Events>
+                        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="buttonSelectClassMBActionPerformed"/>
+                      </Events>
+                    </Component>
                   </SubComponents>
                 </Container>
                 <Container class="javax.swing.JPanel" name="panelViewConfiguration">
@@ -1294,7 +1337,7 @@
                     </Property>
                     <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
                       <Border info="org.netbeans.modules.form.compat2.border.TitledBorderInfo">
-                        <TitledBorder position="3" title="View Configuration">
+                        <TitledBorder position="3">
                           <Font PropertyName="font" name="Tahoma" size="12" style="0"/>
                           <Color PropertyName="color" blue="66" green="33" red="0" type="rgb"/>
                         </TitledBorder>

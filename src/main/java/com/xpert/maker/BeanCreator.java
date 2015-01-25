@@ -177,9 +177,9 @@ public class BeanCreator {
                 Size size = field.getAnnotation(Size.class);
                 if (size != null && size.max() != SIZE_ANNOTATION_MAX_DEFAULT) {
                     maxlength = size.max();
-                }else{
+                } else {
                     Column column = field.getAnnotation(Column.class);
-                    if(column != null){
+                    if (column != null) {
                         maxlength = column.length();
                     }
                 }
@@ -254,17 +254,23 @@ public class BeanCreator {
         return references;
     }
 
+    public static Set<Class> getClassesForClassBean(List<Class> classes) {
+        //set to evict duplicates
+        Set<Class> allClasses = new HashSet<Class>();
+        if (classes != null) {
+            allClasses.addAll(classes);
+            allClasses.addAll(getReferencedClasses(classes));
+        }
+        return allClasses;
+    }
+
     public static String getClassBean(List<Class> classes, BeanConfiguration configuration) {
         try {
             Template template = BeanCreator.getTemplate("class-bean.ftl");
             StringWriter writer = new StringWriter();
             Map attributes = new HashMap();
             //set to evict duplicates
-            Set<Class> allClasses = new HashSet<Class>();
-            if (classes != null) {
-                allClasses.addAll(classes);
-                allClasses.addAll(getReferencedClasses(classes));
-            }
+            Set<Class> allClasses = getClassesForClassBean(classes);
             attributes.put("classes", allClasses);
             attributes.put("configuration", configuration);
             attributes.put("package", configuration.getManagedBean() == null ? "" : configuration.getManagedBean());
@@ -519,6 +525,66 @@ public class BeanCreator {
 
         log(logBuilder, "Finished!");
 
+    }
+
+    public static void writeClassManagedBean(List<Class> classes, BeanConfiguration configuration) {
+
+        if (configuration.getClassManagedBeanLocation() != null && !configuration.getClassManagedBeanLocation().isEmpty()) {
+            File file = new File(configuration.getClassManagedBeanLocation());
+            String lineSeparator = System.getProperty("line.separator");
+            if (file.exists()) {
+                try {
+                    String fileContent = IOUtils.toString(new FileInputStream(file));
+                    Set<Class> allClasses = getClassesForClassBean(classes);
+
+                    StringBuilder imports = new StringBuilder();
+                    StringBuilder getMethods = new StringBuilder();
+                    for (Class clazz : allClasses) {
+                        String getSignature = "get" + clazz.getSimpleName();
+                        if (!fileContent.contains(getSignature)) {
+                            /**
+                             * public Class getOject() { return Object.class; }
+                             */
+                            getMethods.append("    public Class ").append(getSignature).append("() {").append(lineSeparator);
+                            getMethods.append("        return ").append(clazz.getSimpleName()).append(".class;").append(lineSeparator);
+                            getMethods.append("    }").append(lineSeparator);
+
+                        }
+                        String importSignature = "import " + clazz.getName();
+                        if (!fileContent.contains(importSignature)) {
+                            imports.append(importSignature).append(";").append(lineSeparator);
+                        }
+                    }
+
+                    if (imports.length() > 0 || getMethods.length() > 0) {
+
+                        //get index of imports
+                        int importIndex = fileContent.indexOf("import ");
+                        if (importIndex < 0) {
+                            //get the first ";"
+                            importIndex = fileContent.indexOf(";");
+                        }
+
+                        String beforeImports = fileContent.substring(0, importIndex);
+                        String afterImports = fileContent.substring(importIndex, fileContent.lastIndexOf("}"));
+
+                        String newContent = beforeImports + imports.toString() +  afterImports + getMethods.toString() + lineSeparator + "}";
+                        PrintWriter printWriter = new PrintWriter(file);
+                        printWriter.print(newContent);
+                        printWriter.flush();
+                        printWriter.close();
+
+                    }
+
+                    configuration.setClassManagedBeanGenerated(true);
+                } catch (IOException ex) {
+                    logger.log(Level.SEVERE, null, ex);
+                }
+
+            } else {
+                logger.log(Level.WARNING, "Location {0} of Class Managed Bean not found", configuration.getClassManagedBeanLocation());
+            }
+        }
     }
 
     public static byte[] createBeanZipFile(List<MappedBean> mappedBeans, String classBean, String viewTemplate, BeanConfiguration configuration) throws IOException, TemplateException {

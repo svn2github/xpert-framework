@@ -20,10 +20,9 @@ import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
 import org.apache.commons.beanutils.PropertyUtils;
-import org.primefaces.component.column.Column;
 
 /**
- * Generic bean to get objects, if is enum get valus from enum, if is a entity
+ * Generic bean to get objects, if is enum get values from enum, if is a entity
  * try to select from data base. This bean works better on ViewScope to evict
  * duplicates query.
  *
