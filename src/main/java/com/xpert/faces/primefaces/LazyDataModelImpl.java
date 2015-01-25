@@ -24,7 +24,7 @@ import org.primefaces.model.SortOrder;
  * @param <T>
  */
 public class LazyDataModelImpl<T> extends LazyDataModel {
-
+    
     private static boolean DEBUG = false;
     private static final Logger logger = Logger.getLogger(LazyDataModelImpl.class.getName());
     private static final String DEFAULT_PAGINATOR_TEMPLATE = "{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown} {CurrentPageReport}";
@@ -166,7 +166,7 @@ public class LazyDataModelImpl<T> extends LazyDataModel {
                 orderBy = orderBy + " DESC";
             }
         }
-
+        
         return orderBy;
     }
 
@@ -175,9 +175,9 @@ public class LazyDataModelImpl<T> extends LazyDataModel {
      * @return The filter map converted into "restrictions"
      */
     public List<Restriction> getRestrictionsFromFilterMap(Map filters) {
-
+        
         List<Restriction> filterRestrictions = new ArrayList<Restriction>();
-
+        
         if (filters != null && !filters.isEmpty()) {
             for (Entry e : ((Map<String, Object>) filters).entrySet()) {
                 if (e.getValue() != null && !e.getValue().toString().isEmpty()) {
@@ -208,7 +208,7 @@ public class LazyDataModelImpl<T> extends LazyDataModel {
         }
         return filterRestrictions;
     }
-
+    
     @Override
     public List load(int first, int pageSize, String orderBy, SortOrder order, Map filters) {
         if (isLoadData() == false) {
@@ -218,22 +218,22 @@ public class LazyDataModelImpl<T> extends LazyDataModel {
         if (isRestorableFilter()) {
             RestorableFilter.restoreFilterFromSession(filters);
         }
-
+        
         long begin = System.currentTimeMillis();
-
+        
         LazyCountType lazyCountType = getLazyCountType();
         if (lazyCountType == null) {
             lazyCountType = LazyCountType.ALWAYS;
         }
-
+        
         orderBy = getOrderBy(orderBy, order);
-
+        
         if (DEBUG) {
             logger.log(Level.INFO, "Lazy Count Type: {0}. Using order by {1}", new Object[]{lazyCountType, orderBy});
         }
-
+        
         List<Restriction> currentQueryRestrictions = new ArrayList<Restriction>();
-
+        
         if (restrictions != null && !restrictions.isEmpty()) {
             currentQueryRestrictions.addAll(restrictions);
         }
@@ -244,25 +244,23 @@ public class LazyDataModelImpl<T> extends LazyDataModel {
         if (filters != null && !filters.isEmpty()) {
             currentQueryRestrictions.addAll(getRestrictionsFromFilterMap(filters));
         }
-
+        
         this.currentOrderBy = orderBy;
-
+        
         String select = null;
         if (attributes != null && !attributes.isEmpty()) {
             select = attributes;
         } else if (joinBuilder != null && joinBuilder.getRootAlias() != null && !joinBuilder.getRootAlias().isEmpty()) {
             select = joinBuilder.getRootAlias();
         }
-
-        List<T> dados = dao.getQueryBuilder().select(select)
-                .from(dao.getEntityClass(), (joinBuilder != null ? joinBuilder.getRootAlias() : null))
-                .join(joinBuilder)
-                .add(currentQueryRestrictions)
+        
+        List<T> dados = buildQueryBuilder()
+                .select(attributes)
                 .orderBy(orderBy)
                 .setFirstResult(first)
                 .setMaxResults(pageSize)
                 .getResultList();
-
+        
         if (DEBUG) {
             logger.log(Level.INFO, "Select on entity {0}, records found: {1} ", new Object[]{dao.getEntityClass().getName(), dados.size()});
         }
@@ -270,7 +268,7 @@ public class LazyDataModelImpl<T> extends LazyDataModel {
         //If ALWAYS or (ONLY_ONCE and not set currentRowCount or restrictions has changed)
         if (lazyCountType.equals(LazyCountType.ALWAYS)
                 || (lazyCountType.equals(LazyCountType.ONLY_ONCE) && (currentRowCount == null || !currentQueryRestrictions.equals(queryRestrictions)))) {
-
+            
             currentRowCount = dao.getQueryBuilder().from(dao.getEntityClass(), (joinBuilder != null ? joinBuilder.getRootAlias() : null))
                     .join(joinBuilder)
                     .add(currentQueryRestrictions).count().intValue();
@@ -285,9 +283,9 @@ public class LazyDataModelImpl<T> extends LazyDataModel {
             currentRowCount = dados.size();
             this.setRowCount(Integer.MAX_VALUE);
         }
-
+        
         queryRestrictions = currentQueryRestrictions;
-
+        
         if (DEBUG) {
             long end = System.currentTimeMillis();
             logger.log(Level.INFO, "Load method executed in {0} milliseconds", (end - begin));
@@ -295,8 +293,20 @@ public class LazyDataModelImpl<T> extends LazyDataModel {
         if (isRestorableFilter()) {
             RestorableFilter.storeFilterInSession(filters);
         }
-
+        
         return dados;
+    }
+
+    /**
+     * return the query builder of current restrictions and join builder
+     *
+     * @return
+     */
+    public QueryBuilder buildQueryBuilder() {
+        return dao.getQueryBuilder()
+                .from(dao.getEntityClass(), (joinBuilder != null ? joinBuilder.getRootAlias() : null))
+                .join(joinBuilder)
+                .add(queryRestrictions);
     }
 
     /**
@@ -307,11 +317,7 @@ public class LazyDataModelImpl<T> extends LazyDataModel {
      * @return
      */
     public Object sum(String field) {
-        return dao.getQueryBuilder()
-                .from(dao.getEntityClass(), (joinBuilder != null ? joinBuilder.getRootAlias() : null))
-                .join(joinBuilder)
-                .add(queryRestrictions)
-                .sum(field);
+        return buildQueryBuilder().sum(field);
     }
 
     /**
@@ -325,7 +331,7 @@ public class LazyDataModelImpl<T> extends LazyDataModel {
         }
         return DEFAULT_PAGINATOR_TEMPLATE;
     }
-
+    
     public boolean isLazyCountTypeNone() {
         LazyCountType lazyCountType = getLazyCountType();
         if (lazyCountType != null && lazyCountType.equals(LazyCountType.NONE)) {
@@ -362,7 +368,7 @@ public class LazyDataModelImpl<T> extends LazyDataModel {
     public List getAllResults() {
         return getAllResults(currentOrderBy);
     }
-
+    
     @Override
     public void setRowIndex(int rowIndex) {
         if (getPageSize() == 0) {
@@ -370,11 +376,11 @@ public class LazyDataModelImpl<T> extends LazyDataModel {
         }
         super.setRowIndex(rowIndex);
     }
-
+    
     public BaseDAO<T> getDao() {
         return dao;
     }
-
+    
     public void setDao(BaseDAO<T> dao) {
         this.dao = dao;
     }
@@ -387,7 +393,7 @@ public class LazyDataModelImpl<T> extends LazyDataModel {
     public boolean isLoadData() {
         return loadData;
     }
-
+    
     public void setLoadData(boolean loadData) {
         this.loadData = loadData;
     }
@@ -400,7 +406,7 @@ public class LazyDataModelImpl<T> extends LazyDataModel {
     public String getDefaultOrder() {
         return defaultOrder;
     }
-
+    
     public void setDefaultOrder(String defaultOrder) {
         this.defaultOrder = defaultOrder;
     }
@@ -413,31 +419,31 @@ public class LazyDataModelImpl<T> extends LazyDataModel {
     public List<Restriction> getRestrictions() {
         return restrictions;
     }
-
+    
     public void setRestrictions(List<Restriction> restrictions) {
         this.restrictions = restrictions;
     }
-
+    
     public OrderByHandler getOrderByHandler() {
         return orderByHandler;
     }
-
+    
     public void setOrderByHandler(OrderByHandler orderByHandler) {
         this.orderByHandler = orderByHandler;
     }
-
+    
     public String getCurrentOrderBy() {
         return currentOrderBy;
     }
-
+    
     public void setCurrentOrderBy(String currentOrderBy) {
         this.currentOrderBy = currentOrderBy;
     }
-
+    
     public String getAttributes() {
         return attributes;
     }
-
+    
     public void setAttributes(String attributes) {
         this.attributes = attributes;
     }
@@ -450,49 +456,49 @@ public class LazyDataModelImpl<T> extends LazyDataModel {
     public List<Restriction> getQueryRestrictions() {
         return queryRestrictions;
     }
-
+    
     public void setQueryRestrictions(List<Restriction> queryRestrictions) {
         this.queryRestrictions = queryRestrictions;
     }
-
+    
     public JoinBuilder getJoinBuilder() {
         return joinBuilder;
     }
-
+    
     public void setJoinBuilder(JoinBuilder joinBuilder) {
         this.joinBuilder = joinBuilder;
     }
-
+    
     public LazyCountType getLazyCountType() {
         return lazyCountType;
     }
-
+    
     public void setLazyCountType(LazyCountType lazyCountType) {
         this.lazyCountType = lazyCountType;
     }
-
+    
     public Integer getCurrentRowCount() {
         return currentRowCount;
     }
-
+    
     public void setCurrentRowCount(Integer currentRowCount) {
         this.currentRowCount = currentRowCount;
     }
-
+    
     public FilterByHandler getFilterByHandler() {
         return filterByHandler;
     }
-
+    
     public void setFilterByHandler(FilterByHandler filterByHandler) {
         this.filterByHandler = filterByHandler;
     }
-
+    
     public boolean isRestorableFilter() {
         return restorableFilter;
     }
-
+    
     public void setRestorableFilter(boolean restorableFilter) {
         this.restorableFilter = restorableFilter;
     }
-
+    
 }
