@@ -30,7 +30,9 @@ public class BeanConfiguration {
     private String daoImplLocation;
     private String viewLocation;
     private String classManagedBeanLocation;
+    private String resourceBundleLocation;
     private boolean classManagedBeanGenerated;
+    private boolean resourceBundleGenerated;
 
     //suffix/preffix
     private String managedBeanSuffix;
@@ -57,6 +59,22 @@ public class BeanConfiguration {
         this.maskCalendar = true;
     }
 
+    public String getResourceBundleLocation() {
+        return resourceBundleLocation;
+    }
+
+    public void setResourceBundleLocation(String resourceBundleLocation) {
+        this.resourceBundleLocation = resourceBundleLocation;
+    }
+
+    public boolean isResourceBundleGenerated() {
+        return resourceBundleGenerated;
+    }
+
+    public void setResourceBundleGenerated(boolean resourceBundleGenerated) {
+        this.resourceBundleGenerated = resourceBundleGenerated;
+    }
+    
     public boolean isClassManagedBeanGenerated() {
         return classManagedBeanGenerated;
     }

@@ -343,7 +343,7 @@ public class BeanCreator {
             builder.append(field.getName());
             builder.append("=");
             builder.append(new HumaniseCamelCase().humanise(field.getName()));
-            builder.append("\n");
+            builder.append(getLineSeparator());
         }
         return builder.toString();
     }
@@ -353,16 +353,16 @@ public class BeanCreator {
         StringBuilder builder = new StringBuilder();
         String className = StringUtils.getLowerFirstLetter(clazz.getSimpleName());
         String humanName = new HumaniseCamelCase().humanise(clazz.getSimpleName());
-        builder.append("\n\n#").append(clazz.getSimpleName()).append("\n");
-        builder.append(className).append("=").append(humanName).append("\n");
+        builder.append(getLineSeparator()).append(getLineSeparator()).append("#").append(clazz.getSimpleName()).append(getLineSeparator());
+        builder.append(className).append("=").append(humanName).append(getLineSeparator());
 
         //create CRUD i18n, like: person.create, person.list, person.detail
         Locale locale = Locale.getDefault();
-        builder.append(className).append(".create").append("=").append(XpertResourceBundle.get("makerCreate", locale)).append(" ").append(humanName).append("\n");
-        builder.append(className).append(".list").append("=").append(XpertResourceBundle.get("makerList", locale)).append(" ").append(humanName).append("\n");
-        builder.append(className).append(".detail").append("=").append(humanName).append(" - ").append(XpertResourceBundle.get("makerDetail", locale)).append("\n");
+        builder.append(className).append(".create").append("=").append(XpertResourceBundle.get("makerCreate", locale)).append(" ").append(humanName).append(getLineSeparator());
+        builder.append(className).append(".list").append("=").append(XpertResourceBundle.get("makerList", locale)).append(" ").append(humanName).append(getLineSeparator());
+        builder.append(className).append(".detail").append("=").append(humanName).append(" - ").append(XpertResourceBundle.get("makerDetail", locale)).append(getLineSeparator());
 
-        builder.append("\n");
+        builder.append(getLineSeparator());
         builder.append(getI18NFromFields(clazz, className));
 
         return builder.toString();
@@ -463,7 +463,7 @@ public class BeanCreator {
 
     public static void log(StringBuilder logBuilder, String message) {
         if (logBuilder != null) {
-            logBuilder.append(SIMPLE_DATE_FORMAT.format(new Date())).append(" ").append(message).append("\n");
+            logBuilder.append(SIMPLE_DATE_FORMAT.format(new Date())).append(" ").append(message).append(getLineSeparator());
         }
     }
 
@@ -527,11 +527,69 @@ public class BeanCreator {
 
     }
 
+    public static void writeResourceBundle(List<MappedBean> mappedBeans, BeanConfiguration configuration) {
+        if (configuration.getResourceBundleLocation() != null && !configuration.getResourceBundleLocation().isEmpty()) {
+            File file = new File(configuration.getResourceBundleLocation());
+            if (file.exists()) {
+                try {
+                    String currentResource = IOUtils.toString(new FileInputStream(file));
+                    String generatedResource = getI18N(mappedBeans);
+
+                    StringBuilder bundles = new StringBuilder();
+                    List<String> linesGenerated = IOUtils.readLines(new StringReader(generatedResource));
+                    ResourceBundle bundle = new PropertyResourceBundle(new StringReader(currentResource));
+
+                    for (String line : linesGenerated) {
+                        if (line != null && !linesGenerated.isEmpty()) {
+                            String[] parts = line.split("=");
+                            //if line is "something=Value"
+                            if (parts != null && parts.length > 0) {
+                                if (parts[0] != null && !parts[0].isEmpty()) {
+                                    //if is a comment
+                                    if (line.startsWith("#")) {
+                                        if (!currentResource.contains(line)) {
+                                            bundles.append(getLineSeparator()).append(line).append(getLineSeparator());
+                                        }
+                                    } else if (!bundle.containsKey(parts[0])) {
+                                        //if not contains
+                                        bundles.append(line).append(getLineSeparator());
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                    //if has new content then write
+                    if (bundles.length() > 0) {
+
+                        String newContent = currentResource + getLineSeparator() + bundles.toString();
+                        PrintWriter printWriter = new PrintWriter(file);
+                        printWriter.print(newContent);
+                        printWriter.flush();
+                        printWriter.close();
+
+                    }
+
+                    configuration.setResourceBundleGenerated(true);
+
+                } catch (IOException ex) {
+                    logger.log(Level.SEVERE, null, ex);
+                }
+            } else {
+                logger.log(Level.WARNING, "Location {0} of Message Bundle not found", configuration.getResourceBundleLocation());
+            }
+        }
+    }
+
+    public static String getLineSeparator() {
+        return System.getProperty("line.separator");
+    }
+
     public static void writeClassManagedBean(List<Class> classes, BeanConfiguration configuration) {
 
         if (configuration.getClassManagedBeanLocation() != null && !configuration.getClassManagedBeanLocation().isEmpty()) {
             File file = new File(configuration.getClassManagedBeanLocation());
-            String lineSeparator = System.getProperty("line.separator");
+            String lineSeparator = getLineSeparator();
             if (file.exists()) {
                 try {
                     String fileContent = IOUtils.toString(new FileInputStream(file));
@@ -568,7 +626,7 @@ public class BeanCreator {
                         String beforeImports = fileContent.substring(0, importIndex);
                         String afterImports = fileContent.substring(importIndex, fileContent.lastIndexOf("}"));
 
-                        String newContent = beforeImports + imports.toString() +  afterImports + getMethods.toString() + lineSeparator + "}";
+                        String newContent = beforeImports + imports.toString() + afterImports + getMethods.toString() + lineSeparator + "}";
                         PrintWriter printWriter = new PrintWriter(file);
                         printWriter.print(newContent);
                         printWriter.flush();
@@ -636,12 +694,13 @@ public class BeanCreator {
 
     public static String getMenuI18N(List<MappedBean> mappedBeans) {
         StringBuilder builder = new StringBuilder();
-        builder.append("\n\n#").append("menu").append("\n");
+        builder.append(getLineSeparator()).append(getLineSeparator())
+                .append("#").append("menu").append(getLineSeparator());
         for (MappedBean mappedBean : mappedBeans) {
             builder.append("menu.").append(StringUtils.getLowerFirstLetter(mappedBean.getEntityClass().getSimpleName()));
             builder.append("=");
             builder.append(mappedBean.getHumanClassName());
-            builder.append("\n");
+            builder.append(getLineSeparator());
         }
 
         return builder.toString();

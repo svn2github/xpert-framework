@@ -43,6 +43,10 @@ public class MakerSwingFrame extends javax.swing.JFrame {
         return null;
     }
 
+    public String getResourceBundle() {
+        return null;
+    }
+
     public String getDefaultPackage() {
         return null;
     }
@@ -133,6 +137,7 @@ public class MakerSwingFrame extends javax.swing.JFrame {
     private void loadClassManagedBeanText() {
         Class classMB = getClassManagedBean();
         if (classMB != null) {
+            checkBoxUpdateClassMB.setSelected(true);
             String packageLocation = classMB.getPackage().getName().replace(".", File.separator);
             String absolutePath = new java.io.File(".").getAbsolutePath();
             if (absolutePath.endsWith(".")) {
@@ -143,6 +148,25 @@ public class MakerSwingFrame extends javax.swing.JFrame {
                     + "src" + File.separator + "main" + File.separator + "java" + File.separator
                     + packageLocation + File.separator + classMB.getSimpleName() + ".java";
             textClassMB.setText(classMBLocation);
+            checkCheckBoxStates();
+        }
+
+    }
+
+    private void loadResourceBundleText() {
+        String resourceBundle = getResourceBundle();
+        if (resourceBundle != null && !resourceBundle.isEmpty()) {
+            checkBoxUpdateMessageBundle.setSelected(true);
+            String absolutePath = new java.io.File(".").getAbsolutePath();
+            if (absolutePath.endsWith(".")) {
+                absolutePath = absolutePath.substring(0, absolutePath.length() - 1);
+            }
+            if (resourceBundle.startsWith("/")) {
+                resourceBundle = resourceBundle.substring(1, resourceBundle.length());
+            }
+            String resourceLocation = absolutePath + resourceBundle.replace("/", File.separator);
+            textResourceBundleLocation.setText(resourceLocation);
+            checkCheckBoxStates();
         }
 
     }
@@ -312,20 +336,34 @@ public class MakerSwingFrame extends javax.swing.JFrame {
         beanConfiguration.setTimePattern(textTimePattern.getText());
         //class MB
         beanConfiguration.setClassManagedBeanLocation(textClassMB.getText());
+        beanConfiguration.setResourceBundleLocation(textResourceBundleLocation.getText());
         try {
             PersistenceMappedBean persistenceMappedBean = new PersistenceMappedBean(null);
             List<MappedBean> mappedBeans = persistenceMappedBean.getMappedBeans(classesList, beanConfiguration);
-            textAreaI18n.setText(BeanCreator.getI18N(mappedBeans));
             textAreaSecurityGeneration.setText(SecurityCRUDGenerator.create(classesList, getViewForSecurity(beanConfiguration)));
             StringBuilder logBuilder = new StringBuilder();
             BeanCreator.writeBean(mappedBeans, beanConfiguration, logBuilder);
-            BeanCreator.writeClassManagedBean(classesList, beanConfiguration);
+            //classMB
+            if (checkBoxUpdateClassMB.isSelected()) {
+                BeanCreator.writeClassManagedBean(classesList, beanConfiguration);
+            }
+            //message bundles
+            if (checkBoxUpdateMessageBundle.isSelected()) {
+                BeanCreator.writeResourceBundle(mappedBeans, beanConfiguration);
+            }
             if (beanConfiguration.isClassManagedBeanGenerated()) {
                 textAreaClassBean.setEnabled(false);
                 textAreaClassBean.setText("File " + beanConfiguration.getClassManagedBeanLocation() + " updated!");
             } else {
                 textAreaClassBean.setEnabled(true);
                 textAreaClassBean.setText(BeanCreator.getClassBean(classesList, beanConfiguration));
+            }
+            if (beanConfiguration.isResourceBundleGenerated()) {
+                textAreaI18n.setEnabled(false);
+                textAreaI18n.setText("File " + beanConfiguration.getResourceBundleLocation() + " updated!");
+            } else {
+                textAreaI18n.setEnabled(true);
+                textAreaI18n.setText(BeanCreator.getI18N(mappedBeans));
             }
             textAreaLog.setText(logBuilder.toString());
         } catch (Exception ex) {
@@ -417,6 +455,7 @@ public class MakerSwingFrame extends javax.swing.JFrame {
         loadPrimefacesCombo();
         loadBootstrapCombo();
         loadClassManagedBeanText();
+        loadResourceBundleText();
 
     }
 
@@ -465,6 +504,11 @@ public class MakerSwingFrame extends javax.swing.JFrame {
         Toolkit tk = Toolkit.getDefaultToolkit();
         Dimension screenSize = tk.getScreenSize();
         this.setLocation((screenSize.width - this.getSize().width) / 2, (screenSize.height - this.getSize().height) / 2);
+    }
+
+    public void checkCheckBoxStates() {
+        textClassMB.setEnabled(checkBoxUpdateClassMB.isSelected());
+        textResourceBundleLocation.setEnabled(checkBoxUpdateMessageBundle.isSelected());
     }
 
     /**
@@ -544,9 +588,12 @@ public class MakerSwingFrame extends javax.swing.JFrame {
         buttonSelectMB = new javax.swing.JButton();
         labelMBPackage = new javax.swing.JLabel();
         textPackageMB = new javax.swing.JTextField();
-        labelClassMBLocation = new javax.swing.JLabel();
         textClassMB = new javax.swing.JTextField();
         buttonSelectClassMB = new javax.swing.JButton();
+        checkBoxUpdateClassMB = new javax.swing.JCheckBox();
+        checkBoxUpdateMessageBundle = new javax.swing.JCheckBox();
+        textResourceBundleLocation = new javax.swing.JTextField();
+        buttonSelectMessageBundle = new javax.swing.JButton();
         panelViewConfiguration = new javax.swing.JPanel();
         labelXHTMLLocation = new javax.swing.JLabel();
         textView = new javax.swing.JTextField();
@@ -609,7 +656,7 @@ public class MakerSwingFrame extends javax.swing.JFrame {
         panelSelectClasses.setBackground(new java.awt.Color(237, 242, 253));
 
         jPanel3.setBackground(new java.awt.Color(255, 255, 255));
-        jPanel3.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Class Selection", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.BELOW_TOP, new java.awt.Font("Tahoma", 0, 12), new java.awt.Color(0, 0, 153))); // NOI18N
+        jPanel3.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.BELOW_TOP, new java.awt.Font("Tahoma", 0, 12), new java.awt.Color(0, 0, 153))); // NOI18N
 
         labelPackageName.setFont(new java.awt.Font("Tahoma", 0, 9)); // NOI18N
         labelPackageName.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
@@ -671,7 +718,7 @@ public class MakerSwingFrame extends javax.swing.JFrame {
         jPanel3Layout.setHorizontalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel3Layout.createSequentialGroup()
-                .addContainerGap(27, Short.MAX_VALUE)
+                .addContainerGap(52, Short.MAX_VALUE)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel3Layout.createSequentialGroup()
                         .addComponent(labelSelectClasses1, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -686,7 +733,7 @@ public class MakerSwingFrame extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(buttonSearchClasses))
                     .addComponent(labelSelectClasses, javax.swing.GroupLayout.PREFERRED_SIZE, 117, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(50, Short.MAX_VALUE))
+                .addContainerGap(53, Short.MAX_VALUE))
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -759,7 +806,7 @@ public class MakerSwingFrame extends javax.swing.JFrame {
         labelIntroEn.setOpaque(true);
 
         labelXpertSistemas.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
-        labelXpertSistemas.setText("Xpert Sistemas:");
+        labelXpertSistemas.setText("Conheça a Xpert Sistemas:");
 
         labelLinkXpertSistemas.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
         labelLinkXpertSistemas.setForeground(new java.awt.Color(51, 51, 255));
@@ -810,7 +857,7 @@ public class MakerSwingFrame extends javax.swing.JFrame {
                 .addComponent(labelXpertSistemas)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(labelLinkXpertSistemas)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 39, Short.MAX_VALUE)
                 .addComponent(labelWatermakerXpertSistemas)
                 .addContainerGap())
         );
@@ -849,15 +896,17 @@ public class MakerSwingFrame extends javax.swing.JFrame {
         panelSelectClassesLayout.setHorizontalGroup(
             panelSelectClassesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panelSelectClassesLayout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap()
                 .addGroup(panelSelectClassesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelSelectClassesLayout.createSequentialGroup()
+                    .addGroup(panelSelectClassesLayout.createSequentialGroup()
                         .addComponent(panelClassesConfiguration, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addGroup(panelSelectClassesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(panelSelectClassesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(panelStep1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                    .addComponent(buttonTab1Next, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 99, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelSelectClassesLayout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(buttonTab1Next, javax.swing.GroupLayout.PREFERRED_SIZE, 99, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
         );
         panelSelectClassesLayout.setVerticalGroup(
@@ -867,12 +916,12 @@ public class MakerSwingFrame extends javax.swing.JFrame {
                 .addGroup(panelSelectClassesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addGroup(panelSelectClassesLayout.createSequentialGroup()
                         .addComponent(panelStep1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(12, 12, 12)
-                        .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(panelClassesConfiguration, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(panelClassesConfiguration, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(buttonTab1Next)
-                .addContainerGap(140, Short.MAX_VALUE))
+                .addContainerGap(133, Short.MAX_VALUE))
         );
 
         tabbedPanelMain.addTab("Select Classes", panelSelectClasses);
@@ -991,18 +1040,15 @@ public class MakerSwingFrame extends javax.swing.JFrame {
                         .addGap(18, 18, 18)
                         .addComponent(textTimePattern, javax.swing.GroupLayout.PREFERRED_SIZE, 102, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(panelOthersLayout.createSequentialGroup()
+                        .addComponent(labelDatePattern, javax.swing.GroupLayout.PREFERRED_SIZE, 115, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(labelTimePattern, javax.swing.GroupLayout.PREFERRED_SIZE, 115, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(panelOthersLayout.createSequentialGroup()
+                        .addComponent(checkUseCDIBeans, javax.swing.GroupLayout.PREFERRED_SIZE, 284, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(panelOthersLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(panelOthersLayout.createSequentialGroup()
-                                .addComponent(labelDatePattern, javax.swing.GroupLayout.PREFERRED_SIZE, 115, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(labelTimePattern, javax.swing.GroupLayout.PREFERRED_SIZE, 115, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(panelOthersLayout.createSequentialGroup()
-                                .addComponent(checkUseCDIBeans, javax.swing.GroupLayout.PREFERRED_SIZE, 284, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addGroup(panelOthersLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(checkMaskCalendar, javax.swing.GroupLayout.PREFERRED_SIZE, 321, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(checkGeneratesSecurityArea, javax.swing.GroupLayout.PREFERRED_SIZE, 321, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                        .addGap(116, 116, 116)))
+                            .addComponent(checkMaskCalendar, javax.swing.GroupLayout.PREFERRED_SIZE, 321, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(checkGeneratesSecurityArea, javax.swing.GroupLayout.PREFERRED_SIZE, 321, javax.swing.GroupLayout.PREFERRED_SIZE))))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         panelOthersLayout.setVerticalGroup(
@@ -1158,11 +1204,6 @@ public class MakerSwingFrame extends javax.swing.JFrame {
             }
         });
 
-        labelClassMBLocation.setFont(new java.awt.Font("Tahoma", 0, 9)); // NOI18N
-        labelClassMBLocation.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
-        labelClassMBLocation.setLabelFor(textManagedBean);
-        labelClassMBLocation.setText("Class Managed Bean (ClassMB):");
-
         textClassMB.setToolTipText("Your directory of Managed Bean (Controller)");
 
         buttonSelectClassMB.setBackground(BLUE);
@@ -1175,6 +1216,37 @@ public class MakerSwingFrame extends javax.swing.JFrame {
             }
         });
 
+        checkBoxUpdateClassMB.setBackground(new java.awt.Color(255, 255, 255));
+        checkBoxUpdateClassMB.setFont(new java.awt.Font("Tahoma", 0, 9)); // NOI18N
+        checkBoxUpdateClassMB.setText("Update Class Bean");
+        checkBoxUpdateClassMB.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                checkBoxUpdateClassMBActionPerformed(evt);
+            }
+        });
+
+        checkBoxUpdateMessageBundle.setBackground(new java.awt.Color(255, 255, 255));
+        checkBoxUpdateMessageBundle.setFont(new java.awt.Font("Tahoma", 0, 9)); // NOI18N
+        checkBoxUpdateMessageBundle.setText("Update i18n bundle");
+        checkBoxUpdateMessageBundle.setActionCommand("");
+        checkBoxUpdateMessageBundle.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                checkBoxUpdateMessageBundleActionPerformed(evt);
+            }
+        });
+
+        textResourceBundleLocation.setToolTipText("Your directory of Managed Bean (Controller)");
+
+        buttonSelectMessageBundle.setBackground(BLUE);
+        buttonSelectMessageBundle.setForeground(new java.awt.Color(255, 255, 255));
+        buttonSelectMessageBundle.setText("...");
+        buttonSelectMessageBundle.setBorderPainted(false);
+        buttonSelectMessageBundle.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                buttonSelectMessageBundleActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout panelJavaClassConfigurationLayout = new javax.swing.GroupLayout(panelJavaClassConfiguration);
         panelJavaClassConfiguration.setLayout(panelJavaClassConfigurationLayout);
         panelJavaClassConfigurationLayout.setHorizontalGroup(
@@ -1183,72 +1255,88 @@ public class MakerSwingFrame extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(panelJavaClassConfigurationLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(panelJavaClassConfigurationLayout.createSequentialGroup()
-                        .addComponent(textBusinessObject, javax.swing.GroupLayout.PREFERRED_SIZE, 523, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(buttonSelectBO, javax.swing.GroupLayout.PREFERRED_SIZE, 21, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(6, 6, 6)
-                        .addGroup(panelJavaClassConfigurationLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(labelDAOPackage, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(labelBOPackage, javax.swing.GroupLayout.PREFERRED_SIZE, 53, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(textPackageBO, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addContainerGap(46, Short.MAX_VALUE))
-                    .addGroup(panelJavaClassConfigurationLayout.createSequentialGroup()
                         .addGroup(panelJavaClassConfigurationLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(labelBOLocation, javax.swing.GroupLayout.PREFERRED_SIZE, 148, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(labelDAOLocation, javax.swing.GroupLayout.PREFERRED_SIZE, 134, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGroup(panelJavaClassConfigurationLayout.createSequentialGroup()
-                                .addGroup(panelJavaClassConfigurationLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(panelJavaClassConfigurationLayout.createSequentialGroup()
-                                        .addComponent(textDAO, javax.swing.GroupLayout.PREFERRED_SIZE, 523, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(buttonSelectDAO, javax.swing.GroupLayout.PREFERRED_SIZE, 21, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                    .addComponent(labelDAOImplLocation, javax.swing.GroupLayout.PREFERRED_SIZE, 159, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addComponent(checkBoxUpdateMessageBundle, javax.swing.GroupLayout.PREFERRED_SIZE, 123, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addGroup(panelJavaClassConfigurationLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(labelDAOImplPackage, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(textPackageDAO, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                .addComponent(textResourceBundleLocation, javax.swing.GroupLayout.PREFERRED_SIZE, 398, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(buttonSelectMessageBundle, javax.swing.GroupLayout.PREFERRED_SIZE, 21, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addGroup(panelJavaClassConfigurationLayout.createSequentialGroup()
+                        .addGroup(panelJavaClassConfigurationLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(panelJavaClassConfigurationLayout.createSequentialGroup()
-                                .addGroup(panelJavaClassConfigurationLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(panelJavaClassConfigurationLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                .addGroup(panelJavaClassConfigurationLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                    .addGroup(panelJavaClassConfigurationLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                         .addGroup(panelJavaClassConfigurationLayout.createSequentialGroup()
                                             .addComponent(textManagedBean, javax.swing.GroupLayout.PREFERRED_SIZE, 523, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                             .addComponent(buttonSelectMB, javax.swing.GroupLayout.PREFERRED_SIZE, 21, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                        .addGroup(javax.swing.GroupLayout.Alignment.LEADING, panelJavaClassConfigurationLayout.createSequentialGroup()
+                                        .addGroup(panelJavaClassConfigurationLayout.createSequentialGroup()
                                             .addComponent(textDAOImpl, javax.swing.GroupLayout.PREFERRED_SIZE, 523, javax.swing.GroupLayout.PREFERRED_SIZE)
                                             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                            .addComponent(buttonSelectDAOImpl, javax.swing.GroupLayout.PREFERRED_SIZE, 21, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                                    .addComponent(labelMBLocation, javax.swing.GroupLayout.PREFERRED_SIZE, 124, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addGroup(panelJavaClassConfigurationLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(labelMBPackage, javax.swing.GroupLayout.PREFERRED_SIZE, 94, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(textPackageDAOImpl, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(textPackageMB, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                            .addGroup(panelJavaClassConfigurationLayout.createSequentialGroup()
-                                .addComponent(textClassMB, javax.swing.GroupLayout.PREFERRED_SIZE, 523, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(buttonSelectClassMB, javax.swing.GroupLayout.PREFERRED_SIZE, 21, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(labelClassMBLocation, javax.swing.GroupLayout.PREFERRED_SIZE, 221, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(0, 0, Short.MAX_VALUE))))
+                                            .addComponent(buttonSelectDAOImpl, javax.swing.GroupLayout.PREFERRED_SIZE, 21, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                        .addComponent(labelMBLocation, javax.swing.GroupLayout.PREFERRED_SIZE, 124, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, panelJavaClassConfigurationLayout.createSequentialGroup()
+                                        .addComponent(checkBoxUpdateClassMB, javax.swing.GroupLayout.PREFERRED_SIZE, 123, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(textClassMB, javax.swing.GroupLayout.PREFERRED_SIZE, 398, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(buttonSelectClassMB, javax.swing.GroupLayout.PREFERRED_SIZE, 21, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                .addGap(18, 18, 18)
+                                .addComponent(textPackageMB, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(panelJavaClassConfigurationLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                .addGroup(panelJavaClassConfigurationLayout.createSequentialGroup()
+                                    .addGroup(panelJavaClassConfigurationLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addComponent(textBusinessObject, javax.swing.GroupLayout.PREFERRED_SIZE, 523, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(labelDAOLocation, javax.swing.GroupLayout.PREFERRED_SIZE, 134, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                    .addComponent(buttonSelectBO, javax.swing.GroupLayout.PREFERRED_SIZE, 21, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addGap(18, 18, 18)
+                                    .addGroup(panelJavaClassConfigurationLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addComponent(labelBOPackage, javax.swing.GroupLayout.PREFERRED_SIZE, 53, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(textPackageBO, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(labelDAOPackage, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                .addGroup(panelJavaClassConfigurationLayout.createSequentialGroup()
+                                    .addGroup(panelJavaClassConfigurationLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addGroup(panelJavaClassConfigurationLayout.createSequentialGroup()
+                                            .addComponent(textDAO, javax.swing.GroupLayout.PREFERRED_SIZE, 523, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                            .addComponent(buttonSelectDAO, javax.swing.GroupLayout.PREFERRED_SIZE, 21, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                        .addComponent(labelDAOImplLocation, javax.swing.GroupLayout.PREFERRED_SIZE, 159, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addGap(18, 18, 18)
+                                    .addGroup(panelJavaClassConfigurationLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addComponent(textPackageDAO)
+                                        .addGroup(panelJavaClassConfigurationLayout.createSequentialGroup()
+                                            .addGroup(panelJavaClassConfigurationLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                                .addComponent(labelMBPackage, javax.swing.GroupLayout.PREFERRED_SIZE, 94, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                .addComponent(textPackageDAOImpl, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                .addComponent(labelDAOImplPackage, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                            .addGap(0, 0, Short.MAX_VALUE))))))
+                        .addContainerGap(34, Short.MAX_VALUE))))
         );
         panelJavaClassConfigurationLayout.setVerticalGroup(
             panelJavaClassConfigurationLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panelJavaClassConfigurationLayout.createSequentialGroup()
-                .addGap(8, 8, 8)
-                .addGroup(panelJavaClassConfigurationLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(panelJavaClassConfigurationLayout.createSequentialGroup()
-                        .addGroup(panelJavaClassConfigurationLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(labelBOLocation)
-                            .addComponent(labelBOPackage))
-                        .addGap(29, 29, 29))
-                    .addGroup(panelJavaClassConfigurationLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(textBusinessObject, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(buttonSelectBO, javax.swing.GroupLayout.PREFERRED_SIZE, 21, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(textPackageBO, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(5, 5, 5)
+                .addGroup(panelJavaClassConfigurationLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelJavaClassConfigurationLayout.createSequentialGroup()
+                        .addComponent(labelBOLocation)
+                        .addGap(25, 25, 25))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelJavaClassConfigurationLayout.createSequentialGroup()
+                        .addComponent(labelBOPackage)
+                        .addGap(6, 6, 6)
+                        .addGroup(panelJavaClassConfigurationLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(textBusinessObject, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(panelJavaClassConfigurationLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                .addComponent(textPackageBO, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(buttonSelectBO, javax.swing.GroupLayout.PREFERRED_SIZE, 21, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                .addGap(2, 2, 2)
                 .addGroup(panelJavaClassConfigurationLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(labelDAOLocation)
                     .addComponent(labelDAOPackage))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGap(4, 4, 4)
                 .addGroup(panelJavaClassConfigurationLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(textDAO, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(buttonSelectDAO, javax.swing.GroupLayout.PREFERRED_SIZE, 21, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -1266,18 +1354,22 @@ public class MakerSwingFrame extends javax.swing.JFrame {
                 .addGroup(panelJavaClassConfigurationLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(labelMBLocation)
                     .addComponent(labelMBPackage))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGap(3, 3, 3)
                 .addGroup(panelJavaClassConfigurationLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(textManagedBean, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(buttonSelectMB, javax.swing.GroupLayout.PREFERRED_SIZE, 21, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(textPackageMB, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(labelClassMBLocation)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(panelJavaClassConfigurationLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(checkBoxUpdateClassMB)
                     .addComponent(textClassMB, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(buttonSelectClassMB, javax.swing.GroupLayout.PREFERRED_SIZE, 21, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap())
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(panelJavaClassConfigurationLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(checkBoxUpdateMessageBundle)
+                    .addComponent(textResourceBundleLocation, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(buttonSelectMessageBundle, javax.swing.GroupLayout.PREFERRED_SIZE, 21, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         labelMBLocation.getAccessibleContext().setAccessibleParent(panelConfiguration);
@@ -1511,7 +1603,7 @@ public class MakerSwingFrame extends javax.swing.JFrame {
                 .addGap(6, 6, 6)
                 .addComponent(panelStep2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(2, 2, 2)
-                .addComponent(panelJavaClassConfiguration, javax.swing.GroupLayout.PREFERRED_SIZE, 230, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(panelJavaClassConfiguration, javax.swing.GroupLayout.PREFERRED_SIZE, 246, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(panelStep3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -1524,7 +1616,7 @@ public class MakerSwingFrame extends javax.swing.JFrame {
                 .addGroup(panelConfigurationLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(buttonTab2Back)
                     .addComponent(buttonTab2Next))
-                .addContainerGap(52, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         tabbedPanelMain.addTab("Project Configuration", panelConfiguration);
@@ -1750,7 +1842,7 @@ public class MakerSwingFrame extends javax.swing.JFrame {
                 .addComponent(scrollPaneI18N, javax.swing.GroupLayout.PREFERRED_SIZE, 153, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(buttonTab3Back)
-                .addContainerGap(53, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         tabbedPanelMain.addTab("Create Classes", panelCreateClasses);
@@ -1763,7 +1855,9 @@ public class MakerSwingFrame extends javax.swing.JFrame {
         );
         jPanelMainLayout.setVerticalGroup(
             jPanelMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(tabbedPanelMain)
+            .addGroup(jPanelMainLayout.createSequentialGroup()
+                .addComponent(tabbedPanelMain, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -1774,7 +1868,7 @@ public class MakerSwingFrame extends javax.swing.JFrame {
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanelMain, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(jPanelMain, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
 
         pack();
@@ -1869,6 +1963,32 @@ public class MakerSwingFrame extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_buttonSelectClassMBActionPerformed
 
+    private void checkBoxUpdateClassMBActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_checkBoxUpdateClassMBActionPerformed
+        checkCheckBoxStates();
+    }//GEN-LAST:event_checkBoxUpdateClassMBActionPerformed
+
+    private void checkBoxUpdateMessageBundleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_checkBoxUpdateMessageBundleActionPerformed
+        checkCheckBoxStates();
+    }//GEN-LAST:event_checkBoxUpdateMessageBundleActionPerformed
+
+    private void buttonSelectMessageBundleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonSelectMessageBundleActionPerformed
+        JFileChooser chooser = new JFileChooser();
+        if (textResourceBundleLocation != null && textResourceBundleLocation.getText() != null
+                && !textResourceBundleLocation.getText().isEmpty() && new File(textResourceBundleLocation.getText()).exists()) {
+            chooser.setCurrentDirectory(new File(textResourceBundleLocation.getText()));
+        } else {
+            chooser.setCurrentDirectory(new java.io.File("."));
+        }
+        chooser.setDialogTitle("Select a Directory");
+        chooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
+        chooser.setAcceptAllFileFilterUsed(false);
+
+        if (chooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
+            String path = chooser.getSelectedFile().getAbsolutePath();
+            textResourceBundleLocation.setText(path);
+        }
+    }//GEN-LAST:event_buttonSelectMessageBundleActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton buttonCreateClasses;
     private javax.swing.JButton buttonSearchClasses;
@@ -1878,12 +1998,15 @@ public class MakerSwingFrame extends javax.swing.JFrame {
     private javax.swing.JButton buttonSelectDAO;
     private javax.swing.JButton buttonSelectDAOImpl;
     private javax.swing.JButton buttonSelectMB;
+    private javax.swing.JButton buttonSelectMessageBundle;
     private javax.swing.JButton buttonSelectNone;
     private javax.swing.JButton buttonSelectView;
     private javax.swing.JButton buttonTab1Next;
     private javax.swing.JButton buttonTab2Back;
     private javax.swing.JButton buttonTab2Next;
     private javax.swing.JButton buttonTab3Back;
+    private javax.swing.JCheckBox checkBoxUpdateClassMB;
+    private javax.swing.JCheckBox checkBoxUpdateMessageBundle;
     private javax.swing.JCheckBox checkGeneratesSecurityArea;
     private javax.swing.JCheckBox checkMaskCalendar;
     private javax.swing.JCheckBox checkUseCDIBeans;
@@ -1898,7 +2021,6 @@ public class MakerSwingFrame extends javax.swing.JFrame {
     private javax.swing.JLabel labelBaseDAOImpl;
     private javax.swing.JLabel labelBootstrapVersion;
     private javax.swing.JLabel labelClassBean;
-    private javax.swing.JLabel labelClassMBLocation;
     private javax.swing.JLabel labelDAOImplLocation;
     private javax.swing.JLabel labelDAOImplPackage;
     private javax.swing.JLabel labelDAOLocation;
@@ -1984,6 +2106,7 @@ public class MakerSwingFrame extends javax.swing.JFrame {
     private javax.swing.JTextField textPackageMB;
     private javax.swing.JTextField textPackageName;
     private javax.swing.JTextField textResourceBundle;
+    private javax.swing.JTextField textResourceBundleLocation;
     private javax.swing.JTextField textTemplatePath;
     private javax.swing.JTextField textTimePattern;
     private javax.swing.JTextField textView;
