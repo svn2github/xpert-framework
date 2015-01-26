@@ -148,8 +148,8 @@ public class MakerSwingFrame extends javax.swing.JFrame {
                     + "src" + File.separator + "main" + File.separator + "java" + File.separator
                     + packageLocation + File.separator + classMB.getSimpleName() + ".java";
             textClassMB.setText(classMBLocation);
-            checkCheckBoxStates();
         }
+        checkCheckBoxStates();
 
     }
 
@@ -166,8 +166,8 @@ public class MakerSwingFrame extends javax.swing.JFrame {
             }
             String resourceLocation = absolutePath + resourceBundle.replace("/", File.separator);
             textResourceBundleLocation.setText(resourceLocation);
-            checkCheckBoxStates();
         }
+        checkCheckBoxStates();
 
     }
 
@@ -298,7 +298,7 @@ public class MakerSwingFrame extends javax.swing.JFrame {
         Object[] selectedClasses = listClasses.getSelectedValues();
 
         if (selectedClasses == null || selectedClasses.length == 0) {
-            JOptionPane.showMessageDialog(this, "No Classes Select", "Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "No Classes Selected", "Error", JOptionPane.ERROR_MESSAGE);
             return;
         }
 
@@ -507,8 +507,12 @@ public class MakerSwingFrame extends javax.swing.JFrame {
     }
 
     public void checkCheckBoxStates() {
+        //class MB
         textClassMB.setEnabled(checkBoxUpdateClassMB.isSelected());
+        buttonSelectClassMB.setEnabled(checkBoxUpdateClassMB.isSelected());
+        //bundles
         textResourceBundleLocation.setEnabled(checkBoxUpdateMessageBundle.isSelected());
+        buttonSelectMessageBundle.setEnabled(checkBoxUpdateMessageBundle.isSelected());
     }
 
     /**
@@ -1204,7 +1208,7 @@ public class MakerSwingFrame extends javax.swing.JFrame {
             }
         });
 
-        textClassMB.setToolTipText("Your directory of Managed Bean (Controller)");
+        textClassMB.setToolTipText("Directory of Class Managed Bean (ClassMB)");
 
         buttonSelectClassMB.setBackground(BLUE);
         buttonSelectClassMB.setForeground(new java.awt.Color(255, 255, 255));
@@ -1235,7 +1239,7 @@ public class MakerSwingFrame extends javax.swing.JFrame {
             }
         });
 
-        textResourceBundleLocation.setToolTipText("Your directory of Managed Bean (Controller)");
+        textResourceBundleLocation.setToolTipText("Directory of default messages resource bundles");
 
         buttonSelectMessageBundle.setBackground(BLUE);
         buttonSelectMessageBundle.setForeground(new java.awt.Color(255, 255, 255));

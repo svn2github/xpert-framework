@@ -1327,7 +1327,7 @@
                     </Component>
                     <Component class="javax.swing.JTextField" name="textClassMB">
                       <Properties>
-                        <Property name="toolTipText" type="java.lang.String" value="Your directory of Managed Bean (Controller)"/>
+                        <Property name="toolTipText" type="java.lang.String" value="Directory of Class Managed Bean (ClassMB)"/>
                       </Properties>
                     </Component>
                     <Component class="javax.swing.JButton" name="buttonSelectClassMB">
@@ -1376,7 +1376,7 @@
                     </Component>
                     <Component class="javax.swing.JTextField" name="textResourceBundleLocation">
                       <Properties>
-                        <Property name="toolTipText" type="java.lang.String" value="Your directory of Managed Bean (Controller)"/>
+                        <Property name="toolTipText" type="java.lang.String" value="Directory of default messages resource bundles"/>
                       </Properties>
                     </Component>
                     <Component class="javax.swing.JButton" name="buttonSelectMessageBundle">
