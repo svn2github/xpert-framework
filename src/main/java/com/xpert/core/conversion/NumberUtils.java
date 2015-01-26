@@ -83,7 +83,7 @@ public class NumberUtils {
      */
     public static BigDecimal sum(Collection objects, String field) throws NoSuchMethodException, IllegalAccessException, InvocationTargetException {
 
-        long begin = System.currentTimeMillis();
+//        long begin = System.currentTimeMillis();
         BigDecimal total = BigDecimal.ZERO;
         if (objects == null || objects.isEmpty()) {
             return total;
@@ -113,8 +113,8 @@ public class NumberUtils {
                 }
             }
         }
-        long end = System.currentTimeMillis();
-        System.out.println("time: " + (end - begin));
+//        long end = System.currentTimeMillis();
+//        System.out.println("time: " + (end - begin));
 
         return total;
 
