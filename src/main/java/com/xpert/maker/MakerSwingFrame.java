@@ -25,6 +25,11 @@ import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.UIManager;
 import com.xpert.Constants;
+import com.xpert.utils.SwingUtils;
+import java.awt.datatransfer.Clipboard;
+import java.awt.datatransfer.StringSelection;
+import java.awt.event.MouseListener;
+import javax.swing.JTextArea;
 
 /**
  *
@@ -108,6 +113,35 @@ public class MakerSwingFrame extends javax.swing.JFrame {
         initFromConfiguration();
     }
 
+    private void addTootipTextWithLocations(final JTextField textField, final String description) {
+        textField.addMouseListener(new MouseListener() {
+
+            public void mouseClicked(MouseEvent e) {
+            }
+
+            public void mousePressed(MouseEvent e) {
+            }
+
+            public void mouseReleased(MouseEvent e) {
+            }
+
+            public void mouseEntered(MouseEvent e) {
+                StringBuilder text = new StringBuilder();
+                text.append("<html>").append(description).append("<br/><br/>");
+                text.append("<b>Location: </b>");
+                text.append("'").append(textField.getText()).append("'");
+                if(textField.getText() != null && !textField.getText().trim().isEmpty() && !new File(textField.getText()).exists()){
+                    text.append("<span style=\"color: red\"> (Not found)</span>");
+                }
+                text.append("</html>");
+                textField.setToolTipText(text.toString());
+            }
+
+            public void mouseExited(MouseEvent e) {
+            }
+        });
+    }
+
     public final void initCustomLayout() {
 
         buttonCreateClasses.setOpaque(true);
@@ -129,9 +163,17 @@ public class MakerSwingFrame extends javax.swing.JFrame {
         createLabelTabbedPanel("Create Classes", 2);
 
         //create links
-        createHiperLink(labelLinkDocs, "https://code.google.com/p/xpert-framework/wiki/Download?tm=2", "https://code.google.com/p/xpert-framework/wiki/Download?tm=2");
-        createHiperLink(labelLinkShowcase, "http://showcase.xpertsistemas.com.br/", "http://showcase.xpertsistemas.com.br/");
-        createHiperLink(labelLinkXpertSistemas, "http://www.xpertsistemas.com.br/", "http://www.xpertsistemas.com.br/");
+        SwingUtils.createHiperLink(labelLinkDocs, "https://code.google.com/p/xpert-framework/wiki/Download?tm=2", "https://code.google.com/p/xpert-framework/wiki/Download?tm=2");
+        SwingUtils.createHiperLink(labelLinkShowcase, "http://showcase.xpertsistemas.com.br/", "http://showcase.xpertsistemas.com.br/");
+        SwingUtils.createHiperLink(labelLinkXpertSistemas, "http://www.xpertsistemas.com.br/", "http://www.xpertsistemas.com.br/");
+
+        addTootipTextWithLocations(textClassMB, "Directory of Class Managed Bean (ClassMB)");
+        addTootipTextWithLocations(textResourceBundleLocation, "Directory of default messages resource bundles");
+        addTootipTextWithLocations(textBusinessObject, "Directory of Business Object");
+        addTootipTextWithLocations(textDAO, "Directory of DAO interface (Data Acess Object)");
+        addTootipTextWithLocations(textDAOImpl, "Directory of DAO implmentation (Data Acess Object)");
+        addTootipTextWithLocations(textManagedBean, "XHTML directory");
+        addTootipTextWithLocations(textView, "Directory of Business Object");
     }
 
     private void loadClassManagedBeanText() {
@@ -169,22 +211,6 @@ public class MakerSwingFrame extends javax.swing.JFrame {
         }
         checkCheckBoxStates();
 
-    }
-
-    private void createHiperLink(JLabel label, final String url, String text) {
-        label.setToolTipText("go to " + url);
-        label.setText("<html><a href=\"\">" + text + "</a></html>");
-        label.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        label.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                try {
-                    Desktop.getDesktop().browse(new URI(url));
-                } catch (Exception ex) {
-                    logger.log(Level.SEVERE, null, ex);
-                }
-            }
-        });
     }
 
     private void createLabelTabbedPanel(String title, int index) {
@@ -501,9 +527,7 @@ public class MakerSwingFrame extends javax.swing.JFrame {
     }
 
     public void center() {
-        Toolkit tk = Toolkit.getDefaultToolkit();
-        Dimension screenSize = tk.getScreenSize();
-        this.setLocation((screenSize.width - this.getSize().width) / 2, (screenSize.height - this.getSize().height) / 2);
+        SwingUtils.center(this);
     }
 
     public void checkCheckBoxStates() {
@@ -513,6 +537,12 @@ public class MakerSwingFrame extends javax.swing.JFrame {
         //bundles
         textResourceBundleLocation.setEnabled(checkBoxUpdateMessageBundle.isSelected());
         buttonSelectMessageBundle.setEnabled(checkBoxUpdateMessageBundle.isSelected());
+    }
+
+    private void openContentNewWindow(JTextArea textArea) {
+        DialogShowText dialogShowText = new DialogShowText(this, true);
+        dialogShowText.getTextAreaCopy().setText(textArea.getText());
+        dialogShowText.setVisible(true);
     }
 
     /**
@@ -644,6 +674,14 @@ public class MakerSwingFrame extends javax.swing.JFrame {
         labelStep8Detail = new javax.swing.JLabel();
         scrollPaneI18N1 = new javax.swing.JScrollPane();
         textAreaI18n = new javax.swing.JTextArea();
+        buttonCopyI18n = new javax.swing.JButton();
+        buttonCopyClassBean = new javax.swing.JButton();
+        buttonCopySecurity = new javax.swing.JButton();
+        buttonOpenI18n = new javax.swing.JButton();
+        buttonOpenClassBean = new javax.swing.JButton();
+        buttonOpenSecurity = new javax.swing.JButton();
+        buttonCopyLog = new javax.swing.JButton();
+        buttonOpenLog = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Xpert-framework. Version " + Constants.VERSION
@@ -722,22 +760,29 @@ public class MakerSwingFrame extends javax.swing.JFrame {
         jPanel3Layout.setHorizontalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel3Layout.createSequentialGroup()
-                .addContainerGap(52, Short.MAX_VALUE)
+                .addContainerGap()
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel3Layout.createSequentialGroup()
+                        .addComponent(scrollPaneSelectClasses)
+                        .addContainerGap())
+                    .addGroup(jPanel3Layout.createSequentialGroup()
                         .addComponent(labelSelectClasses1, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(buttonSelectAll, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(buttonSelectNone, javax.swing.GroupLayout.PREFERRED_SIZE, 52, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(scrollPaneSelectClasses, javax.swing.GroupLayout.PREFERRED_SIZE, 441, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(labelPackageName, javax.swing.GroupLayout.PREFERRED_SIZE, 86, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(buttonSelectNone, javax.swing.GroupLayout.PREFERRED_SIZE, 52, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addContainerGap(389, Short.MAX_VALUE))
                     .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addComponent(textPackageName, javax.swing.GroupLayout.PREFERRED_SIZE, 346, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(buttonSearchClasses))
-                    .addComponent(labelSelectClasses, javax.swing.GroupLayout.PREFERRED_SIZE, 117, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(53, Short.MAX_VALUE))
+                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel3Layout.createSequentialGroup()
+                                .addComponent(textPackageName, javax.swing.GroupLayout.PREFERRED_SIZE, 388, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(buttonSearchClasses))
+                            .addComponent(labelPackageName, javax.swing.GroupLayout.PREFERRED_SIZE, 86, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(0, 53, Short.MAX_VALUE))
+                    .addGroup(jPanel3Layout.createSequentialGroup()
+                        .addComponent(labelSelectClasses, javax.swing.GroupLayout.PREFERRED_SIZE, 117, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -810,7 +855,7 @@ public class MakerSwingFrame extends javax.swing.JFrame {
         labelIntroEn.setOpaque(true);
 
         labelXpertSistemas.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
-        labelXpertSistemas.setText("Conheça a Xpert Sistemas:");
+        labelXpertSistemas.setText("Xpert Sistemas:");
 
         labelLinkXpertSistemas.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
         labelLinkXpertSistemas.setForeground(new java.awt.Color(51, 51, 255));
@@ -925,7 +970,7 @@ public class MakerSwingFrame extends javax.swing.JFrame {
                     .addComponent(panelClassesConfiguration, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(buttonTab1Next)
-                .addContainerGap(133, Short.MAX_VALUE))
+                .addContainerGap(161, Short.MAX_VALUE))
         );
 
         tabbedPanelMain.addTab("Select Classes", panelSelectClasses);
@@ -1792,32 +1837,157 @@ public class MakerSwingFrame extends javax.swing.JFrame {
         textAreaI18n.setRows(5);
         scrollPaneI18N1.setViewportView(textAreaI18n);
 
+        buttonCopyI18n.setBackground(BLUE);
+        buttonCopyI18n.setFont(new java.awt.Font("Tahoma", 0, 9)); // NOI18N
+        buttonCopyI18n.setForeground(new java.awt.Color(255, 255, 255));
+        buttonCopyI18n.setText("Copy");
+        buttonCopyI18n.setToolTipText("Copy to clipboard");
+        buttonCopyI18n.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
+        buttonCopyI18n.setBorderPainted(false);
+        buttonCopyI18n.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                buttonCopyI18nActionPerformed(evt);
+            }
+        });
+
+        buttonCopyClassBean.setBackground(BLUE);
+        buttonCopyClassBean.setFont(new java.awt.Font("Tahoma", 0, 9)); // NOI18N
+        buttonCopyClassBean.setForeground(new java.awt.Color(255, 255, 255));
+        buttonCopyClassBean.setText("Copy");
+        buttonCopyClassBean.setToolTipText("Copy to clipboard");
+        buttonCopyClassBean.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
+        buttonCopyClassBean.setBorderPainted(false);
+        buttonCopyClassBean.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                buttonCopyClassBeanActionPerformed(evt);
+            }
+        });
+
+        buttonCopySecurity.setBackground(BLUE);
+        buttonCopySecurity.setFont(new java.awt.Font("Tahoma", 0, 9)); // NOI18N
+        buttonCopySecurity.setForeground(new java.awt.Color(255, 255, 255));
+        buttonCopySecurity.setText("Copy");
+        buttonCopySecurity.setToolTipText("Copy to clipboard");
+        buttonCopySecurity.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
+        buttonCopySecurity.setBorderPainted(false);
+        buttonCopySecurity.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                buttonCopySecurityActionPerformed(evt);
+            }
+        });
+
+        buttonOpenI18n.setBackground(BLUE);
+        buttonOpenI18n.setFont(new java.awt.Font("Tahoma", 0, 9)); // NOI18N
+        buttonOpenI18n.setForeground(new java.awt.Color(255, 255, 255));
+        buttonOpenI18n.setText("Open");
+        buttonOpenI18n.setToolTipText("Open in a new window");
+        buttonOpenI18n.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
+        buttonOpenI18n.setBorderPainted(false);
+        buttonOpenI18n.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                buttonOpenI18nActionPerformed(evt);
+            }
+        });
+
+        buttonOpenClassBean.setBackground(BLUE);
+        buttonOpenClassBean.setFont(new java.awt.Font("Tahoma", 0, 9)); // NOI18N
+        buttonOpenClassBean.setForeground(new java.awt.Color(255, 255, 255));
+        buttonOpenClassBean.setText("Open");
+        buttonOpenClassBean.setToolTipText("Open in a new window");
+        buttonOpenClassBean.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
+        buttonOpenClassBean.setBorderPainted(false);
+        buttonOpenClassBean.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                buttonOpenClassBeanActionPerformed(evt);
+            }
+        });
+
+        buttonOpenSecurity.setBackground(BLUE);
+        buttonOpenSecurity.setFont(new java.awt.Font("Tahoma", 0, 9)); // NOI18N
+        buttonOpenSecurity.setForeground(new java.awt.Color(255, 255, 255));
+        buttonOpenSecurity.setText("Open");
+        buttonOpenSecurity.setToolTipText("Open in a new window");
+        buttonOpenSecurity.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
+        buttonOpenSecurity.setBorderPainted(false);
+        buttonOpenSecurity.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                buttonOpenSecurityActionPerformed(evt);
+            }
+        });
+
+        buttonCopyLog.setBackground(BLUE);
+        buttonCopyLog.setFont(new java.awt.Font("Tahoma", 0, 9)); // NOI18N
+        buttonCopyLog.setForeground(new java.awt.Color(255, 255, 255));
+        buttonCopyLog.setText("Copy");
+        buttonCopyLog.setToolTipText("Copy to clipboard");
+        buttonCopyLog.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
+        buttonCopyLog.setBorderPainted(false);
+        buttonCopyLog.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                buttonCopyLogActionPerformed(evt);
+            }
+        });
+
+        buttonOpenLog.setBackground(BLUE);
+        buttonOpenLog.setFont(new java.awt.Font("Tahoma", 0, 9)); // NOI18N
+        buttonOpenLog.setForeground(new java.awt.Color(255, 255, 255));
+        buttonOpenLog.setText("Open");
+        buttonOpenLog.setToolTipText("Open in a new window");
+        buttonOpenLog.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
+        buttonOpenLog.setBorderPainted(false);
+        buttonOpenLog.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                buttonOpenLogActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout panelCreateClassesLayout = new javax.swing.GroupLayout(panelCreateClasses);
         panelCreateClasses.setLayout(panelCreateClassesLayout);
         panelCreateClassesLayout.setHorizontalGroup(
             panelCreateClassesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panelCreateClassesLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(panelCreateClassesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(panelStep5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addGroup(panelCreateClassesLayout.createSequentialGroup()
-                        .addGroup(panelCreateClassesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(panelStep6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(labelI18N)
-                            .addComponent(buttonTab3Back, javax.swing.GroupLayout.PREFERRED_SIZE, 87, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(buttonCreateClasses)
-                            .addComponent(scrollPaneI18N1))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(panelCreateClassesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(panelCreateClassesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                        .addGroup(panelCreateClassesLayout.createSequentialGroup()
+                            .addComponent(buttonOpenSecurity, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                            .addComponent(buttonCopySecurity, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGroup(panelCreateClassesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(panelStep7, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(panelStep5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addGroup(panelCreateClassesLayout.createSequentialGroup()
-                                .addGap(10, 10, 10)
-                                .addComponent(labelClassBean))
-                            .addComponent(scrollPaneClassBean, javax.swing.GroupLayout.Alignment.TRAILING)))
-                    .addComponent(scrollPaneLog)
-                    .addComponent(panelStep8, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(scrollPaneI18N))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                .addGroup(panelCreateClassesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(buttonCreateClasses)
+                                    .addGroup(panelCreateClassesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                        .addGroup(javax.swing.GroupLayout.Alignment.LEADING, panelCreateClassesLayout.createSequentialGroup()
+                                            .addComponent(labelI18N)
+                                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                            .addComponent(buttonOpenI18n, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                            .addComponent(buttonCopyI18n, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                        .addComponent(panelStep6, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addComponent(scrollPaneI18N1, javax.swing.GroupLayout.PREFERRED_SIZE, 380, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 10, Short.MAX_VALUE)
+                                .addGroup(panelCreateClassesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelCreateClassesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                        .addComponent(panelStep7, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                        .addGroup(panelCreateClassesLayout.createSequentialGroup()
+                                            .addGap(10, 10, 10)
+                                            .addComponent(labelClassBean)
+                                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                            .addComponent(buttonOpenClassBean, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                            .addComponent(buttonCopyClassBean, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                        .addComponent(scrollPaneClassBean))
+                                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelCreateClassesLayout.createSequentialGroup()
+                                        .addComponent(buttonOpenLog, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(buttonCopyLog, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                            .addComponent(scrollPaneLog)
+                            .addComponent(panelStep8, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(scrollPaneI18N)))
+                    .addComponent(buttonTab3Back, javax.swing.GroupLayout.PREFERRED_SIZE, 87, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(16, Short.MAX_VALUE))
         );
         panelCreateClassesLayout.setVerticalGroup(
             panelCreateClassesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1825,7 +1995,11 @@ public class MakerSwingFrame extends javax.swing.JFrame {
                 .addContainerGap()
                 .addComponent(panelStep5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(buttonCreateClasses)
+                .addGroup(panelCreateClassesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(buttonCreateClasses)
+                    .addGroup(panelCreateClassesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(buttonCopyLog)
+                        .addComponent(buttonOpenLog)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(scrollPaneLog, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -1835,18 +2009,26 @@ public class MakerSwingFrame extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(panelCreateClassesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(labelI18N)
-                    .addComponent(labelClassBean))
+                    .addComponent(labelClassBean)
+                    .addComponent(buttonCopyI18n)
+                    .addComponent(buttonCopyClassBean)
+                    .addComponent(buttonOpenI18n)
+                    .addComponent(buttonOpenClassBean))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(panelCreateClassesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(scrollPaneClassBean, javax.swing.GroupLayout.PREFERRED_SIZE, 135, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(scrollPaneI18N1, javax.swing.GroupLayout.PREFERRED_SIZE, 133, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(panelCreateClassesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(scrollPaneI18N1, javax.swing.GroupLayout.DEFAULT_SIZE, 128, Short.MAX_VALUE)
+                    .addComponent(scrollPaneClassBean))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(panelStep8, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(scrollPaneI18N, javax.swing.GroupLayout.PREFERRED_SIZE, 153, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(panelCreateClassesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(buttonCopySecurity)
+                    .addComponent(buttonOpenSecurity))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(scrollPaneI18N, javax.swing.GroupLayout.PREFERRED_SIZE, 141, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(buttonTab3Back)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(59, Short.MAX_VALUE))
         );
 
         tabbedPanelMain.addTab("Create Classes", panelCreateClasses);
@@ -1859,9 +2041,7 @@ public class MakerSwingFrame extends javax.swing.JFrame {
         );
         jPanelMainLayout.setVerticalGroup(
             jPanelMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanelMainLayout.createSequentialGroup()
-                .addComponent(tabbedPanelMain, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, Short.MAX_VALUE))
+            .addComponent(tabbedPanelMain)
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -1993,8 +2173,48 @@ public class MakerSwingFrame extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_buttonSelectMessageBundleActionPerformed
 
+    private void buttonCopyI18nActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonCopyI18nActionPerformed
+        SwingUtils.copyToClipboard(textAreaI18n);
+    }//GEN-LAST:event_buttonCopyI18nActionPerformed
+
+    private void buttonCopyClassBeanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonCopyClassBeanActionPerformed
+        SwingUtils.copyToClipboard(textAreaClassBean);
+    }//GEN-LAST:event_buttonCopyClassBeanActionPerformed
+
+    private void buttonCopySecurityActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonCopySecurityActionPerformed
+        SwingUtils.copyToClipboard(textAreaSecurityGeneration);
+    }//GEN-LAST:event_buttonCopySecurityActionPerformed
+
+    private void buttonOpenI18nActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonOpenI18nActionPerformed
+        openContentNewWindow(textAreaI18n);
+    }//GEN-LAST:event_buttonOpenI18nActionPerformed
+
+    private void buttonOpenClassBeanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonOpenClassBeanActionPerformed
+        openContentNewWindow(textAreaClassBean);
+    }//GEN-LAST:event_buttonOpenClassBeanActionPerformed
+
+    private void buttonOpenSecurityActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonOpenSecurityActionPerformed
+        openContentNewWindow(textAreaSecurityGeneration);
+    }//GEN-LAST:event_buttonOpenSecurityActionPerformed
+
+    private void buttonCopyLogActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonCopyLogActionPerformed
+        SwingUtils.copyToClipboard(textAreaLog);
+    }//GEN-LAST:event_buttonCopyLogActionPerformed
+
+    private void buttonOpenLogActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonOpenLogActionPerformed
+        openContentNewWindow(textAreaLog);
+    }//GEN-LAST:event_buttonOpenLogActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton buttonCopyClassBean;
+    private javax.swing.JButton buttonCopyI18n;
+    private javax.swing.JButton buttonCopyLog;
+    private javax.swing.JButton buttonCopySecurity;
     private javax.swing.JButton buttonCreateClasses;
+    private javax.swing.JButton buttonOpenClassBean;
+    private javax.swing.JButton buttonOpenI18n;
+    private javax.swing.JButton buttonOpenLog;
+    private javax.swing.JButton buttonOpenSecurity;
     private javax.swing.JButton buttonSearchClasses;
     private javax.swing.JButton buttonSelectAll;
     private javax.swing.JButton buttonSelectBO;
