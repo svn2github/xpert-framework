@@ -21,6 +21,41 @@ public abstract class SequenceUpdater {
 
     public abstract EntityManager getEntityManager();
 
+    public void createSequences() {
+        if (getEntityManager() == null) {
+            throw new IllegalArgumentException("EntityManager must not null");
+        }
+
+        List<Class> classes = EntityUtils.getMappedEntities(getEntityManager());
+        SequenceGenerator sequenceGenerator = null;
+
+        for (Class clazz : classes) {
+            String schema = null;
+            sequenceGenerator = getSequenceGenerator(clazz);
+            if (sequenceGenerator != null) {
+                createSequence(schema, sequenceGenerator.sequenceName(), sequenceGenerator.initialValue(), sequenceGenerator.allocationSize());
+            }
+        }
+
+    }
+
+    private SequenceGenerator getSequenceGenerator(Class clazz) {
+        SequenceGenerator sequenceGenerator = null;
+        sequenceGenerator = (SequenceGenerator) clazz.getAnnotation(SequenceGenerator.class);
+        //try to get in fields
+        if (sequenceGenerator == null) {
+            Field[] fields = clazz.getDeclaredFields();
+            Field.setAccessible(fields, true);
+            for (Field field : fields) {
+                sequenceGenerator = (SequenceGenerator) field.getAnnotation(SequenceGenerator.class);
+                if (sequenceGenerator != null) {
+                    break;
+                }
+            }
+        }
+        return sequenceGenerator;
+    }
+
     /**
      * Update all entity sequences
      */
@@ -35,22 +70,7 @@ public abstract class SequenceUpdater {
 
         for (Class clazz : classes) {
             String schema = null;
-            Table table = (Table) clazz.getAnnotation(Table.class);
-            if (table != null) {
-                schema = table.schema();
-            }
-            sequenceGenerator = (SequenceGenerator) clazz.getAnnotation(SequenceGenerator.class);
-            //try to get in fields
-            if (sequenceGenerator == null) {
-                Field[] fields = clazz.getDeclaredFields();
-                Field.setAccessible(fields, true);
-                for (Field field : fields) {
-                    sequenceGenerator = (SequenceGenerator) field.getAnnotation(SequenceGenerator.class);
-                    if(sequenceGenerator != null){
-                        break;
-                    }
-                }
-            }
+            sequenceGenerator = getSequenceGenerator(clazz);
             if (sequenceGenerator != null) {
                 Long maxId = getMaxId(sequenceGenerator.sequenceName(), clazz);
                 if (schema != null && !schema.isEmpty()) {
@@ -73,6 +93,8 @@ public abstract class SequenceUpdater {
         }
         return maxId;
     }
+
+    public abstract void createSequence(String schema, String sequenceName, int initialValue, int allocationSize);
 
     public abstract void changeCurrentValue(String sequenceName, Long maxId);
 

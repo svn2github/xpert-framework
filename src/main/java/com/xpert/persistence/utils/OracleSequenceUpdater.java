@@ -6,7 +6,7 @@ import javax.persistence.Query;
 /**
  *
  * Sequence updater to Oracle database
- * 
+ *
  * @author ayslan, arnaldo
  */
 public class OracleSequenceUpdater extends SequenceUpdater {
@@ -16,11 +16,11 @@ public class OracleSequenceUpdater extends SequenceUpdater {
     public OracleSequenceUpdater(EntityManager entityManager) {
         this.entityManager = entityManager;
     }
-    
+
     @Override
     public void changeCurrentValue(String sequenceName, Long maxId) {
-        
-        if(maxId == null){
+
+        if (maxId == null) {
             maxId = 1L;
         }
 
@@ -47,6 +47,27 @@ public class OracleSequenceUpdater extends SequenceUpdater {
     @Override
     public EntityManager getEntityManager() {
         return entityManager;
+    }
+
+    @Override
+    public void createSequence(String schema, String sequenceName, int initialValue, int allocationSize) {
+
+        //verify if sequence exists
+        String selectSequence = "SELECT COUNT(*) FROM user_sequences WHERE upper(sequence_name) = :name ";
+        Query querySelect = entityManager.createNativeQuery(selectSequence);
+        querySelect.setParameter("name", sequenceName.toUpperCase());
+        Number result = (Number) querySelect.getSingleResult();
+
+        if (result == null || result.intValue() <= 0) {
+            String nameWithSchema = sequenceName;
+            if (schema != null && !schema.isEmpty()) {
+                nameWithSchema = nameWithSchema + "." + sequenceName;
+            }
+            String nextVal = "CREATE SEQUENCE " + nameWithSchema + " INCREMENT BY " + allocationSize + " START WITH " + initialValue;
+            Query queryNext = entityManager.createNativeQuery(nextVal);
+            queryNext.executeUpdate();
+        }
+
     }
 
 }

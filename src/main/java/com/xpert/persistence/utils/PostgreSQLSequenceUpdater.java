@@ -35,4 +35,9 @@ public class PostgreSQLSequenceUpdater extends SequenceUpdater {
         return entityManager;
     }
 
+    @Override
+    public void createSequence(String schema, String sequenceName, int initialValue, int allocationSize) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
 }
