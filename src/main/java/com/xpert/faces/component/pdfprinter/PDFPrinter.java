@@ -1,8 +1,6 @@
 package com.xpert.faces.component.pdfprinter;
 
 import com.xpert.faces.utils.FacesUtils;
-import com.xpert.i18n.XpertResourceBundle;
-import com.xpert.utils.StringEscapeUtils;
 import javax.el.ELContext;
 import javax.el.ValueExpression;
 import javax.faces.FacesException;
@@ -10,8 +8,6 @@ import javax.faces.application.ResourceDependencies;
 import javax.faces.application.ResourceDependency;
 import javax.faces.component.StateHolder;
 import javax.faces.component.UIComponent;
-import javax.faces.component.behavior.ClientBehaviorBase;
-import javax.faces.component.behavior.ClientBehaviorContext;
 import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
 import javax.faces.event.ActionListener;
@@ -27,8 +23,7 @@ public class PDFPrinter implements ActionListener, StateHolder {
     private ValueExpression orientation;
 
     private static final String HTML_PARAMETER_NAME = "xpert_html_export";
-    private static final String EMPTY_HTML = "<html><head></head><body></body></html>";
-
+   
     public PDFPrinter() {
     }
 
@@ -40,6 +35,7 @@ public class PDFPrinter implements ActionListener, StateHolder {
 
     @Override
     public void processAction(ActionEvent event) {
+        
         FacesContext context = FacesContext.getCurrentInstance();
         ELContext elContext = context.getELContext();
 
@@ -57,13 +53,7 @@ public class PDFPrinter implements ActionListener, StateHolder {
         try {
 
             UIComponent component = event.getComponent().findComponent(targetId);
-
             String htmlParameter = FacesUtils.getParameter(HTML_PARAMETER_NAME);
-
-            if (htmlParameter == null || htmlParameter.trim().isEmpty()) {
-                htmlParameter = EMPTY_HTML;
-            }
-
             byte[] pdf = PDFPrinterBuilder.createPDF(context, htmlParameter, pageOrientation);
 
             FacesUtils.download(pdf, "application/pdf", outputFileName.endsWith(".pdf") ? outputFileName : outputFileName + ".pdf");
@@ -71,10 +61,9 @@ public class PDFPrinter implements ActionListener, StateHolder {
             if (component == null) {
                 throw new FacesException("Cannot find component " + targetId + " in view.");
             }
-
             context.responseComplete();
-        } catch (Exception e) {
-            throw new FacesException(e);
+        } catch (Exception ex) {
+            throw new FacesException(ex);
         }
     }
 

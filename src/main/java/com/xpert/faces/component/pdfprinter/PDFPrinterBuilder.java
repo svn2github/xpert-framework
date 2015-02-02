@@ -24,6 +24,7 @@ import org.xhtmlrenderer.pdf.ITextRenderer;
 public class PDFPrinterBuilder {
 
     public static boolean DEBUG = true;
+    private static final String EMPTY_HTML = "<html><head></head><body></body></html>";
     private static final Logger logger = Logger.getLogger(PDFPrinterBuilder.class.getName());
 
     /**
@@ -90,6 +91,10 @@ public class PDFPrinterBuilder {
     }
 
     public static byte[] createPDF(FacesContext context, String html, PageOrientation pageOrientation) throws DocumentException, IOException {
+
+        if (html == null || html.trim().isEmpty()) {
+            html = EMPTY_HTML;
+        }
 
         long inicio = System.currentTimeMillis();
 
