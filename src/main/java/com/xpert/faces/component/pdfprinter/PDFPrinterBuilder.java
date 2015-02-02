@@ -23,7 +23,7 @@ import org.xhtmlrenderer.pdf.ITextRenderer;
  */
 public class PDFPrinterBuilder {
 
-    public static boolean DEBUG = true;
+    public static boolean DEBUG = false;
     private static final String EMPTY_HTML = "<html><head></head><body></body></html>";
     private static final Logger logger = Logger.getLogger(PDFPrinterBuilder.class.getName());
 
