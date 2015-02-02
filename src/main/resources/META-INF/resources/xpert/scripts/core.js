@@ -1,4 +1,7 @@
 Xpert = {
+    escapeClientId: function (id) {
+        return "#" + id.replace(/:/g, "\\:");
+    },
     closeModalMessages: function(widgetDialog){
         widgetDialog.hide();
         $('.faces-modal-messages').remove();
@@ -67,7 +70,7 @@ Xpert = {
         return this;
     },
     dateFilter : function(element) {
-        var dateId = PrimeFaces.escapeClientId(element);
+        var dateId = Xpert.escapeClientId(element);
         var $column = $(dateId).closest('.ui-filter-column');
         var $inputFilter = $column.find('.ui-column-filter');
         
@@ -81,14 +84,14 @@ Xpert = {
         $(element).closest('th').find('input').val('');
     },
     refreshDateFilter : function(column, dateStart, dateEnd) {
-        var $column  = $(PrimeFaces.escapeClientId(column));
+        var $column  = $(Xpert.escapeClientId(column));
         $column.find('.calendar-filter-start input').val(dateStart);
         $column.find('.calendar-filter-end input').val(dateEnd);
     },
     filterOnEnter: function(target, selector){
         
          if(target != null && target != "" && target != undefined){
-             selector = PrimeFaces.escapeClientId(target);
+             selector = Xpert.escapeClientId(target);
          }
          if(selector == null || selector == "" || selector == undefined){
              selector = ".ui-datatable";
@@ -154,6 +157,42 @@ Xpert = {
                 }
             });
         }
+    },
+    printPDF: function (element, target) {
+
+        jQuery.fn.outerHtml = function () {
+            return $($('<div></div>').html(this.clone())).html();
+        };
+
+        var $element = $(Xpert.escapeClientId(element));
+        var htmlImports = "";
+        var htmlBody = $(Xpert.escapeClientId(target)).clone().outerHtml();
+
+        var htmlTarget = "";
+
+        if ($("link[media=print]").length > 0)
+        {
+            $("link[media=print]").each(function () {
+                htmlImports = htmlImports + "<link type='text/css' rel='stylesheet' href='" + $(this).attr("href") + "' media='print' />";
+            });
+        }
+        else
+        {
+            $("link").each(function () {
+                htmlImports = htmlImports + "<link type='text/css' rel='stylesheet' href='" + $(this).attr("href") + "' />";
+            });
+        }
+
+        htmlTarget = "<html><head>" + htmlImports + "</head><body>" + htmlBody + "</body></html>";
+
+        //add a hidden input in form
+        var $form = $element.closest("form");
+        //remove input
+        $form.remove("input[name=xpert_html_export]");
+        //add input
+        $("<input>").attr("type", "hidden").attr("name", "xpert_html_export").attr("value", htmlTarget).appendTo($form);
+
+
     }
 };
 Xpert.behavior = {

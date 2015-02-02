@@ -243,4 +243,30 @@
             <type>java.lang.String</type>
         </attribute>
     </tag>
+    
+    <tag>
+        <tag-name>pdfPrinter</tag-name>
+        <handler-class>
+            com.xpert.faces.component.pdfprinter.PDFPrinterTagHandler
+        </handler-class>
+        <attribute>
+            <description>Server side id of the component to be exported.</description>
+            <name>target</name>
+            <required>true</required>
+            <type>java.lang.String</type>
+        </attribute>
+        <attribute>
+            <description>Filename of the generated export file.</description>
+            <name>fileName</name>
+            <required>false</required>
+            <type>java.lang.String</type>
+        </attribute>
+        <attribute>
+            <description>PDF format orientation.Possible values are "portrait" or "landscape". Default value: "portrait"</description>
+            <name>orientation</name>
+            <required>false</required>
+            <type>java.lang.String</type>
+        </attribute>
+    </tag>
+    
 </facelet-taglib>

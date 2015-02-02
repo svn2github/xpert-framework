@@ -128,6 +128,10 @@
         <behavior-id>xpert.faces.DownloadBehavior</behavior-id>
         <behavior-class>com.xpert.faces.behavior.DownloadBehavior</behavior-class>
     </behavior>
+    <behavior>
+        <behavior-id>xpert.faces.PDFPrinterBehavior</behavior-id>
+        <behavior-class>com.xpert.faces.component.pdfprinter.PDFPrinterBehavior</behavior-class>
+    </behavior>
     <component>
         <component-type>com.xpert.faces.component.Confirmation</component-type>
         <component-class>com.xpert.faces.component.confirmation.Confirmation</component-class>
