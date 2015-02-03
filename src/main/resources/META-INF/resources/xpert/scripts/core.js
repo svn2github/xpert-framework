@@ -170,18 +170,9 @@ Xpert = {
 
         var htmlTarget = "";
 
-        if ($("link[media=print]").length > 0)
-        {
-            $("link[media=print]").each(function () {
-                htmlImports = htmlImports + "<link type='text/css' rel='stylesheet' href='" + $(this).attr("href") + "' media='print' />";
-            });
-        }
-        else
-        {
-            $("link").each(function () {
-                htmlImports = htmlImports + "<link type='text/css' rel='stylesheet' href='" + $(this).attr("href") + "' />";
-            });
-        }
+        $("link").each(function () {
+            htmlImports = htmlImports + "<link type='text/css' rel='stylesheet' href='" + $(this).attr("href") + "' />";
+        });
 
         htmlTarget = "<html><head>" + htmlImports + "</head><body>" + htmlBody + "</body></html>";
 
