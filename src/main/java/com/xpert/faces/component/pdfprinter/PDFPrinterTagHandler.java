@@ -31,15 +31,21 @@ public class PDFPrinterTagHandler extends TagHandler {
     public void apply(FaceletContext faceletContext, UIComponent parent) throws IOException, FacesException, FaceletException, ELException {
         if (ComponentHandler.isNew(parent)) {
             ValueExpression targetVE = target.getValueExpression(faceletContext, Object.class);
-            ValueExpression fileNameVE = fileName.getValueExpression(faceletContext, Object.class);
-            ValueExpression orientationVE = orientation.getValueExpression(faceletContext, Object.class);
+            ValueExpression fileNameVE = null;
+            if (fileName != null) {
+                fileNameVE = fileName.getValueExpression(faceletContext, Object.class);
+            }
+            ValueExpression orientationVE = null;
+            if (orientation != null) {
+                orientationVE = orientation.getValueExpression(faceletContext, Object.class);
+            }
 
             ActionSource actionSource = (ActionSource) parent;
             actionSource.addActionListener(new PDFPrinter(targetVE, fileNameVE, orientationVE));
-            
-            ClientBehaviorHolder clientBehaviorHolder = (ClientBehaviorHolder)parent;
+
+            ClientBehaviorHolder clientBehaviorHolder = (ClientBehaviorHolder) parent;
             clientBehaviorHolder.addClientBehavior("click", new PDFPrinterBehavior(target.getValue(faceletContext)));
-            
+
         }
     }
 

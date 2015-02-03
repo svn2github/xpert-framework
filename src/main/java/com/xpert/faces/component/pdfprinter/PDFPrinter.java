@@ -23,7 +23,7 @@ public class PDFPrinter implements ActionListener, StateHolder {
     private ValueExpression orientation;
 
     private static final String HTML_PARAMETER_NAME = "xpert_html_export";
-   
+
     public PDFPrinter() {
     }
 
@@ -35,15 +35,23 @@ public class PDFPrinter implements ActionListener, StateHolder {
 
     @Override
     public void processAction(ActionEvent event) {
-        
+
         FacesContext context = FacesContext.getCurrentInstance();
         ELContext elContext = context.getELContext();
 
         String targetId = (String) target.getValue(elContext);
-        String outputFileName = (String) fileName.getValue(elContext);
-        String pageOrientationString = (String) orientation.getValue(elContext);
-        PageOrientation pageOrientation = PageOrientation.PORTRAIT;
+        String outputFileName = null;
+        if (fileName != null) {
+            outputFileName = (String) fileName.getValue(elContext);
+        } else {
+            outputFileName = "no_name";
+        }
 
+        String pageOrientationString = null;
+        if (orientation != null) {
+            pageOrientationString = (String) orientation.getValue(elContext);
+        }
+        PageOrientation pageOrientation = PageOrientation.PORTRAIT;
         if (pageOrientationString != null) {
             if (pageOrientationString.toUpperCase().equals(PageOrientation.LANDSCAPE.name())) {
                 pageOrientation = PageOrientation.LANDSCAPE;
