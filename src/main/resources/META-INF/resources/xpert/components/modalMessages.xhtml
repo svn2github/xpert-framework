@@ -9,6 +9,7 @@
     <!-- INTERFACE -->
     <cc:interface >
         <cc:attribute name="autoUpdate" default="false" />
+        <cc:attribute name="escape" default="true" />
     </cc:interface>
 
     <!-- IMPLEMENTATION -->
@@ -26,7 +27,7 @@
                               widgetVar="xpertModalDialogMessages" visible="true">
                         <div class="modal-messages">
                             <div class="modal-messages-list">
-                                <p:messages/>
+                                <p:messages escape="#{cc.attrs.escape}"/>
                             </div>
                             <div align="center">
                                 <p:commandButton onclick="Xpert.closeModalMessages(xpertModalDialogMessages)"
@@ -43,7 +44,7 @@
                               widgetVar="xpertModalDialogMessages" visible="true">
                         <div class="modal-messages">
                             <div class="modal-messages-list">
-                                <p:messages/>
+                                <p:messages escape="#{cc.attrs.escape}"/>
                             </div>
                             <div align="center">
                                 <p:commandButton onclick="Xpert.closeModalMessages(PF('xpertModalDialogMessages'))"
