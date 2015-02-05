@@ -40,6 +40,10 @@ public class PDFPrinterBuilder {
         for (Element element : elements) {
             element.attr("href", element.absUrl("href"));
         }
+        elements = document.select("link");
+        for (Element element : elements) {
+            element.attr("media", "all");
+        }
         elements = document.select("script,img");
         for (Element element : elements) {
             element.attr("src", element.absUrl("src"));
