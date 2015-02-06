@@ -48,12 +48,12 @@ public class NumberFunctions {
     }
 
     /**
-     * If the object is instance of LazyDataModelImpl, then  shoudld call sum using query.
-     * If tht object is instance of
-     * 
+     * If the object is instance of LazyDataModelImpl, then shoudld call sum
+     * using query. If tht object is instance of
+     *
      * @param objects
      * @param field
-     * @return 
+     * @return
      */
     public static Object sum(Object objects, String field) {
         if (objects instanceof LazyDataModelImpl) {
@@ -67,6 +67,13 @@ public class NumberFunctions {
         }
     }
 
+    /**
+     * Sum field with return of type Integer
+     *
+     * @param objects
+     * @param field
+     * @return
+     */
     public static Integer sumInteger(Object objects, String field) {
         Collection collection = getCollection(objects);
         try {
@@ -76,6 +83,13 @@ public class NumberFunctions {
         }
     }
 
+    /**
+     * Sum field with return of type Long
+     *
+     * @param objects
+     * @param field
+     * @return
+     */
     public static Long sumLong(Object objects, String field) {
         Collection collection = getCollection(objects);
         try {
