@@ -85,15 +85,44 @@ public class PDFPrinterBuilder {
 
     }
 
+    /**
+     * Get base URI of application, the pattern is : scheme + server name+ port,
+     * example: http://180.1.1.10:8080
+     *
+     * @param context
+     * @return
+     */
     public static String getBaseURI(FacesContext context) {
         HttpServletRequest request = (HttpServletRequest) context.getExternalContext().getRequest();
         return request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort();
     }
 
+    /**
+     * Return a byte representation of a PDF file, based on a HTML String. The
+     * conversion is made using framework flying-saucer. Default page
+     * orientation is "portrait"
+     *
+     * @param context
+     * @param html
+     * @return
+     * @throws DocumentException
+     * @throws IOException
+     */
     public static byte[] createPDF(FacesContext context, String html) throws DocumentException, IOException {
         return createPDF(context, html, PageOrientation.PORTRAIT);
     }
 
+    /**
+     * Return a byte representation of a PDF file, based on a HTML String. The
+     * conversion is made using framework flying-saucer.
+     *
+     * @param context
+     * @param html
+     * @param pageOrientation
+     * @return
+     * @throws DocumentException
+     * @throws IOException
+     */
     public static byte[] createPDF(FacesContext context, String html, PageOrientation pageOrientation) throws DocumentException, IOException {
 
         if (html == null || html.trim().isEmpty()) {
