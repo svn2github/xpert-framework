@@ -61,14 +61,14 @@ public class PDFPrinter implements ActionListener, StateHolder {
         try {
 
             UIComponent component = event.getComponent().findComponent(targetId);
+            if (component == null) {
+                throw new FacesException("Cannot find component " + targetId + " in view.");
+            }
+            
             String htmlParameter = FacesUtils.getParameter(HTML_PARAMETER_NAME);
             byte[] pdf = PDFPrinterBuilder.createPDF(context, htmlParameter, pageOrientation);
 
             FacesUtils.download(pdf, "application/pdf", outputFileName.endsWith(".pdf") ? outputFileName : outputFileName + ".pdf");
-
-            if (component == null) {
-                throw new FacesException("Cannot find component " + targetId + " in view.");
-            }
             context.responseComplete();
         } catch (Exception ex) {
             throw new FacesException(ex);

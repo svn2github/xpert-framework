@@ -179,7 +179,7 @@ Xpert = {
         //add a hidden input in form
         var $form = $element.closest("form");
         //remove input
-        $form.remove("input[name=xpert_html_export]");
+        $form.find("input[name=xpert_html_export]").remove();
         //add input
         $("<input>").attr("type", "hidden").attr("name", "xpert_html_export").attr("value", htmlTarget).appendTo($form);
 

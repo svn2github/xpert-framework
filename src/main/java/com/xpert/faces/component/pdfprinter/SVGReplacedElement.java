@@ -98,16 +98,18 @@ public class SVGReplacedElement implements ITextReplacedElement {
             StringWriter sw = new StringWriter();
             TransformerFactory tf = TransformerFactory.newInstance();
             Transformer transformer = tf.newTransformer();
-            transformer.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "no");
+            transformer.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "yes");
             transformer.setOutputProperty(OutputKeys.METHOD, "xml");
             transformer.setOutputProperty(OutputKeys.INDENT, "yes");
+            transformer.setOutputProperty(OutputKeys.STANDALONE, "yes");
             transformer.setOutputProperty(OutputKeys.ENCODING, "UTF-8");
 
             DOMSource source = new DOMSource(doc);
             transformer.transform(source, new StreamResult(sw));
             
             String result = sw.toString();
-            
+            result = result.replace("xmlns:ns0=\"http://www.w3.org/2000/svg\"", "").replace("ns0:svg=\"\"", "");
+//            return result;
             return result.replace("<svg", "<svg xmlns=\"http://www.w3.org/2000/svg\" ");
         } catch (Exception ex) {
             throw new RuntimeException("Error converting to String", ex);
@@ -126,18 +128,8 @@ public class SVGReplacedElement implements ITextReplacedElement {
         Graphics2D g2d = new PdfGraphics2D(template, width, height);
         String svgString = toString(svg);
 
-        String parser = XMLResourceDescriptor.getXMLParserClassName();
-        SAXSVGDocumentFactory factory = new SAXSVGDocumentFactory(parser);
-
-        SVGDocument sVGDocument;
-        try {
-            sVGDocument = factory.createSVGDocument(null, new StringReader(svgString));
-        } catch (IOException ex) {
-            throw new RuntimeException(ex);
-        }
-
         PrintTranscoder prm = new PrintTranscoder();
-        TranscoderInput ti = new TranscoderInput(sVGDocument);
+        TranscoderInput ti = new TranscoderInput(new StringReader(svgString));
         prm.transcode(ti, null);
         PageFormat pg = new PageFormat();
         Paper pp = new Paper();

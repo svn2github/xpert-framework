@@ -43,7 +43,6 @@ public class SVGReplacedElementFactory extends ITextReplacedElementFactory {
         if (nodeName.equals("img")) {
             return super.createReplacedElement(c, box, uac, cssWidth, cssHeight);
         } else if (nodeName.equals("svg")) {
-
             DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
             documentBuilderFactory.setNamespaceAware(true);
             DocumentBuilder documentBuilder;

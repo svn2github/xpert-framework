@@ -23,67 +23,9 @@ import org.xhtmlrenderer.pdf.ITextRenderer;
  */
 public class PDFPrinterBuilder {
 
-    public static boolean DEBUG = false;
+    public static boolean DEBUG = true;
     private static final String EMPTY_HTML = "<html><head></head><body></body></html>";
     private static final Logger logger = Logger.getLogger(PDFPrinterBuilder.class.getName());
-
-    /**
-     * Normalize the document, setting absolute link on images, css, etc. Set
-     * display block on SVG.
-     *
-     * @param document
-     * @param pageOrientation
-     */
-    public static void normalize(Document document, PageOrientation pageOrientation) {
-        document.select("script").remove();
-        Elements elements = document.select("link,a");
-        for (Element element : elements) {
-            element.attr("href", element.absUrl("href"));
-        }
-        elements = document.select("link");
-        for (Element element : elements) {
-            element.attr("media", "all");
-        }
-        elements = document.select("script,img");
-        for (Element element : elements) {
-            element.attr("src", element.absUrl("src"));
-        }
-        //normalize svg, add display block
-        elements = document.select("svg");
-        for (Element element : elements) {
-            String style = element.attr("style");
-            String width = element.attr("width");
-            String height = element.attr("height");
-            if (style == null) {
-                style = "";
-            }
-            if (style.endsWith(";")) {
-                style = style + ";";
-            }
-
-            style = style + " display: block;";
-            if (width != null && !width.isEmpty()) {
-                style = style + " width: " + width + "px;";
-            }
-            if (height != null && !height.isEmpty()) {
-                style = style + " height: " + height + "px;";
-            }
-            element.attr("style", style);
-        }
-
-        //put all styles in <head>
-        Elements headSeletor = document.select("head");
-        if (headSeletor != null && !headSeletor.isEmpty()) {
-            //page orientation
-            if (pageOrientation != null && pageOrientation.equals(PageOrientation.LANDSCAPE)) {
-                headSeletor.append("<style>").append("@page {size: landscape}").append("</style>");
-            }
-            elements = document.select("style");
-            elements.remove();
-            headSeletor.append(elements.outerHtml());
-        }
-
-    }
 
     /**
      * Get base URI of application, the pattern is : scheme + server name+ port,
@@ -131,13 +73,15 @@ public class PDFPrinterBuilder {
 
         long inicio = System.currentTimeMillis();
 
-        //TODO get baseuri
-        Document document = Jsoup.parse(html, getBaseURI(context), Parser.xmlParser());
+        String content = HtmlNormalizer.normalize(html, getBaseURI(context), pageOrientation);
 
-        document.outputSettings().escapeMode(Entities.EscapeMode.xhtml);
-        normalize(document, pageOrientation);
-        String content = document.html();
+        long fim = System.currentTimeMillis();
 
+        if (DEBUG) {
+            logger.log(Level.INFO, "HTML normalized {0}ms", (fim - inicio));
+        }
+
+        inicio = System.currentTimeMillis();
 //        System.out.println(content);
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
 
@@ -158,7 +102,7 @@ public class PDFPrinterBuilder {
         baos.flush();
         baos.close();
 
-        long fim = System.currentTimeMillis();
+        fim = System.currentTimeMillis();
 
         if (DEBUG) {
             logger.log(Level.INFO, "PDF created in {0}ms", (fim - inicio));
