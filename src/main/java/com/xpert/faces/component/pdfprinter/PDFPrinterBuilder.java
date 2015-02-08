@@ -1,19 +1,12 @@
 package com.xpert.faces.component.pdfprinter;
 
 import com.itextpdf.text.DocumentException;
-import com.xpert.faces.utils.FacesUtils;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.faces.context.FacesContext;
 import javax.servlet.http.HttpServletRequest;
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
-import org.jsoup.nodes.Entities;
-import org.jsoup.parser.Parser;
-import org.jsoup.select.Elements;
 import org.xhtmlrenderer.layout.SharedContext;
 import org.xhtmlrenderer.pdf.ITextRenderer;
 
@@ -23,7 +16,7 @@ import org.xhtmlrenderer.pdf.ITextRenderer;
  */
 public class PDFPrinterBuilder {
 
-    public static boolean DEBUG = true;
+    public static boolean DEBUG = false;
     private static final String EMPTY_HTML = "<html><head></head><body></body></html>";
     private static final Logger logger = Logger.getLogger(PDFPrinterBuilder.class.getName());
 
