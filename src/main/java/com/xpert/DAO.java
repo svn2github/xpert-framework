@@ -6,8 +6,9 @@ import javax.persistence.EntityManager;
 /**
  *
  * @author Ayslan
+ * @param <T> Type of DAO
  */
-public class DAO extends BaseDAOImpl {
+public class DAO<T> extends BaseDAOImpl<T> {
 
     private EntityManager entityManager;
 
