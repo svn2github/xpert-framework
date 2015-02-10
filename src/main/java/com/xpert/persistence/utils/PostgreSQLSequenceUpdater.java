@@ -1,7 +1,11 @@
 package com.xpert.persistence.utils;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
+import javax.sql.DataSource;
 
 /**
  * Sequence update to PostgreSQL
@@ -11,23 +15,42 @@ import javax.persistence.Query;
 public class PostgreSQLSequenceUpdater extends SequenceUpdater {
 
     private final EntityManager entityManager;
+    private DataSource dataSource;
+
+    public PostgreSQLSequenceUpdater(DataSource dataSource, EntityManager entityManager) {
+        this.dataSource = dataSource;
+        this.entityManager = entityManager;
+    }
 
     public PostgreSQLSequenceUpdater(EntityManager entityManager) {
         this.entityManager = entityManager;
     }
 
     @Override
-    public void changeCurrentValue(String sequenceName, Long maxId) {
-        //select setval('sequencename' ,1);
-        String setValQueryString = null;
-        if (maxId == null) {
-            //false indicate that sequence is not called (maxId == null the table is empty)
-            setValQueryString = "SELECT SETVAL('" + sequenceName + "', 1, false)";
+    public void changeCurrentValue(Connection connection, String sequenceName, Long maxId) {
+        if (connection != null) {
+            changeCurrentValueJdbc(connection, sequenceName, maxId);
         } else {
-            setValQueryString = "SELECT SETVAL('" + sequenceName + "', " + maxId + ")";
+            changeCurrentValueJpa(sequenceName, maxId);
         }
+    }
+
+    public void changeCurrentValueJpa(String sequenceName, Long maxId) {
+        //select setval('sequencename' ,1);
+        String setValQueryString = getStringSetVal(sequenceName.trim(), maxId);
         Query querySetVal = entityManager.createNativeQuery(setValQueryString);
         querySetVal.getSingleResult();
+    }
+
+    public void changeCurrentValueJdbc(Connection connection, String sequenceName, Long maxId) {
+        //select setval('sequencename' ,1);
+        String setValQueryString = getStringSetVal(sequenceName.trim(), maxId);
+        try {
+            PreparedStatement statementSetVal = connection.prepareStatement(setValQueryString);
+            statementSetVal.execute();
+        } catch (SQLException ex) {
+            throw new RuntimeException(ex);
+        }
     }
 
     @Override
@@ -36,8 +59,22 @@ public class PostgreSQLSequenceUpdater extends SequenceUpdater {
     }
 
     @Override
-    public void createSequence(String schema, String sequenceName, int initialValue, int allocationSize) {
+    public DataSource getDataSource() {
+        return dataSource;
+    }
+
+    @Override
+    public void createSequence(Connection connection, String schema, String sequenceName, int initialValue, int allocationSize) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    public String getStringSetVal(String sequenceName, Long maxId) {
+        if (maxId == null) {
+            //false indicate that sequence is not called (maxId == null the table is empty)
+            return "SELECT SETVAL('" + sequenceName + "', 1, false)";
+        } else {
+            return "SELECT SETVAL('" + sequenceName + "', " + maxId + ")";
+        }
     }
 
 }

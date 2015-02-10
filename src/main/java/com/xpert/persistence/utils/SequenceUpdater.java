@@ -1,12 +1,16 @@
 package com.xpert.persistence.utils;
 
 import java.lang.reflect.Field;
+import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.Query;
 import javax.persistence.SequenceGenerator;
-import javax.persistence.Table;
+import javax.sql.DataSource;
+import org.hibernate.Session;
+import org.hibernate.jdbc.Work;
 
 /**
  *
@@ -19,21 +23,38 @@ import javax.persistence.Table;
  */
 public abstract class SequenceUpdater {
 
+    public abstract DataSource getDataSource();
+
     public abstract EntityManager getEntityManager();
 
     public void createSequences() {
         if (getEntityManager() == null) {
-            throw new IllegalArgumentException("EntityManager must not null");
+            throw new IllegalArgumentException("Provide a EntityManager to create sequences");
         }
 
-        List<Class> classes = EntityUtils.getMappedEntities(getEntityManager());
-        SequenceGenerator sequenceGenerator = null;
-
-        for (Class clazz : classes) {
-            String schema = null;
-            sequenceGenerator = getSequenceGenerator(clazz);
-            if (sequenceGenerator != null) {
-                createSequence(schema, sequenceGenerator.sequenceName(), sequenceGenerator.initialValue(), sequenceGenerator.allocationSize());
+        final List<Class> classes = EntityUtils.getMappedEntities(getEntityManager());
+        Connection connection = null;
+        try {
+            if (getDataSource() != null) {
+                connection = getDataSource().getConnection();
+            }
+            SequenceGenerator sequenceGenerator = null;
+            for (Class clazz : classes) {
+                String schema = null;
+                sequenceGenerator = getSequenceGenerator(clazz);
+                if (sequenceGenerator != null) {
+                    createSequence(connection, schema, sequenceGenerator.sequenceName(), sequenceGenerator.initialValue(), sequenceGenerator.allocationSize());
+                }
+            }
+        } catch (SQLException ex) {
+            throw new RuntimeException(ex);
+        } finally {
+            try {
+                if (connection != null && !connection.isClosed()) {
+                    connection.close();
+                }
+            } catch (SQLException ex) {
+                throw new RuntimeException(ex);
             }
         }
 
@@ -67,17 +88,32 @@ public abstract class SequenceUpdater {
 
         List<Class> classes = EntityUtils.getMappedEntities(getEntityManager());
         SequenceGenerator sequenceGenerator = null;
-
-        for (Class clazz : classes) {
-            String schema = null;
-            sequenceGenerator = getSequenceGenerator(clazz);
-            if (sequenceGenerator != null) {
-                Long maxId = getMaxId(sequenceGenerator.sequenceName(), clazz);
-                if (schema != null && !schema.isEmpty()) {
-                    changeCurrentValue(schema + "." + sequenceGenerator.sequenceName(), maxId);
-                } else {
-                    changeCurrentValue(sequenceGenerator.sequenceName(), maxId);
+        Connection connection = null;
+        try {
+            if (getDataSource() != null) {
+                connection = getDataSource().getConnection();
+            }
+            for (Class clazz : classes) {
+                String schema = null;
+                sequenceGenerator = getSequenceGenerator(clazz);
+                if (sequenceGenerator != null) {
+                    Long maxId = getMaxId(sequenceGenerator.sequenceName(), clazz);
+                    if (schema != null && !schema.isEmpty()) {
+                        changeCurrentValue(connection, schema + "." + sequenceGenerator.sequenceName(), maxId);
+                    } else {
+                        changeCurrentValue(connection, sequenceGenerator.sequenceName(), maxId);
+                    }
                 }
+            }
+        } catch (SQLException ex) {
+            throw new RuntimeException("Erro updating sequence "+sequenceGenerator.sequenceName(), ex);
+        } finally {
+            try {
+                if (connection != null && !connection.isClosed()) {
+                    connection.close();
+                }
+            } catch (SQLException ex) {
+                throw new RuntimeException(ex);
             }
         }
     }
@@ -94,8 +130,8 @@ public abstract class SequenceUpdater {
         return maxId;
     }
 
-    public abstract void createSequence(String schema, String sequenceName, int initialValue, int allocationSize);
+    public abstract void createSequence(Connection connection, String schema, String sequenceName, int initialValue, int allocationSize);
 
-    public abstract void changeCurrentValue(String sequenceName, Long maxId);
+    public abstract void changeCurrentValue(Connection connection, String sequenceName, Long maxId);
 
 }
