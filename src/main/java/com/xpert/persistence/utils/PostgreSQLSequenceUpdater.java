@@ -45,11 +45,20 @@ public class PostgreSQLSequenceUpdater extends SequenceUpdater {
     public void changeCurrentValueJdbc(Connection connection, String sequenceName, Long maxId) {
         //select setval('sequencename' ,1);
         String setValQueryString = getStringSetVal(sequenceName.trim(), maxId);
+        PreparedStatement statementSetVal = null;
         try {
-            PreparedStatement statementSetVal = connection.prepareStatement(setValQueryString);
+            statementSetVal = connection.prepareStatement(setValQueryString);
             statementSetVal.execute();
         } catch (SQLException ex) {
             throw new RuntimeException(ex);
+        } finally {
+            try {
+                if (statementSetVal != null) {
+                    statementSetVal.close();
+                }
+            } catch (SQLException ex) {
+                throw new RuntimeException(ex);
+            }
         }
     }
 

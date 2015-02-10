@@ -2,6 +2,7 @@ package com.xpert.persistence.utils;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
@@ -69,29 +70,64 @@ public class OracleSequenceUpdater extends SequenceUpdater {
         }
 
         String nextVal = getSelectNextVal(sequenceName);
+        PreparedStatement statementNextVal = null;
+        PreparedStatement statementAlterMax = null;
+        PreparedStatement statementNext = null;
+        PreparedStatement statementAlterDefault = null;
+        ResultSet resultSet = null;
+        
         try {
 
-            PreparedStatement statementNextVal = connection.prepareStatement(nextVal);
+            statementNextVal = connection.prepareStatement(nextVal);
             statementNextVal.execute();
-            statementNextVal.getResultSet().next();
-            long nextValResult = statementNextVal.getResultSet().getLong(1);
+            resultSet = statementNextVal.getResultSet();
+            resultSet.next();
+            long nextValResult = resultSet.getLong(1);
 
             String alterDefault = getAlterSequenceIncrementBy(sequenceName, 1);
             String alterMax = getAlterSequenceIncrementBy(sequenceName, (maxId - nextValResult));
 
             if ((maxId - nextValResult) != 0) {
-                PreparedStatement statementAlterMax = connection.prepareStatement(alterMax);
+                statementAlterMax = connection.prepareStatement(alterMax);
                 statementAlterMax.execute();
+                statementAlterMax.close();
             }
 
-            PreparedStatement statementNext = connection.prepareStatement(nextVal);
+            statementNext = connection.prepareStatement(nextVal);
             statementNext.execute();
 
-            PreparedStatement statementAlterDefault = connection.prepareStatement(alterDefault);
+            statementAlterDefault = connection.prepareStatement(alterDefault);
             statementAlterDefault.execute();
+
+            //close
+            resultSet.close();
+            statementNextVal.close();
+            statementAlterDefault.close();
+            statementNext.close();
 
         } catch (SQLException ex) {
             throw new RuntimeException("Error updating sequence " + sequenceName, ex);
+        } finally {
+            //close result set and statements
+            try {
+                if (resultSet != null) {
+                    resultSet.close();
+                }
+                if (statementNextVal != null) {
+                    statementNextVal.close();
+                }
+                if (statementAlterMax != null) {
+                    statementAlterMax.close();
+                }
+                if (statementNext != null) {
+                    statementNext.close();
+                }
+                if (statementAlterDefault != null) {
+                    statementAlterDefault.close();
+                }
+            } catch (SQLException ex) {
+                throw new RuntimeException(ex);
+            }
         }
     }
 
@@ -116,13 +152,16 @@ public class OracleSequenceUpdater extends SequenceUpdater {
 
     public void createSequenceJdbc(final Connection connection, final String schema, final String sequenceName, final int initialValue, final int allocationSize) {
 
+        PreparedStatement statement = null;
+        ResultSet resultSet = null;
         try {
-            PreparedStatement statement = connection.prepareStatement(getQuerySelectSequence());
+            statement = connection.prepareStatement(getQuerySelectSequence());
 
             statement.setString(1, sequenceName.trim().toUpperCase());
             statement.execute();
-            statement.getResultSet().next();
-            Long result = statement.getResultSet().getLong(1);
+            resultSet = statement.getResultSet();
+            resultSet.next();
+            Long result = resultSet.getLong(1);
 
             if (result == null || result.intValue() <= 0) {
                 String nameWithSchema = sequenceName;
@@ -132,9 +171,23 @@ public class OracleSequenceUpdater extends SequenceUpdater {
                 String queryCreate = getQueryCreateSequence(nameWithSchema, initialValue, allocationSize);
                 PreparedStatement statementCreate = connection.prepareStatement(queryCreate);
                 statementCreate.execute();
+
             }
+
         } catch (SQLException ex) {
             throw new RuntimeException("Error creating sequence " + sequenceName, ex);
+        } finally {
+            //close result set and statements
+            try {
+                if (statement != null) {
+                    statement.close();
+                }
+                if (resultSet != null) {
+                    resultSet.close();
+                }
+            } catch (SQLException ex) {
+                throw new RuntimeException(ex);
+            }
         }
 
     }

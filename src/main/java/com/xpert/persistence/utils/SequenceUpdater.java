@@ -4,13 +4,13 @@ import java.lang.reflect.Field;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.Query;
 import javax.persistence.SequenceGenerator;
 import javax.sql.DataSource;
-import org.hibernate.Session;
-import org.hibernate.jdbc.Work;
 
 /**
  *
@@ -22,6 +22,8 @@ import org.hibernate.jdbc.Work;
  * @author ayslan, arnaldo
  */
 public abstract class SequenceUpdater {
+
+    private static final Logger logger = Logger.getLogger(SequenceUpdater.class.getName());
 
     public abstract DataSource getDataSource();
 
@@ -43,7 +45,12 @@ public abstract class SequenceUpdater {
                 String schema = null;
                 sequenceGenerator = getSequenceGenerator(clazz);
                 if (sequenceGenerator != null) {
-                    createSequence(connection, schema, sequenceGenerator.sequenceName(), sequenceGenerator.initialValue(), sequenceGenerator.allocationSize());
+                    logger.log(Level.INFO, "Mapping sequence {0}", sequenceGenerator.sequenceName());
+                    try {
+                        createSequence(connection, schema, sequenceGenerator.sequenceName(), sequenceGenerator.initialValue(), sequenceGenerator.allocationSize());
+                    } catch (Exception ex) {
+                        logger.log(Level.SEVERE, "Erro in sequence " + sequenceGenerator.sequenceName(), ex);
+                    }
                 }
             }
         } catch (SQLException ex) {
@@ -97,16 +104,21 @@ public abstract class SequenceUpdater {
                 String schema = null;
                 sequenceGenerator = getSequenceGenerator(clazz);
                 if (sequenceGenerator != null) {
-                    Long maxId = getMaxId(sequenceGenerator.sequenceName(), clazz);
-                    if (schema != null && !schema.isEmpty()) {
-                        changeCurrentValue(connection, schema + "." + sequenceGenerator.sequenceName(), maxId);
-                    } else {
-                        changeCurrentValue(connection, sequenceGenerator.sequenceName(), maxId);
+                    try {
+                        logger.log(Level.INFO, "Mapping sequence {0}", sequenceGenerator.sequenceName());
+                        Long maxId = getMaxId(sequenceGenerator.sequenceName(), clazz);
+                        if (schema != null && !schema.isEmpty()) {
+                            changeCurrentValue(connection, schema + "." + sequenceGenerator.sequenceName(), maxId);
+                        } else {
+                            changeCurrentValue(connection, sequenceGenerator.sequenceName(), maxId);
+                        }
+                    } catch (Exception ex) {
+                        logger.log(Level.SEVERE, "Erro in sequence " + sequenceGenerator.sequenceName(), ex);
                     }
                 }
             }
         } catch (SQLException ex) {
-            throw new RuntimeException("Erro updating sequence "+sequenceGenerator.sequenceName(), ex);
+            throw new RuntimeException("Erro updating sequence " + sequenceGenerator.sequenceName(), ex);
         } finally {
             try {
                 if (connection != null && !connection.isClosed()) {
