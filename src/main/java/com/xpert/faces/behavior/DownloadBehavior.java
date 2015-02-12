@@ -30,8 +30,9 @@ public class DownloadBehavior extends ClientBehaviorBase {
     public String getScript(ClientBehaviorContext behaviorContext) {
 
         StringBuilder script = new StringBuilder();
+        String clientId = behaviorContext.getComponent().getClientId();
 
-        script.append("Xpert.behavior.download(this,{");
+        script.append("Xpert.behavior.download('").append(clientId).append("', {");
         script.append("showModal:");
         if (showModal != null && showModal) {
             script.append("true");
@@ -51,7 +52,7 @@ public class DownloadBehavior extends ClientBehaviorBase {
             script.append(XpertResourceBundle.get("loading"));
 
         }
-        script.append("'})");
+        script.append("'});");
 
         return script.toString();
     }

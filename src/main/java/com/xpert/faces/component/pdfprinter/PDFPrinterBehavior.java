@@ -32,7 +32,7 @@ public class PDFPrinterBehavior extends ClientBehaviorBase {
         String clientId = behaviorContext.getComponent().getClientId();
         String componentTarget =  behaviorContext.getComponent().findComponent(target).getClientId();
         
-        script.append("Xpert.printPDF('").append(clientId).append("', '").append(componentTarget).append("')");
+        script.append("Xpert.printPDF('").append(clientId).append("', '").append(componentTarget).append("');");
 
         return script.toString();
     }
