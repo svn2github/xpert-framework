@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.xpert.faces.behavior;
 
 import com.xpert.i18n.XpertResourceBundle;

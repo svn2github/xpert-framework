@@ -74,7 +74,7 @@ public class PostgreSQLSequenceUpdater extends SequenceUpdater {
 
     @Override
     public void createSequence(Connection connection, String schema, String sequenceName, int initialValue, int allocationSize) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        throw new UnsupportedOperationException("PostgreSQL is not supported yet.");
     }
 
     public String getStringSetVal(String sequenceName, Long maxId) {
