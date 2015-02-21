@@ -13,6 +13,8 @@ import org.jsoup.select.Elements;
 
 /**
  *
+ * Utility class to normalize HTML. A well formed HTML must be with tags closed.
+ *
  * @author Ayslan
  */
 public class HtmlNormalizer {
@@ -110,11 +112,11 @@ public class HtmlNormalizer {
         //remove cli-path attribute because batik throws a error
         //tag comes with: <g clip-path="url(http://localhost:8080/xpert-showcase-war/views/components/pdfPrinter.jsf#_ABSTRACT_RENDERER_ID_0)">
         document.select("svg *").removeAttr("clip-path");
-        
+
         //SVG clipath comes in lowerCase
         String documentHTML = document.html();
         documentHTML = documentHTML.replace("<clippath", "<clipPath").replace("</clippath", "</clipPath");
-        
+
         return documentHTML;
     }
 

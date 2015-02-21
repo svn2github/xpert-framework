@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.xpert.maker;
 
 import com.xpert.utils.SwingUtils;
@@ -11,6 +6,8 @@ import javax.swing.JTextArea;
 
 /**
  *
+ * Swing dialog tha show a textarea, with option to copy
+ * 
  * @author ayslan
  */
 public class DialogShowText extends javax.swing.JDialog {
