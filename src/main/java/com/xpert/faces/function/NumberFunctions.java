@@ -2,7 +2,6 @@ package com.xpert.faces.function;
 
 import com.xpert.core.conversion.NumberUtils;
 import com.xpert.faces.primefaces.LazyDataModelImpl;
-import java.math.BigDecimal;
 import java.util.Collection;
 import javax.faces.FacesException;
 import javax.faces.model.DataModel;
@@ -12,18 +11,6 @@ import javax.faces.model.DataModel;
  * @author Ayslan
  */
 public class NumberFunctions {
-
-    /**
-     * Sum implmentantation for LazyDataModelImpl, this method create a query
-     * que the field calling lazyDataModel.sum()
-     *
-     * @param lazyDataModel
-     * @param field
-     * @return
-     */
-    public static Object sumLazyDataModel(LazyDataModelImpl lazyDataModel, String field) {
-        return lazyDataModel.sum(field);
-    }
 
     /**
      * If the object is a instanceof DataModel (example: standart DataModel,
@@ -48,8 +35,68 @@ public class NumberFunctions {
     }
 
     /**
+     * If the object is instance of LazyDataModelImpl, then shoudld call avg
+     * using query.
+     *
+     * @param objects
+     * @param field
+     * @return
+     */
+    public static Object max(Object objects, String field) {
+        if (objects instanceof LazyDataModelImpl) {
+            return ((LazyDataModelImpl) objects).max(field);
+        }
+        Collection collection = getCollection(objects);
+        try {
+            return NumberUtils.max(collection, field);
+        } catch (Exception ex) {
+            throw new FacesException(ex);
+        }
+    }
+
+    /**
+     * If the object is instance of LazyDataModelImpl, then shoudld call avg
+     * using query.
+     *
+     * @param objects
+     * @param field
+     * @return
+     */
+    public static Object min(Object objects, String field) {
+        if (objects instanceof LazyDataModelImpl) {
+            return ((LazyDataModelImpl) objects).min(field);
+        }
+        Collection collection = getCollection(objects);
+        try {
+            return NumberUtils.min(collection, field);
+        } catch (Exception ex) {
+            throw new FacesException(ex);
+        }
+    }
+
+    /**
+     * If the object is instance of LazyDataModelImpl, then shoudld call avg
+     * using query.
+     *
+     * @param objects
+     * @param field
+     * @return
+     */
+    public static Object avg(Object objects, String field) {
+        if (objects instanceof LazyDataModelImpl) {
+            return ((LazyDataModelImpl) objects).avg(field);
+        }
+        Collection collection = getCollection(objects);
+        try {
+            return NumberUtils.avg(collection, field);
+        } catch (Exception ex) {
+            throw new FacesException(ex);
+        }
+    }
+
+    /**
      * If the object is instance of LazyDataModelImpl, then shoudld call sum
-     * using query. If tht object is instance of
+     * using query.
      *
      * @param objects
      * @param field
@@ -57,7 +104,7 @@ public class NumberFunctions {
      */
     public static Object sum(Object objects, String field) {
         if (objects instanceof LazyDataModelImpl) {
-            return sumLazyDataModel((LazyDataModelImpl) objects, field);
+            return ((LazyDataModelImpl) objects).sum(field);
         }
         Collection collection = getCollection(objects);
         try {

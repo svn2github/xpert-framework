@@ -107,6 +107,8 @@ public class QueryBuilder {
             queryString.append("SELECT MIN(").append(select).append(") ");
         } else if (type.equals(QueryType.SUM)) {
             queryString.append("SELECT SUM(").append(select).append(") ");
+        } else if (type.equals(QueryType.AVG)) {
+            queryString.append("SELECT AVG(").append(select).append(") ");
         } else if (type.equals(QueryType.SELECT) && (select != null && !select.isEmpty())) {
             queryString.append("SELECT ").append(select).append(" ");
         }
@@ -285,6 +287,31 @@ public class QueryBuilder {
     public Long count() {
         type = QueryType.COUNT;
         return (Long) createQuery().getSingleResult();
+    }
+
+    /**
+     *
+     * @param property Property to query
+     * @return Value of clausule "SELECT AVG(property)"
+     */
+    public Number avg(String property) {
+        type = QueryType.AVG;
+        atrribute = property;
+        return (Number) createQuery().getSingleResult();
+    }
+
+    /**
+     *
+     * @param property Property to query
+     * @param valueWhenNull Return value when query result is null
+     * @return Value of clausule "SELECT AVG(property)"
+     */
+    public Number avg(String property, Number valueWhenNull) {
+        Number value = avg(property);
+        if (value == null) {
+            return valueWhenNull;
+        }
+        return value;
     }
 
     /**

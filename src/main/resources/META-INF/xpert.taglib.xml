@@ -7,6 +7,21 @@
     <composite-library-name>xpert/components</composite-library-name>
     
     <function>
+        <function-name>avg</function-name>
+        <function-class>com.xpert.faces.function.NumberFunctions</function-class>
+        <function-signature>java.lang.Object avg(java.lang.Object, java.lang.String)</function-signature>
+    </function>
+    <function>
+        <function-name>max</function-name>
+        <function-class>com.xpert.faces.function.NumberFunctions</function-class>
+        <function-signature>java.lang.Object max(java.lang.Object, java.lang.String)</function-signature>
+    </function>
+    <function>
+        <function-name>min</function-name>
+        <function-class>com.xpert.faces.function.NumberFunctions</function-class>
+        <function-signature>java.lang.Object min(java.lang.Object, java.lang.String)</function-signature>
+    </function>
+    <function>
         <function-name>sum</function-name>
         <function-class>com.xpert.faces.function.NumberFunctions</function-class>
         <function-signature>java.lang.Object sum(java.lang.Object, java.lang.String)</function-signature>

@@ -4,6 +4,7 @@ import com.xpert.i18n.I18N;
 import java.lang.reflect.InvocationTargetException;
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.math.RoundingMode;
 import java.text.NumberFormat;
 import java.util.Collection;
 import org.apache.commons.beanutils.NestedNullException;
@@ -83,7 +84,6 @@ public class NumberUtils {
      */
     public static BigDecimal sum(Collection objects, String field) throws NoSuchMethodException, IllegalAccessException, InvocationTargetException {
 
-//        long begin = System.currentTimeMillis();
         BigDecimal total = BigDecimal.ZERO;
         if (objects == null || objects.isEmpty()) {
             return total;
@@ -98,26 +98,159 @@ public class NumberUtils {
                     //nested null, do nothing
                 }
                 if (value != null) {
-                    if (value instanceof BigDecimal) {
-                        total = total.add((BigDecimal) value);
-                    } else if (value instanceof BigInteger) {
-                        total = total.add(new BigDecimal((BigInteger) value));
-                    } else if (value instanceof Double) {
-                        total = total.add(new BigDecimal((Double) value));
-                    } else if (value instanceof Float) {
-                        total = total.add(new BigDecimal((Float) value));
-                    } else if (value instanceof Number) {
-                        Number numberValue = (Number) value;
-                        total = total.add(new BigDecimal(numberValue.longValue()));
+                    total = total.add(convertToBigDecimal(value));
+                }
+            }
+        }
+
+        return total;
+
+    }
+
+    /**
+     * Returns a BigDecimal instance of average of fields in collection. If
+     * collection is null or empty return ZERO. If average is null, return ZERO.
+     *
+     *
+     * @param objects
+     * @param field
+     * @return
+     * @throws NoSuchMethodException
+     * @throws IllegalAccessException
+     * @throws InvocationTargetException
+     */
+    public static BigDecimal avg(Collection objects, String field) throws NoSuchMethodException, IllegalAccessException, InvocationTargetException {
+
+        BigDecimal total = BigDecimal.ZERO;
+        if (objects == null || objects.isEmpty()) {
+            return total;
+        }
+
+        int count = 0;
+        if (field != null && !field.trim().isEmpty()) {
+            for (Object o : objects) {
+                Object value = null;
+                try {
+                    value = PropertyUtils.getProperty(o, field);
+                } catch (NestedNullException ex) {
+                    //nested null, do nothing
+                }
+                if (value != null) {
+                    count++;
+                    total = total.add(convertToBigDecimal(value));
+                }
+            }
+        }
+
+        if (count == 0) {
+            return BigDecimal.ZERO;
+        }
+
+        return total.divide(new BigDecimal(count), 2, RoundingMode.HALF_UP);
+
+    }
+
+    /**
+     * Returns a BigDecimal instance of max value of fields in collection. If
+     * collection is null or empty return null.
+     *
+     *
+     * @param objects
+     * @param field
+     * @return
+     * @throws NoSuchMethodException
+     * @throws IllegalAccessException
+     * @throws InvocationTargetException
+     */
+    public static BigDecimal max(Collection objects, String field) throws NoSuchMethodException, IllegalAccessException, InvocationTargetException {
+
+        if (objects == null || objects.isEmpty()) {
+            return null;
+        }
+        BigDecimal max = null;
+        if (field != null && !field.trim().isEmpty()) {
+            for (Object o : objects) {
+                Object value = null;
+                BigDecimal current = null;
+                try {
+                    value = PropertyUtils.getProperty(o, field);
+                } catch (NestedNullException ex) {
+                    //nested null, do nothing
+                }
+                if (value != null) {
+                    current = convertToBigDecimal(value);
+                    if (max == null || current.compareTo(max) > 0) {
+                        max = current;
                     }
                 }
             }
         }
-//        long end = System.currentTimeMillis();
-//        System.out.println("time: " + (end - begin));
+        return max;
+    }
 
-        return total;
+    /**
+     * Returns a BigDecimal instance of min value of fields in collection. If
+     * collection is null or empty return null.
+     *
+     *
+     * @param objects
+     * @param field
+     * @return
+     * @throws NoSuchMethodException
+     * @throws IllegalAccessException
+     * @throws InvocationTargetException
+     */
+    public static BigDecimal min(Collection objects, String field) throws NoSuchMethodException, IllegalAccessException, InvocationTargetException {
 
+        if (objects == null || objects.isEmpty()) {
+            return null;
+        }
+        BigDecimal min = null;
+        if (field != null && !field.trim().isEmpty()) {
+            for (Object o : objects) {
+                Object value = null;
+                BigDecimal current = null;
+                try {
+                    value = PropertyUtils.getProperty(o, field);
+                } catch (NestedNullException ex) {
+                    //nested null, do nothing
+                }
+                if (value != null) {
+                    current = convertToBigDecimal(value);
+                    if (min == null || current.compareTo(min) < 0) {
+                        min = current;
+                    }
+                }
+            }
+        }
+        return min;
+    }
+
+    /**
+     * Try to convert a object to BigDecimal Example: Double = new
+     * BigDecimal((Double) value) Float = new BigDecimal((Float) value)
+     *
+     * @param value
+     * @return
+     */
+    public static BigDecimal convertToBigDecimal(Object value) {
+        if (value == null) {
+            return null;
+        }
+        if (value instanceof BigDecimal) {
+            return ((BigDecimal) value);
+        } else if (value instanceof BigInteger) {
+            return new BigDecimal((BigInteger) value);
+        } else if (value instanceof Double) {
+            return new BigDecimal((Double) value);
+        } else if (value instanceof Float) {
+            return new BigDecimal((Float) value);
+        } else if (value instanceof Number) {
+            Number numberValue = (Number) value;
+            return new BigDecimal(numberValue.longValue());
+        } else {
+            throw new IllegalArgumentException("Canoot convert " + value.getClass().getName() + " to " + BigDecimal.class.getName() + ". Value: " + value);
+        }
     }
 
     /**

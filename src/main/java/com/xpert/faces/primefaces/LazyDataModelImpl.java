@@ -321,6 +321,38 @@ public class LazyDataModelImpl<T> extends LazyDataModel {
     public Object sum(String field) {
         return buildQueryBuilder().sum(field);
     }
+    
+    /**
+     * Return a average of field, this method gets the QueryBuilder and add the
+     * current restrictions to generate the query
+     *
+     * @param field
+     * @return
+     */
+    public Object avg(String field) {
+        return buildQueryBuilder().avg(field);
+    }
+    /**
+     * Return a min value of field, this method gets the QueryBuilder and add the
+     * current restrictions to generate the query
+     *
+     * @param field
+     * @return
+     */
+    public Object min(String field) {
+        return buildQueryBuilder().min(field);
+    }
+    
+    /**
+     * Return a max value of field, this method gets the QueryBuilder and add the
+     * current restrictions to generate the query
+     *
+     * @param field
+     * @return
+     */
+    public Object max(String field) {
+        return buildQueryBuilder().max(field);
+    }
 
     /**
      * Return Paginator Template
