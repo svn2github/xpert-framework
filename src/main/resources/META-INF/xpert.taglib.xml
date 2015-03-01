@@ -220,6 +220,7 @@
         <component>
             <component-type>com.xpert.faces.component.Group</component-type>
             <renderer-type>com.xpert.faces.component.GroupRenderer</renderer-type>
+            <handler-class>com.xpert.faces.component.group.GroupHandler</handler-class>
         </component>
         <attribute>
             <name>groupBy</name>
@@ -240,6 +241,12 @@
             <type>java.lang.String</type>
         </attribute>
         <attribute>
+            <description><![CDATA[Custom pluggable sortFunction.]]></description>
+            <name>itemSortFunction</name>
+            <required>false</required>
+            <type>javax.el.MethodExpression</type>
+        </attribute>
+        <attribute>
             <description>Sets item sorting order. Can be "ascending" or "descending". Default is "ascending"</description>
             <name>itemSortOrder</name>
             <type>java.lang.String</type>
@@ -252,6 +259,12 @@
         <attribute>
             <name>sortField</name>
             <type>java.lang.String</type>
+        </attribute>
+        <attribute>
+            <description><![CDATA[Custom pluggable sortFunction.]]></description>
+            <name>sortFunction</name>
+            <required>false</required>
+            <type>javax.el.MethodExpression</type>
         </attribute>
         <attribute>
             <name>rowIndexVar</name>

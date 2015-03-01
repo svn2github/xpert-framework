@@ -1,10 +1,13 @@
 package com.xpert.faces.component.group;
 
+import com.xpert.faces.component.api.MethodExpressionComparator;
 import com.xpert.faces.component.api.UIData;
 import com.xpert.faces.component.group.model.GroupModel;
 import com.xpert.faces.component.api.SortOrder;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
+import javax.el.MethodExpression;
 import javax.el.ValueExpression;
 import javax.faces.FacesException;
 import javax.faces.model.DataModel;
@@ -33,7 +36,7 @@ public class Group extends UIData {
 
     protected enum PropertyKeys {
 
-        value, groupBy, itemSortField, itemSortOrder, sortOrder, sortField, rowIndexVar;
+        value, groupBy, itemSortField, itemSortOrder, sortOrder, sortField, rowIndexVar, sortFunction, itemSortFunction;
 
         String toString;
 
@@ -78,8 +81,8 @@ public class Group extends UIData {
 
         String sortOrder = getSortOrder();
         if (sortOrder != null && !sortOrder.isEmpty()) {
-            if(!sortOrder.toUpperCase().equals(SortOrder.ASCENDING.name()) &&
-                    !sortOrder.toUpperCase().equals(SortOrder.DESCENDING.name())){
+            if (!sortOrder.toUpperCase().equals(SortOrder.ASCENDING.name())
+                    && !sortOrder.toUpperCase().equals(SortOrder.DESCENDING.name())) {
                 throw new FacesException("Sort Order must be \"ascending\" or \"descending\"");
             }
             groupModel.setSortOrder(SortOrder.valueOf(sortOrder.toUpperCase()));
@@ -87,11 +90,20 @@ public class Group extends UIData {
 
         String itemSortOrder = getItemSortOrder();
         if (itemSortOrder != null && !itemSortOrder.isEmpty()) {
-             if(!itemSortOrder.toUpperCase().equals(SortOrder.ASCENDING.name()) &&
-                    !itemSortOrder.toUpperCase().equals(SortOrder.DESCENDING.name())){
+            if (!itemSortOrder.toUpperCase().equals(SortOrder.ASCENDING.name())
+                    && !itemSortOrder.toUpperCase().equals(SortOrder.DESCENDING.name())) {
                 throw new FacesException("Item Sort Order must be \"ascending\" or \"descending\"");
             }
             groupModel.setItemSortOrder(SortOrder.valueOf(itemSortOrder.toUpperCase()));
+        }
+
+        MethodExpression sortFunction = getSortFunction();
+        if (sortFunction != null) {
+            groupModel.setComparator(new MethodExpressionComparator(this.getFacesContext(), sortFunction, groupModel.getSortOrder()));
+        }
+        MethodExpression itemSortFunction = getItemSortFunction();
+        if (itemSortFunction != null) {
+            groupModel.setItemComparator(new MethodExpressionComparator(this.getFacesContext(), itemSortFunction, groupModel.getItemSortOrder()));
         }
 
         groupModel.groupItens();
@@ -154,6 +166,22 @@ public class Group extends UIData {
 
     public void setRowIndexVar(String rowIndexVar) {
         setAttribute(PropertyKeys.rowIndexVar, rowIndexVar);
+    }
+
+    public MethodExpression getSortFunction() {
+        return (MethodExpression) getStateHelper().eval(PropertyKeys.sortFunction, null);
+    }
+
+    public void setSortFunction(MethodExpression _sortFunction) {
+        getStateHelper().put(PropertyKeys.sortFunction, _sortFunction);
+    }
+
+    public MethodExpression getItemSortFunction() {
+        return (MethodExpression) getStateHelper().eval(PropertyKeys.itemSortFunction, null);
+    }
+
+    public void setItemSortFunction(MethodExpression _itemSortFunction) {
+        getStateHelper().put(PropertyKeys.itemSortFunction, _itemSortFunction);
     }
 
     @SuppressWarnings("unchecked")

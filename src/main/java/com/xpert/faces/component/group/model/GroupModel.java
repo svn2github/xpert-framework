@@ -3,6 +3,8 @@ package com.xpert.faces.component.group.model;
 import com.xpert.faces.component.api.SortOrder;
 import com.xpert.utils.CollectionsUtils;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -20,8 +22,10 @@ public class GroupModel<K, V> {
     private String groupBy;
     private String itemSortField;
     private SortOrder itemSortOrder;
+    private Comparator<V> itemComparator;
     private String sortField;
     private SortOrder sortOrder;
+    private Comparator<V> comparator;
     /**
      * the original value
      */
@@ -50,9 +54,12 @@ public class GroupModel<K, V> {
 
     public void groupItens() {
         if (value != null) {
-         //   System.out.println("Grouping by: " + groupBy + " size: " + value.size() + " list: " + value);
+            //   System.out.println("Grouping by: " + groupBy + " size: " + value.size() + " list: " + value);
             Map<Object, GroupModelItem> map = new LinkedHashMap<Object, GroupModelItem>();
             itens = new ArrayList<GroupModelItem<K, V>>();
+            if (comparator != null) {
+                Collections.sort(value, comparator);
+            }
             for (Object item : value) {
                 try {
                     Object keyForData;
@@ -85,30 +92,31 @@ public class GroupModel<K, V> {
         }
 
         //order main list
-        String sortKey = "key";
-        if (sortField != null && !sortField.isEmpty()) {
-            sortKey = sortKey + "." + sortField;
-        }
-
-        if (itens != null && !itens.isEmpty()) {
-
-            Object firstItem = itens.get(0).getKey();
-            boolean isSort = false;
-            if (firstItem instanceof Comparable || (sortField != null && !sortField.isEmpty())) {
-                isSort = true;
+        if (comparator == null) {
+            String sortKey = "key";
+            if (sortField != null && !sortField.isEmpty()) {
+                sortKey = sortKey + "." + sortField;
             }
-            if (isSort == true) {
-                if (sortOrder == null || sortOrder.equals(SortOrder.ASCENDING)) {
-                    CollectionsUtils.orderAsc(itens, sortKey);
-                } else {
-                    CollectionsUtils.orderDesc(itens, sortKey);
+
+            if (itens != null && !itens.isEmpty()) {
+
+                Object firstItem = itens.get(0).getKey();
+                boolean isSort = false;
+                if (firstItem instanceof Comparable || (sortField != null && !sortField.isEmpty())) {
+                    isSort = true;
                 }
-            }
+                if (isSort == true) {
+                    if (sortOrder == null || sortOrder.equals(SortOrder.ASCENDING)) {
+                        CollectionsUtils.orderAsc(itens, sortKey);
+                    } else {
+                        CollectionsUtils.orderDesc(itens, sortKey);
+                    }
+                }
 
+            }
         }
 
-       // System.out.println("quantidade de itens: " + itens.size());
-
+        // System.out.println("quantidade de itens: " + itens.size());
         //normalize
         if (itens != null) {
             for (int i = 0; i < itens.size(); i++) {
@@ -120,11 +128,15 @@ public class GroupModel<K, V> {
                     groupModelItem.setLast(true);
                 }
                 //order itens
-                if (itemSortField != null && !itemSortField.isEmpty()) {
-                    if (itemSortOrder == null || itemSortOrder.equals(SortOrder.ASCENDING)) {
-                        CollectionsUtils.orderAsc(groupModelItem.getValue(), itemSortField);
-                    } else {
-                        CollectionsUtils.orderDesc(groupModelItem.getValue(), itemSortField);
+                if (itemComparator != null) {
+                    Collections.sort(groupModelItem.getValue(), itemComparator);
+                } else {
+                    if (itemSortField != null && !itemSortField.isEmpty()) {
+                        if (itemSortOrder == null || itemSortOrder.equals(SortOrder.ASCENDING)) {
+                            CollectionsUtils.orderAsc(groupModelItem.getValue(), itemSortField);
+                        } else {
+                            CollectionsUtils.orderDesc(groupModelItem.getValue(), itemSortField);
+                        }
                     }
                 }
             }
@@ -186,6 +198,22 @@ public class GroupModel<K, V> {
 
     public void setSortField(String sortField) {
         this.sortField = sortField;
+    }
+
+    public Comparator<V> getItemComparator() {
+        return itemComparator;
+    }
+
+    public void setItemComparator(Comparator<V> itemComparator) {
+        this.itemComparator = itemComparator;
+    }
+
+    public Comparator<V> getComparator() {
+        return comparator;
+    }
+
+    public void setComparator(Comparator<V> comparator) {
+        this.comparator = comparator;
     }
 
 }
