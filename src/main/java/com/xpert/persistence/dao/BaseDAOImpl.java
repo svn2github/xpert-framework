@@ -37,10 +37,6 @@ public abstract class BaseDAOImpl<T> implements BaseDAO<T> {
     private static final Logger logger = Logger.getLogger(BaseDAOImpl.class.getName());
     private static final Map<ClassField, String> ORDER_BY_MAP = new HashMap<ClassField, String>();
 
-    /**
-     * Set here your getEntityManager()
-     */
-    //   public abstract void init();
     @SuppressWarnings({"unchecked", "rawtypes"})
     public BaseDAOImpl() {
         try {
@@ -203,10 +199,10 @@ public abstract class BaseDAOImpl<T> implements BaseDAO<T> {
         try {
 
             if (audit) {
-                getNewAudit().delete(id, entityClass);
+                getNewAudit().delete(id, getEntityClass());
             }
 
-            Query query = getEntityManager().createQuery("DELETE FROM " + entityClass.getName() + " WHERE " + EntityUtils.getIdFieldName(entityClass) + " = ?1 ");
+            Query query = getEntityManager().createQuery("DELETE FROM " + getEntityClass().getName() + " WHERE " + EntityUtils.getIdFieldName(getEntityClass()) + " = ?1 ");
             query.setParameter(1, id);
             query.executeUpdate();
         } catch (Exception ex) {
@@ -247,7 +243,7 @@ public abstract class BaseDAOImpl<T> implements BaseDAO<T> {
 
     @Override
     public T find(Object id) {
-        return (T) getEntityManager().find(entityClass, id);
+        return (T) getEntityManager().find(getEntityClass(), id);
     }
 
     @Override
@@ -262,7 +258,7 @@ public abstract class BaseDAOImpl<T> implements BaseDAO<T> {
 
     @Override
     public List<T> listAll(String order) {
-        return listAll(entityClass, order);
+        return listAll(getEntityClass(), order);
     }
 
     @Override
@@ -277,8 +273,8 @@ public abstract class BaseDAOImpl<T> implements BaseDAO<T> {
         QueryBuilder builder = new QueryBuilder(getEntityManager());
 
         return builder.select("o." + attributeName)
-                .from(entityClass, "o")
-                .add("o." + EntityUtils.getIdFieldName(entityClass), id)
+                .from(getEntityClass(), "o")
+                .add("o." + EntityUtils.getIdFieldName(getEntityClass()), id)
                 .getSigleResult();
 
     }
@@ -294,8 +290,8 @@ public abstract class BaseDAOImpl<T> implements BaseDAO<T> {
         QueryBuilder builder = new QueryBuilder(getEntityManager());
 
         return builder.select("o." + attributeName)
-                .from(entityClass, "o")
-                .add("o." + EntityUtils.getIdFieldName(entityClass), id)
+                .from(getEntityClass(), "o")
+                .add("o." + EntityUtils.getIdFieldName(getEntityClass()), id)
                 .getResultList();
 
     }
@@ -307,7 +303,7 @@ public abstract class BaseDAOImpl<T> implements BaseDAO<T> {
 
     @Override
     public T unique(Map<String, Object> args) {
-        Query query = new QueryBuilder(getEntityManager()).from(entityClass).add(args).createQuery().setMaxResults(1);
+        Query query = new QueryBuilder(getEntityManager()).from(getEntityClass()).add(args).createQuery().setMaxResults(1);
         try {
             return (T) query.getSingleResult();
         } catch (NoResultException ex) {
@@ -317,12 +313,12 @@ public abstract class BaseDAOImpl<T> implements BaseDAO<T> {
 
     @Override
     public T unique(Restriction restriction) {
-        return unique(getRestrictions(restriction), entityClass);
+        return unique(getRestrictions(restriction), getEntityClass());
     }
 
     @Override
     public T unique(List<Restriction> restrictions) {
-        return unique(restrictions, entityClass);
+        return unique(restrictions, getEntityClass());
     }
 
     @Override
@@ -332,7 +328,7 @@ public abstract class BaseDAOImpl<T> implements BaseDAO<T> {
 
     @Override
     public T unique(String property, Object value) {
-        return unique(new Restriction(property, value), entityClass);
+        return unique(new Restriction(property, value), getEntityClass());
     }
 
     @Override
@@ -358,7 +354,7 @@ public abstract class BaseDAOImpl<T> implements BaseDAO<T> {
 
     @Override
     public List<T> list(Map<String, Object> restrictions, String order, Integer firstResult, Integer maxResults) {
-        Query query = new QueryBuilder(getEntityManager()).from(entityClass).add(restrictions).orderBy(order).createQuery();
+        Query query = new QueryBuilder(getEntityManager()).from(getEntityClass()).add(restrictions).orderBy(order).createQuery();
 
         if (firstResult != null) {
             query.setFirstResult(firstResult);
@@ -377,7 +373,7 @@ public abstract class BaseDAOImpl<T> implements BaseDAO<T> {
 
     @Override
     public List<T> list(List<Restriction> restrictions) {
-        return list(entityClass, restrictions);
+        return list(getEntityClass(), restrictions);
     }
 
     @Override
@@ -387,17 +383,17 @@ public abstract class BaseDAOImpl<T> implements BaseDAO<T> {
 
     @Override
     public List<T> list(String property, Object value) {
-        return list(entityClass, new Restriction(property, value));
+        return list(getEntityClass(), new Restriction(property, value));
     }
 
     @Override
     public List<T> list(String property, Object value, String order) {
-        return list(entityClass, new Restriction(property, value), order);
+        return list(getEntityClass(), new Restriction(property, value), order);
     }
 
     @Override
     public List<T> list(Restriction restriction) {
-        return list(entityClass, getRestrictions(restriction));
+        return list(getEntityClass(), getRestrictions(restriction));
     }
 
     @Override
@@ -407,37 +403,37 @@ public abstract class BaseDAOImpl<T> implements BaseDAO<T> {
 
     @Override
     public List<T> listAttributes(String attributes, String order) {
-        return list(entityClass, (List) null, order, null, null, attributes);
+        return list(getEntityClass(), (List) null, order, null, null, attributes);
     }
 
     @Override
     public List<T> listAttributes(Map<String, Object> args, String attributes, String order) {
-        return list(entityClass, getRestrictionsFromMap(args), order, null, null, attributes);
+        return list(getEntityClass(), getRestrictionsFromMap(args), order, null, null, attributes);
     }
 
     @Override
     public List<T> listAttributes(Map<String, Object> args, String attributes) {
-        return list(entityClass, getRestrictionsFromMap(args), null, null, null, attributes);
+        return list(getEntityClass(), getRestrictionsFromMap(args), null, null, null, attributes);
     }
 
     @Override
     public List<T> listAttributes(List<Restriction> restrictions, String attributes, String order) {
-        return list(entityClass, restrictions, order, null, null, attributes);
+        return list(getEntityClass(), restrictions, order, null, null, attributes);
     }
 
     @Override
     public List<T> listAttributes(List<Restriction> restrictions, String attributes) {
-        return list(entityClass, restrictions, null, null, null, attributes);
+        return list(getEntityClass(), restrictions, null, null, null, attributes);
     }
 
     @Override
     public List<T> listAttributes(Restriction restriction, String attributes, String order) {
-        return list(entityClass, getRestrictions(restriction), order, null, null, attributes);
+        return list(getEntityClass(), getRestrictions(restriction), order, null, null, attributes);
     }
 
     @Override
     public List<T> listAttributes(Restriction restriction, String attributes) {
-        return list(entityClass, getRestrictions(restriction), null, null, null, attributes);
+        return list(getEntityClass(), getRestrictions(restriction), null, null, null, attributes);
     }
 
     public List listAttributes(String property, Object value, String attributes) {
@@ -450,7 +446,7 @@ public abstract class BaseDAOImpl<T> implements BaseDAO<T> {
 
     @Override
     public List<T> list(List<Restriction> restrictions, String order, Integer firstResult, Integer maxResults) {
-        return list(entityClass, restrictions, order, firstResult, maxResults);
+        return list(getEntityClass(), restrictions, order, firstResult, maxResults);
     }
 
     @Override
@@ -460,7 +456,7 @@ public abstract class BaseDAOImpl<T> implements BaseDAO<T> {
 
     @Override
     public List<T> list(Restriction restriction, String order, Integer firstResult, Integer maxResults) {
-        return list(entityClass, getRestrictions(restriction), order, firstResult, maxResults);
+        return list(getEntityClass(), getRestrictions(restriction), order, firstResult, maxResults);
     }
 
     @Override
@@ -470,7 +466,7 @@ public abstract class BaseDAOImpl<T> implements BaseDAO<T> {
 
     @Override
     public List<T> list(List<Restriction> restrictions, String order) {
-        return list(entityClass, restrictions, order);
+        return list(getEntityClass(), restrictions, order);
     }
 
     @Override
@@ -480,7 +476,7 @@ public abstract class BaseDAOImpl<T> implements BaseDAO<T> {
 
     @Override
     public List<T> list(Restriction restriction, String order) {
-        return list(entityClass, getRestrictions(restriction), order);
+        return list(getEntityClass(), getRestrictions(restriction), order);
     }
 
     @Override
@@ -509,7 +505,7 @@ public abstract class BaseDAOImpl<T> implements BaseDAO<T> {
 
     @Override
     public Long count(Map<String, Object> restrictions) {
-        return new QueryBuilder(getEntityManager()).from(entityClass).add(restrictions).count();
+        return new QueryBuilder(getEntityManager()).from(getEntityClass()).add(restrictions).count();
     }
 
     @Override
@@ -524,12 +520,12 @@ public abstract class BaseDAOImpl<T> implements BaseDAO<T> {
 
     @Override
     public Long count(List<Restriction> restrictions) {
-        return new QueryBuilder(getEntityManager()).from(entityClass).add(restrictions).count();
+        return new QueryBuilder(getEntityManager()).from(getEntityClass()).add(restrictions).count();
     }
 
     @Override
     public Long count() {
-        return count(entityClass);
+        return count(getEntityClass());
     }
 
     @Override
