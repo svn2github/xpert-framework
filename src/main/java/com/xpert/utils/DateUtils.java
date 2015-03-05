@@ -12,12 +12,13 @@ import java.util.GregorianCalendar;
  * @author Ayslan
  */
 public class DateUtils {
-    
+
     /**
-     * Get Date with only day, month and year (removing hour, minute, second and milisecond)
-     * 
+     * Get Date with only day, month and year (removing hour, minute, second and
+     * milisecond)
+     *
      * @param date
-     * @return 
+     * @return
      */
     public static Date removeTime(Date date) {
 
@@ -48,6 +49,38 @@ public class DateUtils {
         }
         return age;
 
+    }
+
+    /**
+     * Return the first day in month. Example: year 2013, month 0 return
+     * '2013-01-01' (yyyy-MM-dd)
+     *
+     * @param month
+     * @param year
+     * @return
+     */
+    public static Date getFirstDayInMonth(int month, int year) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(Calendar.DATE, 1);
+        calendar.set(Calendar.MONTH, month);
+        calendar.set(Calendar.YEAR, year);
+        return calendar.getTime();
+    }
+
+    /**
+     * Return the first day in month. Example: year 2013, month 0 return
+     * '2013-01-31' (yyyy-MM-dd)
+     *
+     * @param month
+     * @param year
+     * @return
+     */
+    public static Date getLastDayInMonth(int month, int year) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(Calendar.MONTH, month);
+        calendar.set(Calendar.DATE, calendar.getActualMaximum(Calendar.DATE));
+        calendar.set(Calendar.YEAR, year);
+        return calendar.getTime();
     }
 
     /**
@@ -94,8 +127,9 @@ public class DateUtils {
     }
 
     /**
-     * Return the month of a date. Example: '2014-01-02' (yyyy-MM-dd) returns 0 (january = 0)
-     * 
+     * Return the month of a date. Example: '2014-01-02' (yyyy-MM-dd) returns 0
+     * (january = 0)
+     *
      *
      * @param date
      * @return
