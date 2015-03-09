@@ -90,7 +90,7 @@ public abstract class SecurityLoginBean {
     public String getUserNotFoundMessage() {
         return "User not found";
     }
-    
+
     public String getUserWithoutPassword() {
         return "User with no password in database";
     }
@@ -146,7 +146,7 @@ public abstract class SecurityLoginBean {
     }
 
     /**
-     * 
+     *
      * @return Query String to find User
      */
     public String getUserLoginQueryString() {
@@ -158,13 +158,13 @@ public abstract class SecurityLoginBean {
         }
         return queryString;
     }
-    
+
     /**
-     * 
+     *
      * @param entityManager
      * @param queryString String to find User
      * @param login User Login
-     * @return 
+     * @return
      */
     public Query getUserLoginQuery(EntityManager entityManager, String queryString, String login) {
         return entityManager.createQuery(queryString).setParameter(1, login);
@@ -190,8 +190,16 @@ public abstract class SecurityLoginBean {
         } catch (NoResultException ex) {
             //
         }
+        
+        //verify user password
+        user = authenticateUserPassword(user, password);
+       
+        return user;
+    }
+
+    public User authenticateUserPassword(User user, String password) {
         //compare password encryptedPassword
-        if (user != null &&  user.getUserPassword() != null && !user.getUserPassword().isEmpty()) {
+        if (user != null && user.getUserPassword() != null && !user.getUserPassword().isEmpty()) {
             try {
                 String encryptedPassword = null;
                 if (getEncryptionType() != null) {
@@ -206,7 +214,7 @@ public abstract class SecurityLoginBean {
                 }
 
                 if (!user.getUserPassword().equals(encryptedPassword)) {
-                    user = null;
+                    return null;
                 }
             } catch (NoSuchAlgorithmException ex) {
                 throw new RuntimeException(ex);
@@ -266,7 +274,7 @@ public abstract class SecurityLoginBean {
 
     }
 
-    private void addErrorMessage(String message) {
+    public void addErrorMessage(String message) {
         FacesContext context = FacesContext.getCurrentInstance();
         context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, message, null));
     }

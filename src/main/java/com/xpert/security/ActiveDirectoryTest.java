@@ -47,7 +47,7 @@ public class ActiveDirectoryTest {
 
     public static void main(String[] args) {
 
-        testChangePassword("ayslan", "paranoid", "123456");
+        testChangePassword("ayslan", "teste", "123456");
 
     }
 
