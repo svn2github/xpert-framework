@@ -190,10 +190,12 @@ public abstract class SecurityLoginBean {
         } catch (NoResultException ex) {
             //
         }
-        
+
         //verify user password
-        user = authenticateUserPassword(user, password);
-       
+        if (user != null) {
+            user = authenticateUserPassword(user, password);
+        }
+        
         return user;
     }
 
