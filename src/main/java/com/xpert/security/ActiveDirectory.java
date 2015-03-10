@@ -197,14 +197,19 @@ public class ActiveDirectory {
         private String distinguishedName;
         private String userPrincipal;
         private String commonName;
-
+        private Attributes attributes;
+        
         public User(Attributes attr) throws javax.naming.NamingException {
             userPrincipal = (String) attr.get("userPrincipalName").get();
             commonName = (String) attr.get("cn").get();
             distinguishedName = (String) attr.get("distinguishedName").get();
-
+            attributes = attr;
         }
 
+        public Attributes getAttributes() {
+            return attributes;
+        }
+        
         public String getUserPrincipal() {
             return userPrincipal;
         }
