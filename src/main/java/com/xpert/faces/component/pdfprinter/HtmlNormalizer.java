@@ -96,11 +96,14 @@ public class HtmlNormalizer {
         if (headSeletor != null && !headSeletor.isEmpty()) {
             //page orientation
             if (pageOrientation != null && pageOrientation.equals(PageOrientation.LANDSCAPE)) {
-                headSeletor.append("<style>").append("@page {size: landscape}").append("</style>");
+                headSeletor.append("<style media=\"print\" >@page {size: landscape}</style>");
             }
-            elements = document.select("style");
-            elements.remove();
-            headSeletor.append(elements.outerHtml());
+            //find style from body
+            Elements stylesInBody = document.body().select("style");
+            //append style from body to head
+            headSeletor.append(stylesInBody.outerHtml());
+            //remove style from body
+            stylesInBody.remove();
         }
 
         //clippath
