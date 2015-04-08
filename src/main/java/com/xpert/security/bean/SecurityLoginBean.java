@@ -152,9 +152,9 @@ public abstract class SecurityLoginBean {
     public String getUserLoginQueryString() {
         String queryString = " FROM " + getUserClass().getName();
         if (isLoginIgnoreCase()) {
-            queryString = queryString + " WHERE UPPER(userLogin) = UPPER(?1) ";
+            queryString = queryString + " WHERE UPPER(userLogin) = UPPER(:userLogin) ";
         } else {
-            queryString = queryString + " WHERE userLogin = ?1 ";
+            queryString = queryString + " WHERE userLogin = :userLogin ";
         }
         return queryString;
     }
@@ -167,7 +167,7 @@ public abstract class SecurityLoginBean {
      * @return
      */
     public Query getUserLoginQuery(EntityManager entityManager, String queryString, String login) {
-        return entityManager.createQuery(queryString).setParameter(1, login);
+        return entityManager.createQuery(queryString).setParameter("userLogin", login);
     }
 
     public User getUser(String login, String password) {
