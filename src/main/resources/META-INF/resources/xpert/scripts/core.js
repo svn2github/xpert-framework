@@ -209,6 +209,7 @@ Xpert.behavior = {
         if (primefaces3 == false) {
             widgetVar = "PF('" + widgetVar + "')";
         }
+        onclick = onclick.replace(/"/g, "'");
         var confirmClick = widgetVar + ".hide();" + onclick + ";return false;";
         ;
         //create only one time
