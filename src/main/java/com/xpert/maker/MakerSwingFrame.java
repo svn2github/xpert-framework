@@ -146,10 +146,23 @@ public class MakerSwingFrame extends javax.swing.JFrame {
         buttonSelectMB.setOpaque(true);
         buttonSelectNone.setOpaque(true);
         buttonSelectView.setOpaque(true);
+        buttonSelectMessageBundle.setOpaque(true);
+        buttonSelectClassMB.setOpaque(true);
+        
         buttonTab1Next.setOpaque(true);
         buttonTab2Back.setOpaque(true);
         buttonTab2Next.setOpaque(true);
         buttonTab3Back.setOpaque(true);
+        //copy buttons
+        buttonCopyClassBean.setOpaque(true);
+        buttonCopyI18n.setOpaque(true);
+        buttonCopyLog.setOpaque(true);
+        buttonCopySecurity.setOpaque(true);
+        //open buttons
+        buttonOpenClassBean.setOpaque(true);
+        buttonOpenI18n.setOpaque(true);
+        buttonOpenLog.setOpaque(true);
+        buttonOpenSecurity.setOpaque(true);
 
         createLabelTabbedPanel("Select Classes", 0);
         createLabelTabbedPanel("Project Configuration", 1);
@@ -963,7 +976,7 @@ public class MakerSwingFrame extends javax.swing.JFrame {
                     .addComponent(panelClassesConfiguration, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(buttonTab1Next)
-                .addContainerGap(161, Short.MAX_VALUE))
+                .addContainerGap(172, Short.MAX_VALUE))
         );
 
         tabbedPanelMain.addTab("Select Classes", panelSelectClasses);
@@ -1411,7 +1424,7 @@ public class MakerSwingFrame extends javax.swing.JFrame {
                     .addComponent(checkBoxUpdateMessageBundle)
                     .addComponent(textResourceBundleLocation, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(buttonSelectMessageBundle, javax.swing.GroupLayout.PREFERRED_SIZE, 21, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(22, Short.MAX_VALUE))
         );
 
         labelMBLocation.getAccessibleContext().setAccessibleParent(panelConfiguration);
@@ -1645,7 +1658,7 @@ public class MakerSwingFrame extends javax.swing.JFrame {
                 .addGap(6, 6, 6)
                 .addComponent(panelStep2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(2, 2, 2)
-                .addComponent(panelJavaClassConfiguration, javax.swing.GroupLayout.PREFERRED_SIZE, 246, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(panelJavaClassConfiguration, javax.swing.GroupLayout.PREFERRED_SIZE, 257, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(panelStep3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -1658,7 +1671,7 @@ public class MakerSwingFrame extends javax.swing.JFrame {
                 .addGroup(panelConfigurationLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(buttonTab2Back)
                     .addComponent(buttonTab2Next))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(39, Short.MAX_VALUE))
         );
 
         tabbedPanelMain.addTab("Project Configuration", panelConfiguration);
@@ -2021,7 +2034,7 @@ public class MakerSwingFrame extends javax.swing.JFrame {
                 .addComponent(scrollPaneI18N, javax.swing.GroupLayout.PREFERRED_SIZE, 141, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(buttonTab3Back)
-                .addContainerGap(59, Short.MAX_VALUE))
+                .addContainerGap(70, Short.MAX_VALUE))
         );
 
         tabbedPanelMain.addTab("Create Classes", panelCreateClasses);
