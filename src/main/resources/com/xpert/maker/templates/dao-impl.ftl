@@ -11,4 +11,10 @@ import javax.ejb.Stateless;
  */
 @Stateless
 public class ${name}DAOImpl extends ${configuration.baseDAOSimpleName}<${name}> implements ${name}DAO {
+
+    @Override
+    public Class getEntityClass() {
+        return ${name}.class;
+    }
+
 }

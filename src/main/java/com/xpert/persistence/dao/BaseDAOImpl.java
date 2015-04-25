@@ -263,14 +263,14 @@ public abstract class BaseDAOImpl<T> implements BaseDAO<T> {
 
     @Override
     public List<T> listAll(Class clazz, String order) {
-        Query query = new QueryBuilder(getEntityManager()).from(clazz).orderBy(order).createQuery();
+        Query query = getQueryBuilder().from(clazz).orderBy(order).createQuery();
         return query.getResultList();
     }
 
     @Override
     public Object findAttribute(String attributeName, Number id) {
 
-        QueryBuilder builder = new QueryBuilder(getEntityManager());
+        QueryBuilder builder = getQueryBuilder();
 
         return builder.select("o." + attributeName)
                 .from(getEntityClass(), "o")
@@ -287,7 +287,7 @@ public abstract class BaseDAOImpl<T> implements BaseDAO<T> {
     @Override
     public Object findList(String attributeName, Number id) {
 
-        QueryBuilder builder = new QueryBuilder(getEntityManager());
+        QueryBuilder builder = getQueryBuilder();
 
         return builder.select("o." + attributeName)
                 .from(getEntityClass(), "o")
@@ -303,7 +303,7 @@ public abstract class BaseDAOImpl<T> implements BaseDAO<T> {
 
     @Override
     public T unique(Map<String, Object> args) {
-        Query query = new QueryBuilder(getEntityManager()).from(getEntityClass()).add(args).createQuery().setMaxResults(1);
+        Query query = getQueryBuilder().from(getEntityClass()).add(args).createQuery().setMaxResults(1);
         try {
             return (T) query.getSingleResult();
         } catch (NoResultException ex) {
@@ -333,7 +333,7 @@ public abstract class BaseDAOImpl<T> implements BaseDAO<T> {
 
     @Override
     public T unique(List<Restriction> restrictions, Class clazz) {
-        Query query = new QueryBuilder(getEntityManager()).from(clazz).add(restrictions).createQuery();
+        Query query = getQueryBuilder().from(clazz).add(restrictions).createQuery();
         query.setMaxResults(1);
         try {
             return (T) query.getSingleResult();
@@ -354,7 +354,7 @@ public abstract class BaseDAOImpl<T> implements BaseDAO<T> {
 
     @Override
     public List<T> list(Map<String, Object> restrictions, String order, Integer firstResult, Integer maxResults) {
-        Query query = new QueryBuilder(getEntityManager()).from(getEntityClass()).add(restrictions).orderBy(order).createQuery();
+        Query query = getQueryBuilder().from(getEntityClass()).add(restrictions).orderBy(order).createQuery();
 
         if (firstResult != null) {
             query.setFirstResult(firstResult);
@@ -492,7 +492,7 @@ public abstract class BaseDAOImpl<T> implements BaseDAO<T> {
     @Override
     public List<T> list(Class clazz, List<Restriction> restrictions, String order, Integer firstResult, Integer maxResults, String attributes) {
 
-        return new QueryBuilder(getEntityManager())
+        return getQueryBuilder()
                 .select(attributes)
                 .from(clazz)
                 .add(restrictions)
@@ -505,7 +505,7 @@ public abstract class BaseDAOImpl<T> implements BaseDAO<T> {
 
     @Override
     public Long count(Map<String, Object> restrictions) {
-        return new QueryBuilder(getEntityManager()).from(getEntityClass()).add(restrictions).count();
+        return getQueryBuilder().from(getEntityClass()).add(restrictions).count();
     }
 
     @Override
@@ -520,7 +520,7 @@ public abstract class BaseDAOImpl<T> implements BaseDAO<T> {
 
     @Override
     public Long count(List<Restriction> restrictions) {
-        return new QueryBuilder(getEntityManager()).from(getEntityClass()).add(restrictions).count();
+        return getQueryBuilder().from(getEntityClass()).add(restrictions).count();
     }
 
     @Override
