@@ -211,7 +211,6 @@ Xpert.behavior = {
         }
         onclick = onclick.replace(/"/g, "'");
         var confirmClick = widgetVar + ".hide();" + onclick + ";return false;";
-        ;
         //create only one time
         var $createdDialog = $("#" + id);
         if ($createdDialog != null && $createdDialog.length > 0) {
