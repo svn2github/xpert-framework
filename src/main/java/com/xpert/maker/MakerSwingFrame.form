@@ -54,7 +54,7 @@
         </DimensionLayout>
         <DimensionLayout dim="1">
           <Group type="103" groupAlignment="0" attributes="0">
-              <Component id="tabbedPanelMain" alignment="0" max="32767" attributes="0"/>
+              <Component id="tabbedPanelMain" min="-2" pref="650" max="-2" attributes="0"/>
           </Group>
         </DimensionLayout>
       </Layout>
@@ -126,7 +126,7 @@
                           </Group>
                           <EmptySpace type="unrelated" max="-2" attributes="0"/>
                           <Component id="buttonTab1Next" min="-2" max="-2" attributes="0"/>
-                          <EmptySpace pref="172" max="32767" attributes="0"/>
+                          <EmptySpace pref="146" max="32767" attributes="0"/>
                       </Group>
                   </Group>
                 </DimensionLayout>
@@ -628,12 +628,12 @@
                           <EmptySpace min="-2" pref="6" max="-2" attributes="0"/>
                           <Component id="panelStep2" min="-2" max="-2" attributes="0"/>
                           <EmptySpace min="-2" pref="2" max="-2" attributes="0"/>
-                          <Component id="panelJavaClassConfiguration" min="-2" pref="257" max="-2" attributes="0"/>
-                          <EmptySpace max="-2" attributes="0"/>
+                          <Component id="panelJavaClassConfiguration" min="-2" pref="265" max="-2" attributes="0"/>
+                          <EmptySpace min="-2" pref="1" max="-2" attributes="0"/>
                           <Component id="panelStep3" min="-2" max="-2" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
                           <Component id="panelViewConfiguration" min="-2" max="-2" attributes="0"/>
-                          <EmptySpace max="-2" attributes="0"/>
+                          <EmptySpace type="unrelated" max="-2" attributes="0"/>
                           <Component id="panelStep4" min="-2" max="-2" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
                           <Component id="panelOthers" min="-2" pref="143" max="-2" attributes="0"/>
@@ -642,7 +642,7 @@
                               <Component id="buttonTab2Back" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="buttonTab2Next" alignment="3" min="-2" max="-2" attributes="0"/>
                           </Group>
-                          <EmptySpace pref="39" max="32767" attributes="0"/>
+                          <EmptySpace max="32767" attributes="0"/>
                       </Group>
                   </Group>
                 </DimensionLayout>
@@ -1104,7 +1104,7 @@
                                   <Component id="textResourceBundleLocation" alignment="3" min="-2" max="-2" attributes="0"/>
                                   <Component id="buttonSelectMessageBundle" alignment="3" min="-2" pref="21" max="-2" attributes="0"/>
                               </Group>
-                              <EmptySpace pref="22" max="32767" attributes="0"/>
+                              <EmptySpace pref="30" max="32767" attributes="0"/>
                           </Group>
                       </Group>
                     </DimensionLayout>
@@ -1911,7 +1911,7 @@
                           <Component id="scrollPaneI18N" min="-2" pref="141" max="-2" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
                           <Component id="buttonTab3Back" min="-2" max="-2" attributes="0"/>
-                          <EmptySpace pref="70" max="32767" attributes="0"/>
+                          <EmptySpace pref="44" max="32767" attributes="0"/>
                       </Group>
                   </Group>
                 </DimensionLayout>
