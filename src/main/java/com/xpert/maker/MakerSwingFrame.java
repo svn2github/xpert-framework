@@ -1067,8 +1067,8 @@ public class MakerSwingFrame extends javax.swing.JFrame {
 
         checkHideIdInRequest.setBackground(new java.awt.Color(255, 255, 255));
         checkHideIdInRequest.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
-        checkHideIdInRequest.setText("Hide the field \"id\" in request when editing a object");
-        checkHideIdInRequest.setToolTipText("Hide the field \"id\" in request when editing a object");
+        checkHideIdInRequest.setText("Hide the field \"id\" in request URL when editing a object");
+        checkHideIdInRequest.setToolTipText("Hide the field \"id\" in request URL when editing a object");
         checkHideIdInRequest.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 checkHideIdInRequestActionPerformed(evt);
