@@ -34,6 +34,10 @@ public class BeanValidator extends javax.faces.validator.BeanValidator {
     private static final Logger logger = Logger.getLogger(BeanValidator.class.getName());
     private static final List<Class> VALIDATION_TYPES = new ArrayList<Class>();
 
+    private static final String CPF_CONSTRAINT_CLASS = "org.hibernate.validator.constraints.br.CPF";
+    private static final String CNPJ_CONSTRAINT_CLASS = "org.hibernate.validator.constraints.br.CNPJ";
+    private static final String TITULO_ELEITORAL_CONSTRAINT_CLASS = "org.hibernate.validator.constraints.br.TituloEleitoral";
+
     static {
         VALIDATION_TYPES.add(NotNull.class);
         VALIDATION_TYPES.add(NotBlank.class);
@@ -48,6 +52,15 @@ public class BeanValidator extends javax.faces.validator.BeanValidator {
         VALIDATION_TYPES.add(URL.class);
         VALIDATION_TYPES.add(Past.class);
         VALIDATION_TYPES.add(Future.class);
+
+        try {
+            VALIDATION_TYPES.add(Class.forName(CPF_CONSTRAINT_CLASS));
+            VALIDATION_TYPES.add(Class.forName(CNPJ_CONSTRAINT_CLASS));
+            VALIDATION_TYPES.add(Class.forName(TITULO_ELEITORAL_CONSTRAINT_CLASS));
+        } catch (ClassNotFoundException ex) {
+            //nothing
+        }
+
     }
 
     @Override
@@ -127,6 +140,15 @@ public class BeanValidator extends javax.faces.validator.BeanValidator {
             if (violation.equals(Future.class)) {
                 return object + " " + XpertResourceBundle.get("mustBeAFutureDate");
             }
+            if (violation.getName().equals(CPF_CONSTRAINT_CLASS)) {
+                return XpertResourceBundle.get("invalidCpf");
+            }
+            if (violation.getName().equals(CNPJ_CONSTRAINT_CLASS)) {
+                return XpertResourceBundle.get("invalidCnpj");
+            }
+            if (violation.getName().equals(TITULO_ELEITORAL_CONSTRAINT_CLASS)) {
+                return XpertResourceBundle.get("invalidTituloEleitoral");
+            }
 
             return getMessageWithDefinedValue(object, valueReference, violation);
 
@@ -142,10 +164,10 @@ public class BeanValidator extends javax.faces.validator.BeanValidator {
      *
      * @param valueReference
      * @param clazz
-     * @return 
+     * @return
      */
     public String getAttributeName(ValueReference valueReference, Class clazz) {
-        return I18N.getAttributeName(clazz,  valueReference.getProperty().toString());
+        return I18N.getAttributeName(clazz, valueReference.getProperty().toString());
     }
 
     /**
