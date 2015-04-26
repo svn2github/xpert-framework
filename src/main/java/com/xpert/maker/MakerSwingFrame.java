@@ -1697,7 +1697,7 @@ public class MakerSwingFrame extends javax.swing.JFrame {
                 .addGroup(panelConfigurationLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(buttonTab2Back)
                     .addComponent(buttonTab2Next))
-                .addContainerGap(36, Short.MAX_VALUE))
+                .addContainerGap(27, Short.MAX_VALUE))
         );
 
         tabbedPanelMain.addTab("Project Configuration", panelConfiguration);
