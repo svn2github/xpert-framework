@@ -43,7 +43,7 @@ public abstract class AbstractBaseBean<T> {
     private T entity;
     private Class entityClass;
     private boolean loadEntityOnPostConstruct = true;
-    private boolean forceReloadEntity = false;
+    private boolean forceReloadEntity = true;
     public static final String ENTITY_REQUEST_TO_LOAD = "xpert.requestEntity";
     public static final String ENTITY_CLASS_TO_LOAD = "xpert.entityClassToLoad";
 

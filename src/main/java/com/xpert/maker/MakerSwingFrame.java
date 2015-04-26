@@ -96,6 +96,10 @@ public class MakerSwingFrame extends javax.swing.JFrame {
     public boolean isMaskCalendar() {
         return true;
     }
+    
+    public boolean isHideIdInRequest() {
+        return false;
+    }
 
     /**
      * Creates new form MakerMainFrame
@@ -366,6 +370,7 @@ public class MakerSwingFrame extends javax.swing.JFrame {
         beanConfiguration.setMaskCalendar(checkMaskCalendar.isSelected());
         beanConfiguration.setDatePattern(textDatePattern.getText());
         beanConfiguration.setTimePattern(textTimePattern.getText());
+        beanConfiguration.setHideIdInRequest(checkHideIdInRequest.isSelected());
         //class MB
         beanConfiguration.setClassManagedBeanLocation(textClassMB.getText());
         beanConfiguration.setResourceBundleLocation(textResourceBundleLocation.getText());
@@ -483,6 +488,7 @@ public class MakerSwingFrame extends javax.swing.JFrame {
         checkUseCDIBeans.setSelected(isUseCDIBeans());
         checkGeneratesSecurityArea.setSelected(isGeneratesSecurityArea());
         checkMaskCalendar.setSelected(isMaskCalendar());
+        checkHideIdInRequest.setSelected(isHideIdInRequest());
         textAuthor.setText(System.getProperty("user.name"));
         loadPrimefacesCombo();
         loadBootstrapCombo();
@@ -607,6 +613,7 @@ public class MakerSwingFrame extends javax.swing.JFrame {
         textDatePattern = new javax.swing.JTextField();
         labelTimePattern = new javax.swing.JLabel();
         textTimePattern = new javax.swing.JTextField();
+        checkHideIdInRequest = new javax.swing.JCheckBox();
         panelJavaClassConfiguration = new javax.swing.JPanel();
         labelBOPackage = new javax.swing.JLabel();
         textPackageBO = new javax.swing.JTextField();
@@ -777,7 +784,7 @@ public class MakerSwingFrame extends javax.swing.JFrame {
                         .addComponent(buttonSelectAll, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(buttonSelectNone, javax.swing.GroupLayout.PREFERRED_SIZE, 52, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addContainerGap(389, Short.MAX_VALUE))
+                        .addContainerGap(392, Short.MAX_VALUE))
                     .addGroup(jPanel3Layout.createSequentialGroup()
                         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel3Layout.createSequentialGroup()
@@ -976,7 +983,7 @@ public class MakerSwingFrame extends javax.swing.JFrame {
                     .addComponent(panelClassesConfiguration, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(buttonTab1Next)
-                .addContainerGap(146, Short.MAX_VALUE))
+                .addContainerGap(177, Short.MAX_VALUE))
         );
 
         tabbedPanelMain.addTab("Select Classes", panelSelectClasses);
@@ -1058,13 +1065,23 @@ public class MakerSwingFrame extends javax.swing.JFrame {
 
         textTimePattern.setToolTipText("Time pattern to be used in p:calendar");
 
+        checkHideIdInRequest.setBackground(new java.awt.Color(255, 255, 255));
+        checkHideIdInRequest.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
+        checkHideIdInRequest.setText("Hide the field \"id\" in request when editing a object");
+        checkHideIdInRequest.setToolTipText("Hide the field \"id\" in request when editing a object");
+        checkHideIdInRequest.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                checkHideIdInRequestActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout panelOthersLayout = new javax.swing.GroupLayout(panelOthers);
         panelOthers.setLayout(panelOthersLayout);
         panelOthersLayout.setHorizontalGroup(
             panelOthersLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panelOthersLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(panelOthersLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(panelOthersLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addGroup(panelOthersLayout.createSequentialGroup()
                         .addGroup(panelOthersLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(panelOthersLayout.createSequentialGroup()
@@ -1091,20 +1108,24 @@ public class MakerSwingFrame extends javax.swing.JFrame {
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addComponent(labelBOSuffix, javax.swing.GroupLayout.PREFERRED_SIZE, 105, javax.swing.GroupLayout.PREFERRED_SIZE))))
                     .addGroup(panelOthersLayout.createSequentialGroup()
-                        .addComponent(textDatePattern, javax.swing.GroupLayout.PREFERRED_SIZE, 102, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addComponent(textTimePattern, javax.swing.GroupLayout.PREFERRED_SIZE, 102, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(checkUseCDIBeans, javax.swing.GroupLayout.PREFERRED_SIZE, 284, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(checkHideIdInRequest, javax.swing.GroupLayout.PREFERRED_SIZE, 321, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(panelOthersLayout.createSequentialGroup()
                         .addComponent(labelDatePattern, javax.swing.GroupLayout.PREFERRED_SIZE, 115, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(labelTimePattern, javax.swing.GroupLayout.PREFERRED_SIZE, 115, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(panelOthersLayout.createSequentialGroup()
-                        .addComponent(checkUseCDIBeans, javax.swing.GroupLayout.PREFERRED_SIZE, 284, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(panelOthersLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(checkMaskCalendar, javax.swing.GroupLayout.PREFERRED_SIZE, 321, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(checkGeneratesSecurityArea, javax.swing.GroupLayout.PREFERRED_SIZE, 321, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelOthersLayout.createSequentialGroup()
+                        .addGroup(panelOthersLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addGroup(panelOthersLayout.createSequentialGroup()
+                                .addComponent(textDatePattern, javax.swing.GroupLayout.PREFERRED_SIZE, 102, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18)
+                                .addComponent(textTimePattern, javax.swing.GroupLayout.PREFERRED_SIZE, 102, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(checkGeneratesSecurityArea, javax.swing.GroupLayout.PREFERRED_SIZE, 321, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(checkMaskCalendar, javax.swing.GroupLayout.PREFERRED_SIZE, 321, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(115, 115, 115)))
+                .addContainerGap(61, Short.MAX_VALUE))
         );
         panelOthersLayout.setVerticalGroup(
             panelOthersLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1123,20 +1144,25 @@ public class MakerSwingFrame extends javax.swing.JFrame {
                     .addComponent(textAuthor, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(textManagedBeanSuffix, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(textBusinessObjectSuffix, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(panelOthersLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(labelDatePattern)
-                    .addComponent(labelTimePattern))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(panelOthersLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(textDatePattern, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(textTimePattern, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(checkMaskCalendar))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(panelOthersLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(checkUseCDIBeans)
-                    .addComponent(checkGeneratesSecurityArea))
-                .addContainerGap(19, Short.MAX_VALUE))
+                .addGroup(panelOthersLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(panelOthersLayout.createSequentialGroup()
+                        .addGroup(panelOthersLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(labelDatePattern)
+                            .addComponent(labelTimePattern))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(panelOthersLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(textDatePattern, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(textTimePattern, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(panelOthersLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(checkUseCDIBeans)
+                            .addComponent(checkHideIdInRequest)))
+                    .addGroup(panelOthersLayout.createSequentialGroup()
+                        .addComponent(checkMaskCalendar)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(checkGeneratesSecurityArea)))
+                .addContainerGap(14, Short.MAX_VALUE))
         );
 
         panelJavaClassConfiguration.setBackground(new java.awt.Color(255, 255, 255));
@@ -1663,15 +1689,15 @@ public class MakerSwingFrame extends javax.swing.JFrame {
                 .addComponent(panelStep3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(panelViewConfiguration, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(panelStep4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(panelOthers, javax.swing.GroupLayout.PREFERRED_SIZE, 143, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGap(11, 11, 11)
                 .addGroup(panelConfigurationLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(buttonTab2Back)
                     .addComponent(buttonTab2Next))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(36, Short.MAX_VALUE))
         );
 
         tabbedPanelMain.addTab("Project Configuration", panelConfiguration);
@@ -2034,7 +2060,7 @@ public class MakerSwingFrame extends javax.swing.JFrame {
                 .addComponent(scrollPaneI18N, javax.swing.GroupLayout.PREFERRED_SIZE, 141, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(buttonTab3Back)
-                .addContainerGap(44, Short.MAX_VALUE))
+                .addContainerGap(75, Short.MAX_VALUE))
         );
 
         tabbedPanelMain.addTab("Create Classes", panelCreateClasses);
@@ -2047,7 +2073,9 @@ public class MakerSwingFrame extends javax.swing.JFrame {
         );
         jPanelMainLayout.setVerticalGroup(
             jPanelMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(tabbedPanelMain, javax.swing.GroupLayout.PREFERRED_SIZE, 650, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addGroup(jPanelMainLayout.createSequentialGroup()
+                .addComponent(tabbedPanelMain, javax.swing.GroupLayout.PREFERRED_SIZE, 681, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -2211,6 +2239,10 @@ public class MakerSwingFrame extends javax.swing.JFrame {
         openContentNewWindow(textAreaLog);
     }//GEN-LAST:event_buttonOpenLogActionPerformed
 
+    private void checkHideIdInRequestActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_checkHideIdInRequestActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_checkHideIdInRequestActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton buttonCopyClassBean;
     private javax.swing.JButton buttonCopyI18n;
@@ -2238,6 +2270,7 @@ public class MakerSwingFrame extends javax.swing.JFrame {
     private javax.swing.JCheckBox checkBoxUpdateClassMB;
     private javax.swing.JCheckBox checkBoxUpdateMessageBundle;
     private javax.swing.JCheckBox checkGeneratesSecurityArea;
+    private javax.swing.JCheckBox checkHideIdInRequest;
     private javax.swing.JCheckBox checkMaskCalendar;
     private javax.swing.JCheckBox checkUseCDIBeans;
     private javax.swing.JComboBox comboBootstrapVersion;

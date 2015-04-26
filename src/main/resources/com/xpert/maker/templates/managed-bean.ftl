@@ -40,4 +40,11 @@ public class ${name}${configuration.managedBeanSuffix} extends AbstractBaseBean<
     public String getDataModelOrder() {
         return "${viewEntity.idFieldName}";
     }
+    <#if configuration.hideIdInRequest == true >
+
+    @Override
+    public boolean isLoadEntityOnPostConstruct() {
+        return false;
+    }
+    </#if>
 }

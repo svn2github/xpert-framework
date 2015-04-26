@@ -69,7 +69,7 @@
                                      process="@form" update=":formDetail${entity.name}" title="${sharp}{xmsg['detail']}" >
                         <f:setPropertyActionListener value="${sharp}{${entity.nameLower}}" target="${sharp}{${entity.nameLower}${configuration.managedBeanSuffix}.entity}" />
                     </p:commandButton>
-                    <#if entity.embeddedId == false >
+                    <#if entity.embeddedId == false && configuration.hideIdInRequest == false >
                     <#if configuration.generatesSecurityArea == true >
                     <x:securityArea rolesAllowed="${entity.nameLower}.create">
                         <p:button icon="ui-icon-pencil" outcome="create${entity.name}" title="${sharp}{xmsg['edit']}">

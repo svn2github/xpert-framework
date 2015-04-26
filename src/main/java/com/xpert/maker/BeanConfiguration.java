@@ -38,6 +38,8 @@ public class BeanConfiguration {
     private boolean useCDIBeans;
     private boolean generatesSecurityArea;
     private boolean maskCalendar;
+    //hide id in url
+    private boolean hideIdInRequest;
     
     //date pattern to calendar
     private String datePattern;
@@ -53,8 +55,17 @@ public class BeanConfiguration {
         this.bootstrapVersion = null;
         this.generatesSecurityArea = true;
         this.maskCalendar = true;
+        this.hideIdInRequest = false;
     }
 
+    public boolean isHideIdInRequest() {
+        return hideIdInRequest;
+    }
+
+    public void setHideIdInRequest(boolean hideIdInRequest) {
+        this.hideIdInRequest = hideIdInRequest;
+    }
+    
     public String getResourceBundleLocation() {
         return resourceBundleLocation;
     }
