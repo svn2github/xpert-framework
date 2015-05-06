@@ -184,6 +184,24 @@ Xpert = {
         $("<input>").attr("type", "hidden").attr("name", "xpert_html_export").attr("value", htmlTarget).appendTo($form);
 
 
+    },
+    disableTree: function (selector) {
+        $(selector + " .ui-treenode-label").removeClass("ui-state-highlight");
+        $(selector + " .ui-tree-selectable *:not(.ui-tree-toggler)").click(function () {
+            return false;
+        });
+        $(selector + " .ui-chkbox-box").addClass("ui-state-disabled").click(function () {
+            return false;
+        });
+    },
+    disableTreeNode: function (selector) {
+        $(selector + " > .ui-tree-selectable .ui-chkbox-box").removeClass("ui-state-highlight");
+        $(selector + " > .ui-tree-selectable *:not(.ui-tree-toggler)").click(function () {
+            return false;
+        });
+        $(selector + " > .ui-tree-selectable .ui-chkbox-box, " + selector + " > .ui-tree-selectable .ui-treenode-label").addClass("ui-state-disabled").click(function () {
+            return false;
+        });
     }
 };
 Xpert.behavior = {
