@@ -40,11 +40,11 @@ public class EntityUtils {
      * exsits try to get @Entity, if not exists return class.getSimpleName()
      *
      * @param entity
-     * @param fullName Indicate if name comes with schema. Example:
+     * @param nameWithSchema Indicate if name comes with schema. Example:
      * yourShema.tableName
      * @return
      */
-    public static String getEntityTableName(Class entity, boolean fullName) {
+    public static String getEntityTableName(Class entity, boolean nameWithSchema) {
 
         String name = null;
         String schema = null;
@@ -62,7 +62,7 @@ public class EntityUtils {
             }
         }
 
-        if (schema != null) {
+        if (nameWithSchema == true && schema != null) {
             name = schema + "." + name;
         }
 
