@@ -21,6 +21,7 @@ import org.hibernate.SessionFactory;
 import org.hibernate.internal.SessionFactoryImpl;
 import org.hibernate.metadata.ClassMetadata;
 import org.hibernate.persister.entity.AbstractEntityPersister;
+import org.hibernate.proxy.HibernateProxy;
 
 /**
  * Utility class to manipulae JPA entities
@@ -124,9 +125,6 @@ public class EntityUtils {
      * @return
      */
     public static Object getId(Object object) {
-        if (object == null) {
-            return null;
-        }
         return getId(object, object.getClass());
     }
 
@@ -152,6 +150,14 @@ public class EntityUtils {
     public static Object getId(Object object, Class clazz) {
 
         try {
+            if (object == null) {
+                return null;
+            }
+            
+            if (object instanceof HibernateProxy) {
+                return ((HibernateProxy) object).getHibernateLazyInitializer().getIdentifier();
+            }
+            
             AccessibleObject accessibleObject = getIdAccessibleObject(clazz);
             if (accessibleObject instanceof Field) {
                 Field field = (Field) accessibleObject;

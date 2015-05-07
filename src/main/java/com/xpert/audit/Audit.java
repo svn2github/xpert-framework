@@ -5,6 +5,7 @@ import com.xpert.audit.model.AbstractMetadata;
 import com.xpert.audit.model.AuditingType;
 import com.xpert.Configuration;
 import com.xpert.faces.utils.FacesUtils;
+import com.xpert.persistence.utils.EntityUtils;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.math.BigDecimal;
@@ -39,46 +40,6 @@ public class Audit {
         this.entityManager = entityManager;
     }
 
-    /**
-     * Returns the object id. This method must get id if object is a
-     * HibernateProxy
-     *
-     * @param object
-     * @return
-     */
-    public Object getId(Object object) {
-        if (object == null) {
-            return null;
-        }
-        if (object instanceof HibernateProxy) {
-            return ((HibernateProxy) object).getHibernateLazyInitializer().getIdentifier();
-        }
-        return getAnnotadedWithId(object, object.getClass());
-    }
-
-    public Object getAnnotadedWithId(Object object, Class clazz) {
-        Field[] fields = clazz.getDeclaredFields();
-        Method[] methods = clazz.getDeclaredMethods();
-        try {
-            for (Field field : fields) {
-                if (field.isAnnotationPresent(Id.class)) {
-                    field.setAccessible(true);
-                    return field.get(object);
-                }
-            }
-            for (Method method : methods) {
-                if (method.isAnnotationPresent(Id.class)) {
-                    return method.invoke(object);
-                }
-            }
-            if (clazz.getSuperclass() != null && !clazz.getSuperclass().equals(Object.class)) {
-                return getAnnotadedWithId(object, clazz.getSuperclass());
-            }
-        } catch (Exception ex) {
-            logger.log(Level.SEVERE, null, ex);
-        }
-        return null;
-    }
 
     /**
      * Get the object from database
@@ -87,7 +48,7 @@ public class Audit {
      * @return the object from database
      */
     public Object getPersisted(Object object) {
-        Object id = getId(object);
+        Object id = EntityUtils.getId(object);
         if (id != null) {
             if (entityManager.contains(object)) {
                 entityManager.detach(object);
@@ -265,7 +226,7 @@ public class Audit {
                 Field.setAccessible(fields, true);
 
                 AbstractAuditing auditing = Configuration.getAbstractAuditing();
-                auditing.setIdentifier(Long.valueOf(getId(object).toString()));
+                auditing.setIdentifier(Long.valueOf(EntityUtils.getId(object).toString()));
                 auditing.setEntity(getEntityName(object.getClass()));
                 auditing.setAuditingType(auditingType);
                 auditing.setEventDate(new Date());
@@ -386,7 +347,7 @@ public class Audit {
                         }
                         metadata.setNewValue(newValue.toString());
                     } else if (isEntity(method.getReturnType())) {
-                        Object newId = getId(fieldValue);
+                        Object newId = EntityUtils.getId(fieldValue);
                         //a proxy doesnt has value changed
                         if (!(fieldValue instanceof HibernateProxy) || isDelete == true) {
                             /**
@@ -410,7 +371,7 @@ public class Audit {
                             if (fieldOld instanceof HibernateProxy) {
                                 oldId = ((HibernateProxy) fieldOld).getHibernateLazyInitializer().getIdentifier();
                             } else {
-                                oldId = getId(fieldOld);
+                                oldId = EntityUtils.getId(fieldOld);
                             }
                             metadata.setOldIdentifier(oldId == null ? null : Long.valueOf(oldId.toString()));
                             metadata.setOldValue(fieldOld == null ? "" : fieldOld.toString());
