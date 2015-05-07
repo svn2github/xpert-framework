@@ -98,6 +98,12 @@ Xpert = {
         }
 
         $("body").delegate(selector + " .ui-filter-column input", "focus", function (e) {
+            
+            var attr = $(this).attr("data-x-filteronenter");
+            if(attr != null && attr != undefined && attr != false){
+                return;
+            }
+            
             var events = $._data(this, "events");
             var originalEvent;
             $.each(events, function (i, event) {
@@ -117,6 +123,7 @@ Xpert = {
                     originalEvent(keydown);
                 }
             });
+            $(this).attr("data-x-filteronenter", true);
         });
     },
     spreadCheckBoxList: function (id, columns, highlight) {
