@@ -125,6 +125,9 @@ public class EntityUtils {
      * @return
      */
     public static Object getId(Object object) {
+        if (object == null) {
+            return null;
+        }
         return getId(object, object.getClass());
     }
 
@@ -153,11 +156,11 @@ public class EntityUtils {
             if (object == null) {
                 return null;
             }
-            
+
             if (object instanceof HibernateProxy) {
                 return ((HibernateProxy) object).getHibernateLazyInitializer().getIdentifier();
             }
-            
+
             AccessibleObject accessibleObject = getIdAccessibleObject(clazz);
             if (accessibleObject instanceof Field) {
                 Field field = (Field) accessibleObject;
