@@ -3,15 +3,12 @@ package com.xpert.persistence.query;
 import com.xpert.persistence.dao.BaseDAO;
 import com.xpert.persistence.dao.BaseDAOImpl;
 import java.math.BigDecimal;
-import javax.persistence.EntityManager;
 
 /**
  *
  * @author Ayslan
  */
 public class TestQueryBuilder {
-    
-    
 
     public static void printQueryString(Restrictions restrictions) {
         QueryBuilder builder = new QueryBuilder(null);
@@ -21,21 +18,32 @@ public class TestQueryBuilder {
         System.out.println(builder.getQueryString());
         System.out.println(builder.getQueryParameters());
     }
-    
+
     public static void main(String[] args) {
-        
-        BaseDAO baseDAO = new BaseDAOImpl() {
+        QueryBuilder queryBuilder = new QueryBuilder(null)
+                .from(Object.class, "o")
+                .like("nome1", "TESTE")
+                .like("nome2", "TESTE", false)
+                .notLike("nome3", "TESTE")
+                .notLike("nome4", "TESTE", false);
 
-            @Override
-            public EntityManager getEntityManager() {
-                return null;
-            }
-        };
-        
-        baseDAO.setEntityClass(String.class);
+        System.out.println(queryBuilder.getQueryString());
+    }
 
-        baseDAO.listAttributes("campo", "valor", "teste, outro, mais");
-        
+    public static void main4(String[] args) {
+
+//        BaseDAO baseDAO = new BaseDAOImpl() {
+//
+//            @Override
+//            public EntityManager getEntityManager() {
+//                return null;
+//            }
+//        };
+//
+//        baseDAO.setEntityClass(String.class);
+//
+//        baseDAO.listAttributes("campo", "valor", "teste, outro, mais");
+
     }
 
     public static void main3(String[] args) {
@@ -44,14 +52,14 @@ public class TestQueryBuilder {
                 .from(Object.class, "o")
                 .innerJoin("outro a")
                 .leftJoinFetch("o.atributos b")
-                    .startGroup()
-                        .equals("o.teste", "1234")
-                        .like("a.teste", "1234")
-                    .endGroup()
+                .startGroup()
+                .equals("o.teste", "1234")
+                .like("a.teste", "1234")
+                .endGroup()
                 .or()
-                    .startGroup()
-                      .isNull("o.teste")
-                    .endGroup()
+                .startGroup()
+                .isNull("o.teste")
+                .endGroup()
                 .orderBy("a.teste");
 
         // queryBuilder.getResultList();

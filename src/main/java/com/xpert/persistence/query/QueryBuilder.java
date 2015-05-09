@@ -168,7 +168,11 @@ public class QueryBuilder {
                     queryString.append(" (").append(restriction.getProperty()).append(") ");
                 } else {
                     if (restriction.getRestrictionType().equals(RestrictionType.LIKE) || restriction.getRestrictionType().equals(RestrictionType.NOT_LIKE)) {
-                        queryString.append("UPPER(").append(propertyName).append(")").append(" ");
+                        if (restriction.isIlike()) {
+                            queryString.append("UPPER(").append(propertyName).append(")").append(" ");
+                        } else {
+                            queryString.append(propertyName).append(" ");
+                        }
                     } else if (restriction.getTemporalType() != null && restriction.getTemporalType().equals(TemporalType.DATE)) {
                         queryString.append("CAST(").append(propertyName).append(" AS date)").append(" ");
                     } else {
@@ -185,7 +189,11 @@ public class QueryBuilder {
                     } else {
                         queryString.append(" ").append(restriction.getRestrictionType().getSymbol()).append(" ");
                         if (restriction.getRestrictionType().equals(RestrictionType.LIKE) || restriction.getRestrictionType().equals(RestrictionType.NOT_LIKE)) {
-                            queryString.append("UPPER(?").append(currentParameter).append(")");
+                            if (restriction.isIlike()) {
+                                queryString.append("UPPER(?").append(currentParameter).append(")");
+                            } else {
+                                queryString.append("?").append(currentParameter);
+                            }
                         } else if (restriction.getRestrictionType().equals(RestrictionType.IN) || restriction.getRestrictionType().equals(RestrictionType.NOT_IN)) {
                             queryString.append("(?").append(currentParameter).append(")");
                         } else {
@@ -791,11 +799,38 @@ public class QueryBuilder {
      *
      * @param property
      * @param value
+     * @param ilike
+     * @return Current QueryBuilder with added restriction
+     */
+    public QueryBuilder like(String property, Object value, boolean ilike) {
+        this.add(new Restriction(property, RestrictionType.LIKE, value, ilike));
+        return this;
+    }
+
+    /**
+     * Add a RestrictionType.LIKE (property 'like' value)
+     *
+     * @param property
+     * @param value
      * @param likeType
      * @return Current QueryBuilder with added restriction
      */
     public QueryBuilder like(String property, Object value, LikeType likeType) {
         this.add(new Restriction(property, RestrictionType.LIKE, value, likeType));
+        return this;
+    }
+
+    /**
+     * Add a RestrictionType.LIKE (property 'like' value)
+     *
+     * @param property
+     * @param value
+     * @param likeType
+     * @param ilike
+     * @return Current QueryBuilder with added restriction
+     */
+    public QueryBuilder like(String property, Object value, LikeType likeType, boolean ilike) {
+        this.add(new Restriction(property, RestrictionType.LIKE, value, likeType, ilike));
         return this;
     }
 
@@ -816,11 +851,38 @@ public class QueryBuilder {
      *
      * @param property
      * @param value
+     * @param ilike
+     * @return Current QueryBuilder with added restriction
+     */
+    public QueryBuilder notLike(String property, Object value, boolean ilike) {
+        this.add(new Restriction(property, RestrictionType.NOT_LIKE, value, ilike));
+        return this;
+    }
+
+    /**
+     * Add a RestrictionType.NOT_LIKE (property 'not like' value)
+     *
+     * @param property
+     * @param value
      * @param likeType
      * @return Current QueryBuilder with added restriction
      */
     public QueryBuilder notLike(String property, Object value, LikeType likeType) {
         this.add(new Restriction(property, RestrictionType.NOT_LIKE, value, likeType));
+        return this;
+    }
+
+    /**
+     * Add a RestrictionType.NOT_LIKE (property 'not like' value)
+     *
+     * @param property
+     * @param value
+     * @param likeType
+     * @param ilike
+     * @return Current QueryBuilder with added restriction
+     */
+    public QueryBuilder notLike(String property, Object value, LikeType likeType, boolean ilike) {
+        this.add(new Restriction(property, RestrictionType.NOT_LIKE, value, likeType, ilike));
         return this;
     }
 
