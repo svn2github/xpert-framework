@@ -2,8 +2,11 @@ Xpert = {
     escapeClientId: function (id) {
         return "#" + id.replace(/:/g, "\\:");
     },
-    closeModalMessages: function (widgetDialog) {
+    closeModalMessages: function (widgetDialog, onconfirm) {
         widgetDialog.hide();
+        if(onconfirm){
+           onconfirm(); 
+        }
         $('.faces-modal-messages').remove();
         $('div[id*=xpertModalMessages]').remove();
     },

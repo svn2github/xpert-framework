@@ -13,6 +13,7 @@
         <cc:attribute name="showDetail" default="false" type="java.lang.Boolean"/>
         <cc:attribute name="showSummary" default="true" type="java.lang.Boolean"/>
         <cc:attribute name="globalOnly" default="false" type="java.lang.Boolean"/>
+        <cc:attribute name="onconfirm" />
     </cc:interface>
 
     <!-- IMPLEMENTATION -->
@@ -34,7 +35,7 @@
                                             showSummary="#{cc.attrs.showSummary}" globalOnly="#{cc.attrs.globalOnly}"/>
                             </div>
                             <div align="center">
-                                <p:commandButton onclick="Xpert.closeModalMessages(xpertModalDialogMessages)"
+                                <p:commandButton onclick="Xpert.closeModalMessages(xpertModalDialogMessages, function(){ #{cc.attrs.onconfirm} })"
                                                  styleClass="button-confirm-modal" type="button" value="Ok" />
 
                             </div>
@@ -52,7 +53,7 @@
                                             showSummary="#{cc.attrs.showSummary}" globalOnly="#{cc.attrs.globalOnly}"/>
                             </div>
                             <div align="center">
-                                <p:commandButton onclick="Xpert.closeModalMessages(PF('xpertModalDialogMessages'))"
+                                <p:commandButton onclick="Xpert.closeModalMessages(PF('xpertModalDialogMessages'), function(){ #{cc.attrs.onconfirm} } )"
                                                  styleClass="button-confirm-modal" type="button" value="Ok" />
                             </div>
                         </div>
