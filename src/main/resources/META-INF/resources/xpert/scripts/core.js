@@ -279,10 +279,10 @@ Xpert.behavior = {
         }
         var $object = $(Xpert.escapeClientId(element));
         Xpert.clearDownloadCookie();
-        var token = $($object.closest("form")).find("input[id=javax\\.faces\\.ViewState]").val();
+        var token = $($object.closest("form")).find("input[id*=javax\\.faces\\.ViewState]").val();
         if (token == null || token == "") {
             //find by name
-            token = $($object.closest("form")).find("input[name=javax\\.faces\\.ViewState]").val();
+            token = $($object.closest("form")).find("input[name*=javax\\.faces\\.ViewState]").val();
             if (token == null || token == "") {
                 return;
             }
@@ -291,9 +291,7 @@ Xpert.behavior = {
             Xpert.createOverlayWithDialog("dialog-download", cfg.message);
         }
         var poll = setInterval(function () {
-            var cookie = $.cookie('xpert.download', {
-                path: '/'
-            });
+            var cookie = $.cookie('xpert.download');
             if (cookie != null && cookie.replace(/\"/g, "") == token.replace(/\"/g, "")) {
                 if (cfg.oncomplete) {
                     cfg.oncomplete();
