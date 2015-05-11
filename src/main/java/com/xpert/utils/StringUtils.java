@@ -60,6 +60,12 @@ public class StringUtils {
         return message;
     }
 
+    /**
+     * Remove HTML tags from string
+     * 
+     * @param string
+     * @return 
+     */
     public static String removeHTML(String string) {
         return string.replaceAll("\\<.*?\\>", "");
     }
