@@ -2105,7 +2105,7 @@ public class MakerSwingFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_buttonSelectNoneActionPerformed
 
     private void buttonSelectViewActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonSelectViewActionPerformed
-        showFileChooser(textView, textView);
+        showFileChooser(textView, null);
     }//GEN-LAST:event_buttonSelectViewActionPerformed
 
     private void buttonSelectDAOImplActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonSelectDAOImplActionPerformed
