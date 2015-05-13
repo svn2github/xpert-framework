@@ -3,15 +3,23 @@ package com.xpert.i18n;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.validation.MessageInterpolator;
 
 public class CustomInterpolator implements MessageInterpolator {
 
+    private static final boolean DEBUG = false;
+    private static final Logger logger = Logger.getLogger(CustomInterpolator.class.getName());
+
     public CustomInterpolator() {
+        if (DEBUG) {
+            logger.log(Level.INFO, "Construct a new instance of {0} ", this.getClass().getName());
+        }
     }
-    
+
     private static final Pattern PATTERN = Pattern.compile("\\{.*?\\}");
 
     protected static String replaceParameters(String message, MessageInterpolator.Context context) {
@@ -43,11 +51,15 @@ public class CustomInterpolator implements MessageInterpolator {
     @Override
     public String interpolate(String messageTemplate, MessageInterpolator.Context context, Locale locale) {
         return getMessage(messageTemplate, context);
-        
+
     }
 
     public String getMessage(String messageTemplate, MessageInterpolator.Context context) {
-        
+
+        if (DEBUG) {
+            logger.log(Level.INFO, "Get message for template {0} ", messageTemplate);
+        }
+
         String message = "";
 
         if (messageTemplate != null && !messageTemplate.trim().isEmpty()) {
@@ -55,7 +67,7 @@ public class CustomInterpolator implements MessageInterpolator {
         }
 
         message = replaceParameters(message, context);
-        
+
         return message;
     }
 }

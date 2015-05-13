@@ -31,6 +31,7 @@ import org.hibernate.validator.constraints.URL;
  */
 public class BeanValidator extends javax.faces.validator.BeanValidator {
 
+    private static final boolean DEBUG = false;
     private static final Logger logger = Logger.getLogger(BeanValidator.class.getName());
     private static final List<Class> VALIDATION_TYPES = new ArrayList<Class>();
 
@@ -80,8 +81,18 @@ public class BeanValidator extends javax.faces.validator.BeanValidator {
                 messages.addAll(ex.getFacesMessages());
             }
 
+            if (DEBUG) {
+                logger.log(Level.INFO, "Caught a ValidatorException. {0} messages.", messages.size());
+            }
+
             for (FacesMessage facesMessage : messages) {
+                if (DEBUG) {
+                    logger.log(Level.INFO, "Message summary: {0}", facesMessage.getSummary());
+                }
                 String message = getMessage(facesMessage.getSummary(), valueReference);
+                if (DEBUG) {
+                    logger.log(Level.INFO, "Message resolved: {0}", message);
+                }
                 facesMessage.setSummary(message);
                 facesMessage.setDetail(message);
             }
@@ -121,6 +132,9 @@ public class BeanValidator extends javax.faces.validator.BeanValidator {
     public String getMessage(String message, ValueReference valueReference) {
         Class violation = getViolation(message);
         if (violation != null) {
+            if (DEBUG) {
+                logger.log(Level.INFO, "Violation: {0}", violation.getName());
+            }
             String object = getAttributeName(valueReference, valueReference.getBase().getClass());
 
             if (violation.equals(Email.class)) {
@@ -152,6 +166,10 @@ public class BeanValidator extends javax.faces.validator.BeanValidator {
 
             return getMessageWithDefinedValue(object, valueReference, violation);
 
+        } else {
+            if (DEBUG) {
+                logger.log(Level.INFO, "Violation for message \"{0}\" not found", message);
+            }
         }
         return message.replace("{", "").replace("}", "");
     }
