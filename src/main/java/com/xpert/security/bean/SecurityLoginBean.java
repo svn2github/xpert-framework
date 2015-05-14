@@ -195,7 +195,7 @@ public abstract class SecurityLoginBean {
         if (user != null) {
             user = authenticateUserPassword(user, password);
         }
-        
+
         return user;
     }
 
@@ -207,8 +207,9 @@ public abstract class SecurityLoginBean {
                 if (getEncryptionType() != null) {
                     if (getEncryptionType().equals(EncryptionType.SHA256)) {
                         encryptedPassword = Encryption.getSHA256(password);
-                    }
-                    if (getEncryptionType().equals(EncryptionType.MD5)) {
+                    } else if (getEncryptionType().equals(EncryptionType.SHA512)) {
+                        encryptedPassword = Encryption.getSHA512(password);
+                    } else if (getEncryptionType().equals(EncryptionType.MD5)) {
                         encryptedPassword = Encryption.getMD5(password);
                     }
                 } else {
