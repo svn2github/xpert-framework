@@ -133,7 +133,7 @@ public class InitializerBean {
      *
      * @param component Component to get ValueExpression
      * @param context Current FacesContext
-     * @param value If passed ValueExpression will not be used, this value will
+     * @param valueExpression If passed ValueExpression will not be used, this value will
      * be initilized
      */
     public void initialize(UIComponent component, FacesContext context, ValueExpression valueExpression) {
