@@ -4,6 +4,7 @@ import com.xpert.utils.ReflectionUtils;
 import com.xpert.i18n.I18N;
 import com.xpert.utils.StringUtils;
 import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -70,10 +71,18 @@ public class RestrictionsNormalizer {
                         if (propertyType.isEnum()) {
                             restriction.setValue(Enum.valueOf(propertyType, restriction.getValue().toString()));
                         }
-                        if (propertyType.equals(Integer.class) || propertyType.equals(int.class)) {
+                        if (propertyType.equals(Integer.class) || propertyType.equals(int.class)
+                                || propertyType.equals(Short.class) || propertyType.equals(short.class)
+                                || propertyType.equals(BigInteger.class)) {
                             String valueNumber = StringUtils.getOnlyIntegerNumbers(restriction.getValue().toString());
                             if (valueNumber != null && !valueNumber.isEmpty()) {
-                                restriction.setValue(Integer.valueOf(StringUtils.getOnlyIntegerNumbers(restriction.getValue().toString())));
+                                if (propertyType.equals(Integer.class) || propertyType.equals(int.class)) {
+                                    restriction.setValue(Integer.valueOf(valueNumber));
+                                } else if (propertyType.equals(Short.class) || propertyType.equals(short.class)) {
+                                    restriction.setValue(Short.valueOf(valueNumber));
+                                } else if (propertyType.equals(BigInteger.class)) {
+                                    restriction.setValue(new BigInteger(valueNumber));
+                                }
                             } else {
                                 ignoreRestriction = true;
                             }
