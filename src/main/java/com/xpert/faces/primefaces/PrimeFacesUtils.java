@@ -58,10 +58,16 @@ public class PrimeFacesUtils {
     private static Boolean IS_VERSION_3;
 
     public static boolean isVersion4() {
+        if(isVersion3()){
+            return false;
+        }
         return RequestContext.getCurrentInstance().getApplicationContext().getConfig().getBuildVersion().startsWith("4");
     }
     
     public static boolean isVersion5() {
+        if(isVersion3()){
+            return false;
+        }
         return RequestContext.getCurrentInstance().getApplicationContext().getConfig().getBuildVersion().startsWith("5");
     }
     
