@@ -1,6 +1,5 @@
 package com.xpert.faces.component.filter;
 
-import com.xpert.i18n.XpertResourceBundle;
 import java.io.IOException;
 import javax.faces.FacesException;
 import javax.faces.component.UIComponent;

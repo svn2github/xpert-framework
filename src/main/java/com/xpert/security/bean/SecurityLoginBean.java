@@ -55,7 +55,7 @@ public abstract class SecurityLoginBean {
      * Define something when login is successful like add a message "Welcome
      * user"
      *
-     * @return
+     * @param user
      */
     public void onSucess(User user) {
     }
@@ -63,7 +63,6 @@ public abstract class SecurityLoginBean {
     /**
      * Define something when login is unsuccessful
      *
-     * @return
      */
     public void onError() {
     }
@@ -134,7 +133,9 @@ public abstract class SecurityLoginBean {
     /**
      * Executed after user query in database
      *
+     * @param user
      * @return
+     * @throws com.xpert.core.exception.BusinessException
      */
     public boolean validate(User user) throws BusinessException {
         return true;

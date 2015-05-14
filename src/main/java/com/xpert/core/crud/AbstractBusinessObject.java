@@ -13,6 +13,7 @@ import java.util.List;
  * Generic Business Object to create CRUD
  * 
  * @author Ayslan
+ * @param <T>
  */
 public abstract class AbstractBusinessObject<T> {
 

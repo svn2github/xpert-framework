@@ -34,6 +34,9 @@ public class JRBeanCollectionDataSource extends net.sf.jasperreports.engine.data
 
     /**
      *
+     * @param beanCollection
+     * @param entityManager
+     * @param isUseFieldDescription
      */
     public JRBeanCollectionDataSource(Collection<?> beanCollection, boolean isUseFieldDescription, EntityManager entityManager) {
         super(isUseFieldDescription);
@@ -71,6 +74,9 @@ public class JRBeanCollectionDataSource extends net.sf.jasperreports.engine.data
 
     /**
      *
+     * @param field
+     * @return 
+     * @throws net.sf.jasperreports.engine.JRException 
      */
     public Object getFieldValue(JRField field) throws JRException {
         return getFieldValue(currentBean, field);

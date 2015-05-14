@@ -1,7 +1,6 @@
 package com.xpert.faces.component.restorablefilter;
 
 import com.xpert.faces.utils.FacesUtils;
-import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 import javax.el.ValueExpression;
@@ -9,10 +8,7 @@ import javax.faces.application.ResourceDependencies;
 import javax.faces.application.ResourceDependency;
 import javax.faces.component.UIComponent;
 import javax.faces.component.UIComponentBase;
-import javax.faces.component.UINamingContainer;
 import javax.faces.context.FacesContext;
-import org.primefaces.component.api.UIColumn;
-import org.primefaces.component.column.Column;
 import org.primefaces.component.datatable.DataTable;
 
 /**

@@ -1,7 +1,6 @@
 package com.xpert.i18n;
 
 import com.xpert.core.conversion.NumberUtils;
-import com.xpert.maker.BeanCreator;
 import com.xpert.utils.DateUtils;
 import com.xpert.utils.StringUtils;
 import java.math.BigDecimal;
@@ -33,6 +32,7 @@ public class ResourceBundleUtils {
      *
      * @param key
      * @param bundle
+     * @param array
      * @return
      */
     public static String get(String key, String bundle, Object... array) {
@@ -49,7 +49,10 @@ public class ResourceBundleUtils {
      * Os parametros devem está nas mensagens no formato: {0} {1}. Ex: Já existe
      * o município {0} cadastrado para o estado {1}
      *
-     * @param message
+     * @param key
+     * @param bundle
+     * @param classLoader
+     * @param locale
      * @param array
      * @return
      */

@@ -1,9 +1,5 @@
 package com.xpert.persistence.query;
 
-import com.xpert.persistence.dao.BaseDAO;
-import com.xpert.persistence.dao.BaseDAOImpl;
-import java.math.BigDecimal;
-
 /**
  *
  * @author Ayslan

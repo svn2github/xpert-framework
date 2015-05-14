@@ -35,6 +35,7 @@ public abstract class FindAllBean {
     /**
      * Define de default order for the Map Key (Class), also set the default
      * attribute to itemLabel in SelectItem
+     * @return 
      */
     public abstract Map<Class, ClassModel> getClassModel();
     private Map<Class, List> values = new HashMap<Class, List>();

@@ -22,10 +22,8 @@ public class ReadClass {
      * http://snippets.dzone.com/posts/show/4831 and extended to support use of
      * JAR files
      *
-     * @param packageName The base package
+     * @param path
      * @return The classes
-     * @throws ClassNotFoundException
-     * @throws IOException
      */
     public static Class[] getClasses(String path) {
         try {

@@ -202,7 +202,6 @@ public class FacesUtils {
      *
      * @param name
      * @param value
-     * @return
      */
     public static void addCookie(String name, String value) {
         Cookie cookie = new Cookie(name, value);
@@ -244,7 +243,6 @@ public class FacesUtils {
      * Removes Cookie
      *
      * @param nomeCookie
-     * @return
      */
     public static void removeCookie(String nomeCookie) {
 

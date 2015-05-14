@@ -37,6 +37,9 @@ public class I18N {
 
     /**
      *
+     * @param clazz
+     * @param fieldName
+     * 
      * @return the attribute name from configured resourcebundle the message
      * for: simple name (FirstLetter lowercase) + "." + property. Example: Class
      * Person and attribute name - person.name

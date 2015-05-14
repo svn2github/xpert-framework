@@ -16,6 +16,8 @@ public class DialogShowText extends javax.swing.JDialog {
 
     /**
      * Creates new form DialogShowText
+     * @param parent
+     * @param modal
      */
     public DialogShowText(java.awt.Frame parent, boolean modal) {
         super(parent, modal);

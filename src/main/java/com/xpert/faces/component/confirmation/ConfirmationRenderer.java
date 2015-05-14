@@ -1,7 +1,6 @@
 package com.xpert.faces.component.confirmation;
 
 import com.xpert.faces.primefaces.PrimeFacesUtils;
-import com.xpert.faces.primefaces.PrimeFacesVersion;
 import com.xpert.i18n.XpertResourceBundle;
 import com.xpert.utils.StringEscapeUtils;
 import java.io.IOException;

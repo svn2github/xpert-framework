@@ -17,7 +17,6 @@ import com.itextpdf.text.pdf.PdfTemplate;
 import com.lowagie.text.PageSize;
 import java.awt.print.PageFormat;
 import java.awt.print.Paper;
-import java.io.IOException;
 import java.io.StringReader;
 import java.io.StringWriter;
 import javax.xml.transform.OutputKeys;
@@ -25,11 +24,8 @@ import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
-import org.apache.batik.dom.svg.SAXSVGDocumentFactory;
 import org.apache.batik.transcoder.TranscoderInput;
 import org.apache.batik.transcoder.print.PrintTranscoder;
-import org.apache.batik.util.XMLResourceDescriptor;
-import org.w3c.dom.svg.SVGDocument;
 
 /**
  *

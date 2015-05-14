@@ -123,7 +123,6 @@ public class QueryBuilder {
 
     /**
      * @param restrictions
-     * @param alias
      * @return String of the part after "WHERE" from JPQL generated
      */
     public static String getQueryStringFromRestrictions(List<Restriction> restrictions) {

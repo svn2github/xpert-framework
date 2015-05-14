@@ -584,7 +584,7 @@ public class Audit {
     /**
      * Verifica se o objeto passado é uma entidade de persistencia
      *
-     * @param objeto
+     * @param clazz
      * @return boolean
      */
     public static boolean isEntity(Class clazz) {

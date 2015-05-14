@@ -1,7 +1,6 @@
 package com.xpert.utils;
 
 import com.xpert.security.EncryptionType;
-import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 

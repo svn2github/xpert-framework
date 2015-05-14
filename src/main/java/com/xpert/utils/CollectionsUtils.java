@@ -36,7 +36,7 @@ public class CollectionsUtils {
 
     /**
      *
-     * @param collection
+     * @param list
      * @param ordenacao
      * @throws IllegalArgumentException
      */

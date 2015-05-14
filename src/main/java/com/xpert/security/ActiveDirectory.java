@@ -32,7 +32,7 @@ import javax.net.ssl.*;
  */
 public class ActiveDirectory {
 
-    private static String[] userAttributes = {
+    private static final String[] userAttributes = {
         "distinguishedName", "cn", "name", "uid",
         "sn", "givenname", "memberOf", "samaccountname",
         "userPrincipalName"
@@ -44,6 +44,12 @@ public class ActiveDirectory {
     /**
      * Used to authenticate a user given a username/password. Domain name is
      * derived from the fully qualified domain name of the host machine.
+     *
+     * @param username
+     * @param password
+     * @return
+     * @throws javax.naming.CommunicationException
+     * @throws javax.naming.AuthenticationException
      */
     public static LdapContext getConnection(String username, String password) throws CommunicationException, AuthenticationException {
         return getConnection(username, password, null, null);
@@ -51,6 +57,13 @@ public class ActiveDirectory {
 
     /**
      * Used to authenticate a user given a username/password and domain name.
+     *
+     * @param username
+     * @param password
+     * @param domainName
+     * @return
+     * @throws javax.naming.CommunicationException
+     * @throws javax.naming.AuthenticationException
      */
     public static LdapContext getConnection(String username, String password, String domainName) throws CommunicationException, AuthenticationException {
         return getConnection(username, password, domainName, null);
@@ -59,6 +72,14 @@ public class ActiveDirectory {
     /**
      * Used to authenticate a user given a username/password and domain name.
      * Provides an option to identify a specific a Active Directory server.
+     *
+     * @param username
+     * @param password
+     * @param domainName
+     * @param serverName
+     * @return
+     * @throws javax.naming.CommunicationException
+     * @throws javax.naming.AuthenticationException
      */
     public static LdapContext getConnection(String username, String password, String domainName, String serverName) throws CommunicationException, AuthenticationException {
 
@@ -107,6 +128,8 @@ public class ActiveDirectory {
      *
      * @param username A username to validate (e.g. "peter", "peter@acme.com",
      * or "ACME\peter").
+     * @param context
+     * @return
      */
     public static User getUser(String username, LdapContext context) {
         try {
@@ -144,10 +167,12 @@ public class ActiveDirectory {
         return null;
     }
 
-    //** getUsers
-    //*************************************************************************/
     /**
      * Returns a list of users in the domain.
+     *
+     * @param context
+     * @return
+     * @throws javax.naming.NamingException
      */
     public static User[] getUsers(LdapContext context) throws NamingException {
 
@@ -194,11 +219,11 @@ public class ActiveDirectory {
      */
     public static class User {
 
-        private String distinguishedName;
-        private String userPrincipal;
-        private String commonName;
-        private Attributes attributes;
-        
+        private final String distinguishedName;
+        private final String userPrincipal;
+        private final String commonName;
+        private final Attributes attributes;
+
         public User(Attributes attr) throws javax.naming.NamingException {
             userPrincipal = (String) attr.get("userPrincipalName").get();
             commonName = (String) attr.get("cn").get();
@@ -209,7 +234,7 @@ public class ActiveDirectory {
         public Attributes getAttributes() {
             return attributes;
         }
-        
+
         public String getUserPrincipal() {
             return userPrincipal;
         }
@@ -258,6 +283,7 @@ public class ActiveDirectory {
          *
          * @param context
          * @throws java.io.IOException
+         * @throws javax.naming.directory.InvalidAttributeValueException
          * @throws javax.naming.NamingException
          */
         public void changePassword(String oldPass, String newPass, boolean trustAllCerts, LdapContext context)

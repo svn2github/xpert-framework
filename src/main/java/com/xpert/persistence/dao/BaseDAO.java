@@ -36,6 +36,7 @@ public interface BaseDAO<T> {
     /**
      * 
      * @return Connection from ConnectionProvider of SessionFactory
+     * @throws java.sql.SQLException
      */
     public Connection getConnection() throws SQLException ;
 

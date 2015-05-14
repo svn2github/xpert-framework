@@ -5,7 +5,6 @@ import com.xpert.faces.component.api.UIData;
 import com.xpert.faces.component.group.model.GroupModel;
 import com.xpert.faces.component.api.SortOrder;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 import javax.el.MethodExpression;
 import javax.el.ValueExpression;

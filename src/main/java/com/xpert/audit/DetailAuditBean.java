@@ -3,7 +3,6 @@ package com.xpert.audit;
 import com.xpert.faces.primefaces.LazyDataModelImpl;
 import com.xpert.audit.model.AbstractAuditing;
 import com.xpert.persistence.dao.BaseDAO;
-import com.xpert.persistence.query.JoinBuilder;
 import com.xpert.persistence.query.Restriction;
 import com.xpert.persistence.utils.EntityUtils;
 import java.util.ArrayList;
