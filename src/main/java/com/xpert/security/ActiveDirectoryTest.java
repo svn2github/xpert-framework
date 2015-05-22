@@ -16,12 +16,12 @@ public class ActiveDirectoryTest {
 
     public static void testConnection(String username, String password) {
         try {
-            LdapContext context = ActiveDirectory.getConnection("ayslan", "123456");
+            LdapContext context = ActiveDirectory.getConnection(username, password);
             context.close();
             System.out.println("Success!");
-        } catch (CommunicationException ex) {
-            System.out.println(ex.getMessage());
         } catch (AuthenticationException ex) {
+            System.out.println(ex.getMessage());
+        } catch (CommunicationException ex) {
             System.out.println(ex.getMessage());
         } catch (NamingException ex) {
             Logger.getLogger(ActiveDirectoryTest.class.getName()).log(Level.SEVERE, null, ex);
@@ -30,13 +30,13 @@ public class ActiveDirectoryTest {
 
     public static void testChangePassword(String username, String oldPass, String newPass) {
         try {
-            LdapContext conn = ActiveDirectory.getConnection(username, oldPass);
-            ActiveDirectory.getUser(username, conn).changePassword(oldPass, newPass, conn);
-            conn.close();
+            LdapContext context = ActiveDirectory.getConnection(username, oldPass);
+            ActiveDirectory.getUser(username, context).changePassword(oldPass, newPass, context);
+            context.close();
             System.out.println("Success!");
-        } catch (CommunicationException ex) {
-            System.out.println(ex.getMessage());
         } catch (AuthenticationException ex) {
+            System.out.println(ex.getMessage());
+        } catch (CommunicationException ex) {
             System.out.println(ex.getMessage());
         } catch (InvalidAttributeValueException ex) {
             System.out.println(ex.getMessage());
@@ -47,7 +47,7 @@ public class ActiveDirectoryTest {
 
     public static void main(String[] args) {
 
-        testChangePassword("ayslan", "teste", "123456");
+        testConnection("ayslan", "123456");
 
     }
 

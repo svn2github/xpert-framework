@@ -579,6 +579,7 @@ public abstract class BaseDAOImpl<T> implements BaseDAO<T> {
                     String fieldName = role.substring(role.lastIndexOf(".") + 1, role.length());
                     String orderBy = null;
 
+                    //generate "SELECT o FROM Object o JOIN o.itens c WHERE o = ?1 ORDER BY {something}"
                     StringBuilder queryString = new StringBuilder();
                     queryString.append(" SELECT ").append(" c ");
                     queryString.append(" FROM ").append(owner.getClass().getName()).append(" o ");
@@ -588,7 +589,8 @@ public abstract class BaseDAOImpl<T> implements BaseDAO<T> {
                     orderBy = getOrderBy(fieldName, owner.getClass());
 
                     if (orderBy != null && !orderBy.isEmpty()) {
-                        queryString.append(" ORDER BY c.").append(orderBy);
+                        //alias of attribute is "c"
+                        queryString.append(" ORDER BY ").append(getOrderByWithAlias("c", orderBy));
                     }
 
                     Query query = getEntityManager().createQuery(queryString.toString());
@@ -610,6 +612,22 @@ public abstract class BaseDAOImpl<T> implements BaseDAO<T> {
             }
         }
         return object;
+    }
+
+    public String getOrderByWithAlias(String alias, String orderBy) {
+        if (orderBy == null || orderBy.isEmpty()) {
+            return "";
+        }
+        String[] parts = orderBy.split(",");
+        StringBuilder builder = new StringBuilder();
+        for (int i = 0; i < parts.length; i++) {
+            if (i > 0) {
+                builder.append(",");
+            }
+            builder.append(alias).append(parts[i].replace(" ", ""));
+
+        }
+        return builder.toString();
     }
 
     private String getOrderBy(String fieldName, Class entity) {
