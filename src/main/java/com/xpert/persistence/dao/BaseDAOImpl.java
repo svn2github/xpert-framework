@@ -614,6 +614,15 @@ public abstract class BaseDAOImpl<T> implements BaseDAO<T> {
         return object;
     }
 
+    /**
+     * Normalize a order by. Example: @OrderBy(value = "descricao, id DESC")
+     * With alias "c" should be ORDER BY c.descricao, c.id DESC
+     *
+     *
+     * @param alias
+     * @param orderBy
+     * @return
+     */
     public String getOrderByWithAlias(String alias, String orderBy) {
         if (orderBy == null || orderBy.isEmpty()) {
             return "";
@@ -622,14 +631,23 @@ public abstract class BaseDAOImpl<T> implements BaseDAO<T> {
         StringBuilder builder = new StringBuilder();
         for (int i = 0; i < parts.length; i++) {
             if (i > 0) {
-                builder.append(",");
+                builder.append(", ");
             }
-            builder.append(alias).append(parts[i].replace(" ", ""));
-
+            if (alias != null || !alias.isEmpty()) {
+                builder.append(alias).append(".");
+            }
+            builder.append(parts[i].trim());
         }
         return builder.toString();
     }
 
+    /**
+     * Get value of OrderBy in class
+     *
+     * @param fieldName
+     * @param entity
+     * @return
+     */
     private String getOrderBy(String fieldName, Class entity) {
         String orderBy = null;
 
