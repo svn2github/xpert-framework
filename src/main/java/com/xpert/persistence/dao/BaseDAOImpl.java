@@ -633,7 +633,7 @@ public abstract class BaseDAOImpl<T> implements BaseDAO<T> {
             if (i > 0) {
                 builder.append(", ");
             }
-            if (alias != null || !alias.isEmpty()) {
+            if (alias != null && !alias.isEmpty()) {
                 builder.append(alias).append(".");
             }
             builder.append(parts[i].trim());
