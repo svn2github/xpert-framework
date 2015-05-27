@@ -335,7 +335,7 @@ public class FacesUtils {
             addCookie(FILE_DOWNLOAD_TOKEN, request.getParameter("javax.faces.ViewState"));
             response.setContentType(contentType);
             if (attachment) {
-                response.setHeader("Content-Disposition", "attachment; filename=\"" + fileName+"\"");
+                response.setHeader("Content-Disposition", "attachment; filename=\"" + fileName + "\"");
             }
             response.setContentLength(bytes.length);
             response.getOutputStream().write(bytes);
@@ -356,7 +356,7 @@ public class FacesUtils {
      * @param fileName
      */
     public static void download(InputStream inputStream, String contentType, String fileName) {
-        download(inputStreamToByte(inputStream), contentType, fileName);
+        download(inputStream, contentType, fileName, true);
     }
 
     /**
@@ -372,7 +372,7 @@ public class FacesUtils {
      * @param attachment
      */
     public static void download(InputStream inputStream, String contentType, String fileName, boolean attachment) {
-        download(inputStream, contentType, fileName, attachment);
+        download(inputStreamToByte(inputStream), contentType, fileName, attachment);
     }
 
     private static byte[] inputStreamToByte(InputStream inputStream) {
