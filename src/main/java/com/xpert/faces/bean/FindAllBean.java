@@ -35,7 +35,8 @@ public abstract class FindAllBean {
     /**
      * Define de default order for the Map Key (Class), also set the default
      * attribute to itemLabel in SelectItem
-     * @return 
+     *
+     * @return
      */
     public abstract Map<Class, ClassModel> getClassModel();
     private Map<Class, List> values = new HashMap<Class, List>();
@@ -44,7 +45,13 @@ public abstract class FindAllBean {
 
     @PostConstruct
     public void init() {
-        baseDAO = new DAO();
+        if (getBaseDAO() == null) {
+            baseDAO = new DAO();
+        }
+    }
+
+    public BaseDAO getBaseDAO() {
+        return baseDAO;
     }
 
     /**
@@ -70,7 +77,7 @@ public abstract class FindAllBean {
             if (classModel != null) {
                 restrictions = classModel.getRestrictions();
             }
-            objects = baseDAO.list(clazz, restrictions, order);
+            objects = getBaseDAO().list(clazz, restrictions, order);
             values.put(clazz, objects);
         }
 
