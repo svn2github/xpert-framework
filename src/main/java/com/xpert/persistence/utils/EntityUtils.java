@@ -179,6 +179,24 @@ public class EntityUtils {
     }
 
     /**
+     * Return a class from object id object is null then return null, if object
+     * instance of HibernateProxy then return
+     * getHibernateLazyInitializer().getPersistentClass()
+     *
+     * @param object
+     * @return
+     */
+    public static Class getPersistentClass(Object object) {
+        if (object == null) {
+            return null;
+        }
+        if (object instanceof HibernateProxy) {
+            return ((HibernateProxy) object).getHibernateLazyInitializer().getPersistentClass();
+        }
+        return object.getClass();
+    }
+
+    /**
      * Return the type of @Id/@EmbeddedId from entity. Example: Integer.class,
      * Long.class
      *

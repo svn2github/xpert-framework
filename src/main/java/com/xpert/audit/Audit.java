@@ -53,7 +53,7 @@ public class Audit {
             if (entityManager.contains(object)) {
                 entityManager.detach(object);
             }
-            return entityManager.find(object.getClass(), id);
+            return entityManager.find(EntityUtils.getPersistentClass(object), id);
         }
         return null;
     }
@@ -109,7 +109,8 @@ public class Audit {
             audit(object, persisted, AuditingType.UPDATE);
             entityManager.detach(persisted);
         } else {
-            logger.log(Level.SEVERE, "Entity {0} passed to update in Xpert Audit, is a transient instance", new Object[]{object.getClass().getName()});
+            logger.log(Level.SEVERE, "Entity {0} passed to update in Xpert Audit, is a transient instance",
+                    new Object[]{EntityUtils.getPersistentClass(object).getName()});
         }
     }
 
@@ -191,7 +192,7 @@ public class Audit {
         if (object == null) {
             return false;
         }
-        return isAudit(object.getClass());
+        return isAudit(EntityUtils.getPersistentClass(object));
     }
 
     /**
@@ -219,21 +220,23 @@ public class Audit {
         try {
 
             if (isEntity(object)) {
+                
+                Class entityClass = EntityUtils.getPersistentClass(object);
 
-                Field[] fields = object.getClass().getDeclaredFields();
-                Method[] methods = object.getClass().getDeclaredMethods();
+                Field[] fields = entityClass.getDeclaredFields();
+                Method[] methods = entityClass.getDeclaredMethods();
                 Method.setAccessible(methods, true);
                 Field.setAccessible(fields, true);
 
                 AbstractAuditing auditing = Configuration.getAbstractAuditing();
                 auditing.setIdentifier(Long.valueOf(EntityUtils.getId(object).toString()));
-                auditing.setEntity(getEntityName(object.getClass()));
+                auditing.setEntity(getEntityName(entityClass));
                 auditing.setAuditingType(auditingType);
                 auditing.setEventDate(new Date());
                 if (FacesContext.getCurrentInstance() != null) {
                     auditing.setIp(FacesUtils.getIP());
                 }
-                auditing.setAuditClass(object.getClass());
+                auditing.setAuditClass(entityClass);
                 AbstractAuditingListener listener = Configuration.getAuditingListener();
                 if (listener != null) {
                     listener.onSave(auditing);
@@ -509,14 +512,16 @@ public class Audit {
 
     public List<Method> getMethods(Object objeto) {
 
-        List<Method> methodGet = MAPPED_METHODS.get(objeto.getClass());
+        
+        Class entityClass = EntityUtils.getPersistentClass(objeto);
+        List<Method> methodGet = MAPPED_METHODS.get(entityClass);
 
         if (methodGet != null) {
             return methodGet;
         }
 
         methodGet = new ArrayList<Method>();
-        Method methods[] = objeto.getClass().getMethods();
+        Method methods[] = entityClass.getMethods();
 
         List exclude = Arrays.asList(EXCLUDED_FIELDS);
 
@@ -550,7 +555,7 @@ public class Audit {
         } catch (Exception ex) {
             logger.log(Level.SEVERE, ex.getMessage(), ex);
         }
-        MAPPED_METHODS.put(objeto.getClass(), methodGet);
+        MAPPED_METHODS.put(entityClass, methodGet);
         return methodGet;
     }
 
@@ -578,7 +583,7 @@ public class Audit {
      * @return boolean
      */
     public static boolean isEntity(Object objeto) {
-        return isEntity(objeto.getClass());
+        return isEntity(EntityUtils.getPersistentClass(objeto));
     }
 
     /**
