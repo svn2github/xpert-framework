@@ -275,7 +275,7 @@ public abstract class BaseDAOImpl<T> implements BaseDAO<T> {
         return builder.select("o." + attributeName)
                 .from(getEntityClass(), "o")
                 .add("o." + EntityUtils.getIdFieldName(getEntityClass()), id)
-                .getSigleResult();
+                .getSingleResult();
 
     }
 

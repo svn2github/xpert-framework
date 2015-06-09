@@ -448,10 +448,10 @@ public class QueryBuilder {
     }
 
     /**
-     * @return entityManager.getSigleResult(), returns null when
+     * @return entityManager.getSingleResult(), returns null when
      * NoResultExceptionis throw
      */
-    public Object getSigleResult() {
+    public Object getSingleResult() {
         try {
             type = QueryType.SELECT;
             return this.createQuery().getSingleResult();
