@@ -30,11 +30,11 @@ public class Audit {
 
     private static final Logger logger = Logger.getLogger(Audit.class.getName());
     private static final String[] EXCLUDED_FIELDS = {"notifyAll", "notify", "getClass", "wait", "hashCode", "toString", "equals"};
-    private static final SimpleDateFormat AUDIT_DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
     private static final Map<Class, String> MAPPED_NAME = new HashMap<Class, String>();
     private static final Map<Class, List<Method>> MAPPED_METHODS = new HashMap<Class, List<Method>>();
     private static final Map<Method, Boolean> MAPPED_ONE_TO_ONE_CASCADE_ALL = new HashMap<Method, Boolean>();
     private final EntityManager entityManager;
+    private final SimpleDateFormat AUDIT_DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
     public Audit(EntityManager entityManager) {
         this.entityManager = entityManager;

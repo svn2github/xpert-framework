@@ -26,8 +26,8 @@ import javax.persistence.EntityManager;
  */
 public class BeanMaker implements Serializable {
 
-    private static final SimpleDateFormat ZIP_NAME_DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd_HH'h'-mm'm'");
     private static final Logger logger = Logger.getLogger(BeanMaker.class.getName());
+    private final SimpleDateFormat ZIP_NAME_DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd_HH'h'-mm'm'");
     private EntityManager entityManager;
     private List<MappedBean> mappedBeans;
     private List<Class> selectedClasses;
