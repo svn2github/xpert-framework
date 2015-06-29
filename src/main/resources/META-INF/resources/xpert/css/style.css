@@ -54,7 +54,8 @@ th.uix-datatable-index .ui-menubutton .ui-button{height: 24px; width: 30px;}
 .uix-calendar .ui-inputfield{width: 100%; height: 34px;}
 .uix-calendar .ui-inputfield.hasDatepicker {padding-right: 35px;}
 .uix-calendar .ui-datepicker-trigger.ui-button.ui-widget.ui-state-default.ui-corner-all.ui-button-icon-only { left: -31px;}
-.uix-select-menu{height: 34px; padding: 0; width: 100% !important; }
+.uix-select-menu{padding: 0; width: 100% !important; }
+.uix-select-menu.ui-selectonemenu , .uix-select-menu.ui-selectcheckboxmenu{height: 34px;}
 .uix-select-menu .ui-selectonemenu-label{width: 100% !important;}
 .uix-select-menu .ui-inputfield{padding: 7px;}
 .uix-select-menu .ui-selectonemenu-trigger{width:  25px !important;}
@@ -65,7 +66,8 @@ th.uix-datatable-index .ui-menubutton .ui-button{height: 24px; width: 30px;}
 .uix-select-menu .ui-selectcheckboxmenu-trigger .ui-icon {margin-top: 7px !important;}
 .uix-select-menupanel .ui-selectonemenu-filter-container{width: 100%}
 .uix-select-menupanel .ui-inputfield{width: 100% !important}
-
+.uix-select-menu .ui-inputfield.ui-selectlistbox-filter{width: 100%}
+.uix-select-menu .ui-chkbox-box{margin-right: 5px;}
 
 
 
