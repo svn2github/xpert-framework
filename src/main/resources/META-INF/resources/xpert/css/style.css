@@ -61,6 +61,8 @@ th.uix-datatable-index .ui-menubutton .ui-button{height: 24px; width: 30px;}
 .uix-select-menu label{margin-bottom: 0;}
 .uix-select-menu .ui-selectcheckboxmenu-trigger{width:  25px !important;}
 .uix-select-menu .ui-selectcheckboxmenu-label {padding: 7px !important;}
+.uix-select-menu .ui-selectonemenu-trigger .ui-icon {margin-top: 7px !important;}
+.uix-select-menu .ui-selectcheckboxmenu-trigger .ui-icon {margin-top: 7px !important;}
 .uix-select-menupanel .ui-selectonemenu-filter-container{width: 100%}
 .uix-select-menupanel .ui-inputfield{width: 100% !important}
 
