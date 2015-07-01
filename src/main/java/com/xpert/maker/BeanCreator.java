@@ -191,9 +191,15 @@ public class BeanCreator {
             }
             viewField.setLazy(isLazy(field));
             if (field.getType().equals(Collection.class) || field.getType().equals(List.class) || field.getType().equals(Set.class)) {
-                ParameterizedType parameterizedType = (ParameterizedType) field.getGenericType();
-                Class<?> listType = (Class<?>) parameterizedType.getActualTypeArguments()[0];
-                viewField.setTypeName(listType.getSimpleName());
+                if (field.getGenericType() instanceof ParameterizedType) {
+                    ParameterizedType parameterizedType = (ParameterizedType) field.getGenericType();
+                    if (parameterizedType.getActualTypeArguments().length > 0) {
+                        if (parameterizedType.getActualTypeArguments()[0] instanceof Class<?>) {
+                            Class<?> listType = (Class<?>) parameterizedType.getActualTypeArguments()[0];
+                            viewField.setTypeName(listType.getSimpleName());
+                        }
+                    }
+                }
             } else {
                 viewField.setTypeName(field.getType().getSimpleName());
             }
