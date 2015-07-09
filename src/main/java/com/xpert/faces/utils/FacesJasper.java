@@ -19,16 +19,12 @@ import net.sf.jasperreports.engine.export.ooxml.JRXlsxExporter;
 
 /**
  * Generic class to create Jasper Reports
- * 
+ *
  * @author Ayslan
  */
 public class FacesJasper {
 
     private static final Logger logger = Logger.getLogger(FacesJasper.class.getName());
-
-    public static void createJasperReport(List dataSource, Map parameters, String path, String fileName) {
-        createJasperReport(dataSource, parameters, path, fileName, null);
-    }
 
     public static JasperPrint fillReport(List dataSource, Map parameters, String path) throws JRException {
         return fillReport(dataSource, parameters, path, null);
@@ -49,30 +45,92 @@ public class FacesJasper {
         }
     }
 
+    /**
+     * Create a jasper report
+     *
+     * @param dataSource DataSource of report
+     * @param parameters Map of parameters
+     * @param path Path of Report
+     * @param fileName Name of generated file
+     */
+    public static void createJasperReport(List dataSource, Map parameters, String path, String fileName) {
+        createJasperReport(dataSource, parameters, path, fileName, true);
+    }
+
+    /**
+     * Create a jasper report
+     *
+     * @param dataSource DataSource of report
+     * @param parameters Map of parameters
+     * @param path Path of Report
+     * @param fileName Name of generated file
+     * @param attachment indicates attachment in header
+     */
+    public static void createJasperReport(List dataSource, Map parameters, String path, String fileName, boolean attachment) {
+        createJasperReport(dataSource, parameters, path, fileName, null, attachment);
+    }
+
+    /**
+     * Create a jasper report
+     *
+     * @param dataSource DataSource of report
+     * @param parameters Map of parameters
+     * @param path Path of Report
+     * @param fileName Name of generated file
+     * @param entityManager
+     */
     public static void createJasperReport(List dataSource, Map parameters, String path, String fileName, EntityManager entityManager) {
+        createJasperReport(dataSource, parameters, path, fileName, entityManager, true);
+    }
+
+    /**
+     * Create a jasper report
+     *
+     * @param dataSource DataSource of report
+     * @param parameters Map of parameters
+     * @param path Path of Report
+     * @param fileName Name of generated file
+     * @param entityManager
+     * @param attachment indicates attachment in header
+     */
+    public static void createJasperReport(List dataSource, Map parameters, String path, String fileName, EntityManager entityManager, boolean attachment) {
 
         try {
             String layout = FacesContext.getCurrentInstance().getExternalContext().getRealPath(path);
             JasperPrint jasperPrint = fillReport(dataSource, parameters, layout, entityManager);
-            FacesUtils.download(JasperExportManager.exportReportToPdf(jasperPrint), "application/pdf", fileName.endsWith(".pdf") ? fileName : fileName + ".pdf");
+            FacesUtils.download(JasperExportManager.exportReportToPdf(jasperPrint), "application/pdf", fileName.endsWith(".pdf") ? fileName : fileName + ".pdf", attachment);
         } catch (JRException ex) {
             logger.log(Level.SEVERE, null, ex);
             throw new RuntimeException(ex);
         }
     }
 
+    /**
+     * Create a jasper report with xlsx format
+     *
+     * @param dataSource DataSource of report
+     * @param parameters Map of parameters
+     * @param path Path of Report
+     * @param fileName Name of generated file
+     */
+    public static void createJasperExcel(List dataSource, Map parameters, String path, String fileName) {
+        createJasperExcel(dataSource, parameters, path, fileName, null);
+    }
+
+    /**
+     * Create a jasper report with xlsx format
+     *
+     * @param dataSource DataSource of report
+     * @param parameters Map of parameters
+     * @param path Path of Report
+     * @param fileName Name of generated file
+     * @param entityManager
+     */
     public static void createJasperExcel(List dataSource, Map parameters, String path, String fileName, EntityManager entityManager) {
 
         try {
             String layout = FacesContext.getCurrentInstance().getExternalContext().getRealPath(path);
-            JasperPrint jasperPrint;
-            JRBeanCollectionDataSource jRBeanCollectionDataSource = new JRBeanCollectionDataSource(dataSource, entityManager);
-            if (jRBeanCollectionDataSource.getData() == null || jRBeanCollectionDataSource.getData().isEmpty()) {
-                JREmptyDataSource jREmptyDataSource = new JREmptyDataSource();
-                jasperPrint = JasperFillManager.fillReport(layout, parameters, jREmptyDataSource);
-            } else {
-                jasperPrint = JasperFillManager.fillReport(layout, parameters, jRBeanCollectionDataSource);
-            }
+            JasperPrint jasperPrint = fillReport(dataSource, parameters, layout, entityManager);
 
             ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
 
