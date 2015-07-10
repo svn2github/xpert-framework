@@ -1,14 +1,22 @@
 package com.xpert.faces.component.pdfprinter;
 
 import com.itextpdf.text.DocumentException;
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.faces.context.FacesContext;
 import javax.servlet.http.HttpServletRequest;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import org.w3c.dom.Document;
 import org.xhtmlrenderer.layout.SharedContext;
 import org.xhtmlrenderer.pdf.ITextRenderer;
+import org.xhtmlrenderer.resource.FSEntityResolver;
+import org.xml.sax.SAXException;
 
 /**
  *
@@ -69,39 +77,58 @@ public class PDFPrinterBuilder {
         String content = HtmlNormalizer.normalize(html, getBaseURI(context), pageOrientation);
 
         long fim = System.currentTimeMillis();
-
         if (DEBUG) {
-            logger.log(Level.INFO, "HTML normalized {0}ms", (fim - inicio));
+            logger.log(Level.INFO, "HTML normalized in {0}ms", (fim - inicio));
         }
 
         inicio = System.currentTimeMillis();
 //        System.out.println(content);
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
 
+        //XRLog.setLoggingEnabled(DEBUG);
         //create renderer
-        ITextRenderer iTextRenderer = new ITextRenderer();
-        iTextRenderer.setDocumentFromString(content);
+        try {
 
-        //to convert svg
-        ChainingReplacedElementFactory chainingReplacedElementFactory = new ChainingReplacedElementFactory();
-        chainingReplacedElementFactory.addReplacedElementFactory(new SVGReplacedElementFactory(iTextRenderer.getOutputDevice()));
-        SharedContext sharedContext = iTextRenderer.getSharedContext();
+            ITextRenderer iTextRenderer = new ITextRenderer();
+            //iTextRenderer.setDocumentFromString(content);
+            ChainingReplacedElementFactory chainingReplacedElementFactory = new ChainingReplacedElementFactory();
+            chainingReplacedElementFactory.addReplacedElementFactory(new SVGReplacedElementFactory(iTextRenderer.getOutputDevice()));
+            SharedContext sharedContext = iTextRenderer.getSharedContext();
+            sharedContext.setReplacedElementFactory(chainingReplacedElementFactory);
+            sharedContext.setUserAgentCallback(new CustomUserAgentCallback());
+            iTextRenderer.setDocumentFromString(content);
 
-        sharedContext.setReplacedElementFactory(chainingReplacedElementFactory);
-        iTextRenderer.layout();
+            //to convert svg
+            iTextRenderer.layout();
 
-        //write
-        iTextRenderer.createPDF(baos);
-        baos.flush();
-        baos.close();
+            //write
+            iTextRenderer.createPDF(baos);
+            baos.flush();
+            baos.close();
 
-        fim = System.currentTimeMillis();
+            fim = System.currentTimeMillis();
 
-        if (DEBUG) {
-            logger.log(Level.INFO, "PDF created in {0}ms", (fim - inicio));
+            if (DEBUG) {
+                logger.log(Level.INFO, "PDF created in {0}ms", (fim - inicio));
+            }
+            return baos.toByteArray();
+        } catch (Exception ex) {
+            throw new RuntimeException(ex);
         }
+    }
 
-        return baos.toByteArray();
+    public Document getDocument(String content) throws UnsupportedEncodingException, SAXException, IOException, ParserConfigurationException {
+        final DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
+        documentBuilderFactory.setNamespaceAware(false);
+        documentBuilderFactory.setValidating(false);
+        documentBuilderFactory.setFeature("http://xml.org/sax/features/namespaces", false);
+        documentBuilderFactory.setFeature("http://xml.org/sax/features/validation", false);
+        documentBuilderFactory.setFeature("http://apache.org/xml/features/nonvalidating/load-dtd-grammar", false);
+        documentBuilderFactory.setFeature("http://apache.org/xml/features/nonvalidating/load-external-dtd", false);
+        documentBuilderFactory.setValidating(false);
+        DocumentBuilder builder = documentBuilderFactory.newDocumentBuilder();
+        builder.setEntityResolver(FSEntityResolver.instance());
+        return builder.parse(new ByteArrayInputStream(content.getBytes("UTF-8")));
     }
 
 }
