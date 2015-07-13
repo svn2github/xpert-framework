@@ -52,7 +52,7 @@ public class PDFPrinterBuilder {
      * @throws IOException
      */
     public static byte[] createPDF(FacesContext context, String html) throws DocumentException, IOException {
-        return createPDF(context, html, PageOrientation.PORTRAIT);
+        return createPDF(context, html, PageOrientation.PORTRAIT, true, true);
     }
 
     /**
@@ -62,11 +62,13 @@ public class PDFPrinterBuilder {
      * @param context
      * @param html
      * @param pageOrientation
+     * @param cacheCss Cache CSS resources
+     * @param replaceHttp Replace HTTPS with HTTP
      * @return
      * @throws DocumentException
      * @throws IOException
      */
-    public static byte[] createPDF(FacesContext context, String html, PageOrientation pageOrientation) throws DocumentException, IOException {
+    public static byte[] createPDF(FacesContext context, String html, PageOrientation pageOrientation, boolean cacheCss, boolean replaceHttp) throws DocumentException, IOException {
 
         if (html == null || html.trim().isEmpty()) {
             html = EMPTY_HTML;
@@ -95,7 +97,7 @@ public class PDFPrinterBuilder {
             chainingReplacedElementFactory.addReplacedElementFactory(new SVGReplacedElementFactory(iTextRenderer.getOutputDevice()));
             SharedContext sharedContext = iTextRenderer.getSharedContext();
             sharedContext.setReplacedElementFactory(chainingReplacedElementFactory);
-            sharedContext.setUserAgentCallback(new CustomUserAgentCallback());
+            sharedContext.setUserAgentCallback(new CustomUserAgentCallback(cacheCss, replaceHttp));
             iTextRenderer.setDocumentFromString(content);
 
             //to convert svg

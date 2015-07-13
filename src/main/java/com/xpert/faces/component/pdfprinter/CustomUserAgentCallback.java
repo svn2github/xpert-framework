@@ -21,14 +21,32 @@ public class CustomUserAgentCallback extends NaiveUserAgent {
 
     private static final Map<String, byte[]> CACHE = new HashMap<String, byte[]>();
 
+    private final boolean loadFromCache;
+    private final boolean replaceHttps;
+
+    public CustomUserAgentCallback(boolean loadFromCache, boolean replaceHttps) {
+        this.loadFromCache = loadFromCache;
+        this.replaceHttps = replaceHttps;
+    }
+
+    public static void clearCache() {
+        CACHE.clear();
+    }
+
     @Override
     public CSSResource getCSSResource(String uri) {
-        byte[] resource = CACHE.get(uri);
+        byte[] resource = null;
+       
+        if (replaceHttps && uri.startsWith("https://")) {
+            uri = uri.replace("https://", "http://");
+        }
+
+        if (loadFromCache == true) {
+            resource = CACHE.get(uri);
+        }
         try {
             if (resource == null || resource.length == 0) {
-                if(uri.startsWith("https://")){
-                    uri = uri.replace("https://", "http://");
-                }
+
                 InputStream inputStream = resolveAndOpenStream(uri);
                 if (inputStream != null) {
                     resource = IOUtils.toByteArray(inputStream);

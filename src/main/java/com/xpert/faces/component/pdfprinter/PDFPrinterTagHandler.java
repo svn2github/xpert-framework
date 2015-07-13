@@ -20,12 +20,16 @@ public class PDFPrinterTagHandler extends TagHandler {
     private final TagAttribute target;
     private final TagAttribute fileName;
     private final TagAttribute orientation;
+    private final TagAttribute cacheCss;
+    private final TagAttribute replaceHttps;
 
     public PDFPrinterTagHandler(TagConfig tagConfig) {
         super(tagConfig);
         this.target = getRequiredAttribute("target");
         this.fileName = getAttribute("fileName");
         this.orientation = getAttribute("orientation");
+        this.cacheCss = getAttribute("cacheCss");
+        this.replaceHttps = getAttribute("replaceHttps");
     }
 
     public void apply(FaceletContext faceletContext, UIComponent parent) throws IOException, FacesException, FaceletException, ELException {
@@ -39,9 +43,18 @@ public class PDFPrinterTagHandler extends TagHandler {
             if (orientation != null) {
                 orientationVE = orientation.getValueExpression(faceletContext, Object.class);
             }
+            ValueExpression cacheCssVE = null;
+            if (cacheCss != null) {
+                cacheCssVE = cacheCss.getValueExpression(faceletContext, Boolean.class);
+            }
+
+            ValueExpression replaceHttpsVE = null;
+            if (replaceHttps != null) {
+                replaceHttpsVE = replaceHttps.getValueExpression(faceletContext, Boolean.class);
+            }
 
             ActionSource actionSource = (ActionSource) parent;
-            actionSource.addActionListener(new PDFPrinter(targetVE, fileNameVE, orientationVE));
+            actionSource.addActionListener(new PDFPrinter(targetVE, fileNameVE, orientationVE, cacheCssVE, replaceHttpsVE));
 
             ClientBehaviorHolder clientBehaviorHolder = (ClientBehaviorHolder) parent;
             clientBehaviorHolder.addClientBehavior("click", new PDFPrinterBehavior(target.getValue(faceletContext)));

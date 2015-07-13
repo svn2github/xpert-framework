@@ -21,16 +21,20 @@ public class PDFPrinter implements ActionListener, StateHolder {
     private ValueExpression target;
     private ValueExpression fileName;
     private ValueExpression orientation;
+    private ValueExpression cacheCss;
+    private ValueExpression replaceHttps;
 
     private static final String HTML_PARAMETER_NAME = "xpert_html_export";
 
     public PDFPrinter() {
     }
 
-    public PDFPrinter(ValueExpression target, ValueExpression fileName, ValueExpression orientation) {
+    public PDFPrinter(ValueExpression target, ValueExpression fileName, ValueExpression orientation, ValueExpression cacheCss, ValueExpression replaceHttps) {
         this.target = target;
         this.fileName = fileName;
         this.orientation = orientation;
+        this.cacheCss = cacheCss;
+        this.replaceHttps = replaceHttps;
     }
 
     @Override
@@ -58,15 +62,25 @@ public class PDFPrinter implements ActionListener, StateHolder {
             }
         }
 
+        Boolean cacheCssValue = true;
+        if (cacheCss != null) {
+            cacheCssValue = (Boolean) cacheCss.getValue(elContext);
+        }
+        
+        Boolean replaceHttpsValue = true;
+        if (replaceHttps != null) {
+            cacheCssValue = (Boolean) replaceHttps.getValue(elContext);
+        }
+
         try {
 
             UIComponent component = event.getComponent().findComponent(targetId);
             if (component == null) {
                 throw new FacesException("Cannot find component " + targetId + " in view.");
             }
-            
+
             String htmlParameter = FacesUtils.getParameter(HTML_PARAMETER_NAME);
-            byte[] pdf = PDFPrinterBuilder.createPDF(context, htmlParameter, pageOrientation);
+            byte[] pdf = PDFPrinterBuilder.createPDF(context, htmlParameter, pageOrientation, cacheCssValue, replaceHttpsValue);
 
             FacesUtils.download(pdf, "application/pdf", outputFileName.endsWith(".pdf") ? outputFileName : outputFileName + ".pdf");
             context.responseComplete();
@@ -91,6 +105,8 @@ public class PDFPrinter implements ActionListener, StateHolder {
         target = (ValueExpression) values[0];
         fileName = (ValueExpression) values[1];
         orientation = (ValueExpression) values[2];
+        cacheCss = (ValueExpression) values[3];
+        replaceHttps = (ValueExpression) values[4];
     }
 
     @Override
@@ -100,6 +116,8 @@ public class PDFPrinter implements ActionListener, StateHolder {
         values[0] = target;
         values[1] = fileName;
         values[2] = orientation;
+        values[3] = cacheCss;
+        values[4] = replaceHttps;
 
         return ((Object[]) values);
     }
