@@ -5,6 +5,7 @@ import com.xpert.i18n.XpertResourceBundle;
 import com.xpert.i18n.I18N;
 import com.xpert.utils.StringUtils;
 import com.xpert.faces.utils.ValueExpressionAnalyzer;
+import com.xpert.i18n.CustomInterpolator;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -14,10 +15,14 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.el.ValueExpression;
 import javax.el.ValueReference;
+import javax.faces.FacesException;
 import javax.faces.application.FacesMessage;
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
+import static javax.faces.validator.BeanValidator.VALIDATOR_FACTORY_KEY;
 import javax.faces.validator.ValidatorException;
+import javax.validation.ValidationException;
+import javax.validation.ValidatorFactory;
 import javax.validation.constraints.*;
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotBlank;
@@ -66,6 +71,21 @@ public class BeanValidator extends javax.faces.validator.BeanValidator {
 
     @Override
     public void validate(FacesContext context, UIComponent component, Object value) {
+
+        Object cachedObject = context.getExternalContext().getApplicationMap().get(VALIDATOR_FACTORY_KEY);
+        if (cachedObject instanceof ValidatorFactory) {
+            ValidatorFactory validatorFactory = (ValidatorFactory) cachedObject;
+            //if not instance of CustomInterpolator, then force
+            //weblogic for some reason doesnt set the interpolator from validation.xml
+            if (validatorFactory.getMessageInterpolator() instanceof CustomInterpolator == false) {
+                validatorFactory = javax.validation.Validation.byDefaultProvider()
+                        .configure()
+                        .messageInterpolator(new CustomInterpolator())
+                        .buildValidatorFactory();
+                context.getExternalContext().getApplicationMap().put(VALIDATOR_FACTORY_KEY, validatorFactory);
+            }
+        }
+
         try {
             super.validate(context, component, value);
         } catch (ValidatorException ex) {
@@ -283,7 +303,7 @@ public class BeanValidator extends javax.faces.validator.BeanValidator {
                 return getDeclaredField(clazz.getSuperclass(), fieldName);
             }
         } catch (SecurityException ex) {
-            logger.log(Level.SEVERE, null, ex);
+            logger.log(Level.INFO, null, ex);
         }
 
         return field;
@@ -299,7 +319,7 @@ public class BeanValidator extends javax.faces.validator.BeanValidator {
                 return getDeclaredMethod(clazz.getSuperclass(), fieldName);
             }
         } catch (SecurityException ex) {
-            logger.log(Level.SEVERE, null, ex);
+            logger.log(Level.INFO, null, ex);
         }
 
         return method;
