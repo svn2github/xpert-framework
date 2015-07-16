@@ -110,7 +110,7 @@ public class DateFilterRenderer extends Renderer {
             widgetVar = "PF('" + widgetVar + "')";
         }
 
-        String filterScript = "Xpert.dateFilter('" + calendarEnd.getClientId() + "');" + widgetVar + ".filter(); return false;";
+        String filterScript = "Xpert.dateFilter('" + column.getClientId() + "');" + widgetVar + ".filter(); return false;";
 
         ClientBehavior clientBehavior = createClientBehavior(filterScript);
 

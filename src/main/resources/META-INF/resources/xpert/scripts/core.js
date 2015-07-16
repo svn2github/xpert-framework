@@ -73,8 +73,9 @@ Xpert = {
         return this;
     },
     dateFilter: function (element) {
-        var dateId = Xpert.escapeClientId(element);
-        var $column = $(dateId).closest('.ui-filter-column');
+//        var dateId = Xpert.escapeClientId(element);
+//        var $column = $(dateId).closest('.ui-filter-column');
+        var $column = $(Xpert.escapeClientId(element));
         var $inputFilter = $column.find('.ui-column-filter');
 
         var dateStart = $column.find('.calendar-filter-start input').val();
