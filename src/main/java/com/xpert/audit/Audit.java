@@ -15,6 +15,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.faces.context.FacesContext;
 import javax.persistence.*;
+import org.apache.commons.lang.StringUtils;
 import org.hibernate.collection.internal.PersistentBag;
 import org.hibernate.collection.spi.PersistentCollection;
 import org.hibernate.proxy.HibernateProxy;
@@ -39,7 +40,6 @@ public class Audit {
     public Audit(EntityManager entityManager) {
         this.entityManager = entityManager;
     }
-
 
     /**
      * Get the object from database
@@ -220,7 +220,7 @@ public class Audit {
         try {
 
             if (isEntity(object)) {
-                
+
                 Class entityClass = EntityUtils.getPersistentClass(object);
 
                 Field[] fields = entityClass.getDeclaredFields();
@@ -376,13 +376,19 @@ public class Audit {
                             } else {
                                 oldId = EntityUtils.getId(fieldOld);
                             }
-                            metadata.setOldIdentifier(oldId == null ? null : Long.valueOf(oldId.toString()));
+                            //set id if is numeric
+                            if (oldId != null && oldId.toString() != null && !oldId.toString().isEmpty() && StringUtils.isNumeric(oldId.toString())) {
+                                metadata.setOldIdentifier(Long.valueOf(oldId.toString()));
+                            }
                             metadata.setOldValue(fieldOld == null ? "" : fieldOld.toString());
                             if ((oldId == null && newId != null) || (oldId != null && newId == null) || (oldId != null && !oldId.equals(newId))) {
                                 addMetadata = true;
                             }
                             metadata.setEntity(method.getDeclaringClass().getName());
-                            metadata.setNewIdentifier(newId == null ? null : Long.valueOf(newId.toString()));
+                            //set id if is numeric
+                            if (newId != null && newId.toString() != null && !newId.toString().isEmpty()  && StringUtils.isNumeric(newId.toString())) {
+                                metadata.setNewIdentifier(Long.valueOf(newId.toString()));
+                            }
                             metadata.setNewValue(fieldValue == null ? "" : fieldValue.toString());
 
                         }
@@ -512,7 +518,6 @@ public class Audit {
 
     public List<Method> getMethods(Object objeto) {
 
-        
         Class entityClass = EntityUtils.getPersistentClass(objeto);
         List<Method> methodGet = MAPPED_METHODS.get(entityClass);
 
