@@ -104,7 +104,7 @@ public class Configuration {
             InputStream inputStream = servletContext.getResourceAsStream(CONFIG_LOCATION);
 
             if (inputStream == null) {
-                logger.log(Level.WARNING, "xpert-config.xml not found in WEB-INF");
+                logger.log(Level.INFO, "xpert-config.xml not found in WEB-INF");
                 return;
             }
 

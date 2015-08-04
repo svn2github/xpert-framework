@@ -3,7 +3,10 @@ package com.xpert.faces.utils;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.StringWriter;
 import java.util.Iterator;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.el.ELContext;
 import javax.el.ExpressionFactory;
 import javax.el.ValueExpression;
@@ -15,6 +18,7 @@ import javax.faces.component.UIViewRoot;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.faces.context.FacesContextFactory;
+import javax.faces.context.ResponseWriter;
 import javax.faces.lifecycle.Lifecycle;
 import javax.faces.lifecycle.LifecycleFactory;
 import javax.servlet.ServletContext;
@@ -29,6 +33,28 @@ import javax.servlet.http.HttpSession;
  * @author Ayslan
  */
 public class FacesUtils {
+
+    public static String getHtml(UIComponent component) {
+        FacesContext context = FacesContext.getCurrentInstance();
+        if(context == null){
+            return null;
+        }
+        ResponseWriter originalWriter = context.getResponseWriter();
+        StringWriter writer = new StringWriter();
+        try {
+            context.setResponseWriter(context.getRenderKit().createResponseWriter(writer, "text/html", "UTF-8"));
+            try {
+                component.encodeAll(context);
+            } catch (IOException ex) {
+                throw new RuntimeException(ex);
+            }
+        } finally {
+            if (originalWriter != null) {
+                context.setResponseWriter(originalWriter);
+            }
+        }
+        return writer.toString();
+    }
 
     /**
      * Get a object from Http Session
