@@ -51,8 +51,9 @@ public abstract class AbstractBusinessObject<T> {
      * @throws UniqueFieldException
      */
     public void validateUniqueFields(T object) throws UniqueFieldException {
-        if (getUniqueFields() != null && !getUniqueFields().isEmpty()) {
-            UniqueFieldsValidation.validateUniqueFields(getUniqueFields(), object, getDAO());
+        List<UniqueField> uniqueFields = getUniqueFields();
+        if (uniqueFields != null && !uniqueFields.isEmpty()) {
+            UniqueFieldsValidation.validateUniqueFields(uniqueFields, object, getDAO());
         }
     }
 
