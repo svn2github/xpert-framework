@@ -11,7 +11,7 @@ import java.util.List;
 
 /**
  * Generic Business Object to create CRUD
- * 
+ *
  * @author Ayslan
  * @param <T>
  */
@@ -85,7 +85,7 @@ public abstract class AbstractBusinessObject<T> {
      * @throws DeleteException
      */
     public void delete(Object id) throws DeleteException {
-        getDAO().delete(id);
+        getDAO().delete(id, isAudit());
     }
 
     /**
@@ -96,7 +96,7 @@ public abstract class AbstractBusinessObject<T> {
      */
     public void remove(Number id) throws DeleteException {
         Object object = getDAO().find(id);
-        getDAO().remove(object);
+        getDAO().remove(object, isAudit());
     }
 
     /**
@@ -106,6 +106,6 @@ public abstract class AbstractBusinessObject<T> {
      * @throws DeleteException
      */
     public void remove(T object) throws DeleteException {
-        getDAO().remove(object);
+        getDAO().remove(object, isAudit());
     }
 }
