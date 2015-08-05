@@ -1,8 +1,11 @@
 package com.xpert.persistence.utils;
 
+import com.xpert.utils.StringUtils;
 import java.lang.reflect.AccessibleObject;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -33,6 +36,48 @@ public class EntityUtils {
     private static final Map<Class, String> ID_NAME_MAP = new HashMap<Class, String>();
     private static final Map<Class, AccessibleObject> ID_ACCESSIBLE_MAP = new HashMap<Class, AccessibleObject>();
     private static final Map<Class, Class> ID_TYPE_MAP = new HashMap<Class, Class>();
+
+    /**
+     * Convert a string to a mapped id type.
+     * 
+     * Example:
+     * <pre>
+     * <code>
+     * &#064;Id
+     * private Integer id;
+     * </code>
+     * </pre>
+     * With string "10" returns a Integer value 10 
+     * 
+     * @param id
+     * @param entityClass
+     * @return 
+     */
+    public static Object getIdFromString(String id, Class entityClass) {
+        if (id == null || id.isEmpty()) {
+            return null;
+        }
+        try {
+            Class idType = EntityUtils.getIdType(entityClass);
+            if (idType.equals(Long.class) || idType.equals(long.class)) {
+                return Long.parseLong(StringUtils.getOnlyIntegerNumbers(id));
+            } else if (idType.equals(Integer.class) || idType.equals(int.class)) {
+                return Integer.parseInt(StringUtils.getOnlyIntegerNumbers(id));
+            } else if (idType.equals(BigInteger.class)) {
+                return new BigInteger(StringUtils.getOnlyIntegerNumbers(id));
+            } else if (idType.equals(Short.class) || idType.equals(short.class)) {
+                return Short.parseShort(StringUtils.getOnlyIntegerNumbers(id));
+            } else if (idType.equals(BigDecimal.class)) {
+                return new BigDecimal(StringUtils.getOnlyIntegerNumbers(id));
+            } else if (idType.equals(String.class)) {
+                return id;
+            } else {
+                throw new IllegalArgumentException("Type " + idType.getName() + " from entity " + entityClass.getName() + " cannot be converted");
+            }
+        } catch (NumberFormatException ex) {
+            return null;
+        }
+    }
 
     /**
      * Returns a entity table name. Try to get from @Table annotation, if not

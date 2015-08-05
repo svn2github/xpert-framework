@@ -8,6 +8,7 @@ import com.xpert.persistence.query.QueryBuilder;
 import com.xpert.persistence.query.Restriction;
 import com.xpert.persistence.query.RestrictionType;
 import com.xpert.persistence.query.Restrictions;
+import com.xpert.persistence.utils.EntityUtils;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -299,6 +300,28 @@ public class LazyDataModelImpl<T> extends LazyDataModel {
         return dados;
     }
 
+    @Override
+    public Object getRowData(String rowKey) {
+        if (rowKey != null && !rowKey.isEmpty()) {
+            //convert id (id can be integer, long, string, etc...)
+            Object id = EntityUtils.getIdFromString(rowKey, getDao().getEntityClass());
+            if(id != null){
+                return getDao().find(id);
+            }
+        }
+        return null;
+    }
+
+    
+    @Override
+    public Object getRowKey(Object object) {
+        if (object != null) {
+            //return id from entity
+            return EntityUtils.getId(object);
+        }
+        return null;
+    }
+
     /**
      * return the query builder of current restrictions and join builder
      *
@@ -321,7 +344,7 @@ public class LazyDataModelImpl<T> extends LazyDataModel {
     public Object sum(String field) {
         return buildQueryBuilder().sum(field);
     }
-    
+
     /**
      * Return a average of field, this method gets the QueryBuilder and add the
      * current restrictions to generate the query
@@ -332,9 +355,10 @@ public class LazyDataModelImpl<T> extends LazyDataModel {
     public Object avg(String field) {
         return buildQueryBuilder().avg(field);
     }
+
     /**
-     * Return a min value of field, this method gets the QueryBuilder and add the
-     * current restrictions to generate the query
+     * Return a min value of field, this method gets the QueryBuilder and add
+     * the current restrictions to generate the query
      *
      * @param field
      * @return
@@ -342,10 +366,10 @@ public class LazyDataModelImpl<T> extends LazyDataModel {
     public Object min(String field) {
         return buildQueryBuilder().min(field);
     }
-    
+
     /**
-     * Return a max value of field, this method gets the QueryBuilder and add the
-     * current restrictions to generate the query
+     * Return a max value of field, this method gets the QueryBuilder and add
+     * the current restrictions to generate the query
      *
      * @param field
      * @return

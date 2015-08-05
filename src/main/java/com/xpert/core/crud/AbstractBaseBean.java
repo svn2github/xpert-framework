@@ -168,23 +168,7 @@ public abstract class AbstractBaseBean<T> {
             return null;
         }
         try {
-            Class idType = EntityUtils.getIdType(entityClass);
-            if (idType.equals(Long.class) || idType.equals(long.class) ) {
-                return Long.parseLong(StringUtils.getOnlyIntegerNumbers(parameter));
-            } else if (idType.equals(Integer.class) || idType.equals(int.class)) {
-                return Integer.parseInt(StringUtils.getOnlyIntegerNumbers(parameter));
-            } else if (idType.equals(BigInteger.class)) {
-                return new BigInteger(StringUtils.getOnlyIntegerNumbers(parameter));
-            } else if (idType.equals(Short.class) || idType.equals(short.class)) {
-                return Short.parseShort(StringUtils.getOnlyIntegerNumbers(parameter));
-            } else if (idType.equals(BigDecimal.class)) {
-                return new BigDecimal(StringUtils.getOnlyIntegerNumbers(parameter));
-            } else if (idType.equals(String.class)) {
-                return parameter;
-            } else {
-                logger.log(Level.SEVERE, "Type {0} from entity {1} is not mapped in generic base bean", new Object[]{idType.getName(), entityClass.getName()});
-                return null;
-            }
+           return EntityUtils.getIdFromString(parameter, entityClass);
         } catch (NumberFormatException ex) {
             return null;
         }
