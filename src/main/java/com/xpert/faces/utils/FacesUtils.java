@@ -34,9 +34,15 @@ import javax.servlet.http.HttpSession;
  */
 public class FacesUtils {
 
+    /**
+     * Return generated HTML from component.
+     *
+     * @param component
+     * @return HTML from component
+     */
     public static String getHtml(UIComponent component) {
         FacesContext context = FacesContext.getCurrentInstance();
-        if(context == null){
+        if (context == null) {
             return null;
         }
         ResponseWriter originalWriter = context.getResponseWriter();
